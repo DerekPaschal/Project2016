@@ -1,9 +1,6 @@
 import java.awt.Graphics2D;
 
-public class Sprite 
+public abstract class Sprite 
 {
-	void draw(Graphics2D g2)
-	{
-		
-	}
+	abstract void draw(Graphics2D g2);
 }

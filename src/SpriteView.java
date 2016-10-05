@@ -1,3 +1,6 @@
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.LinkedList;
 
 import javax.swing.JFrame;
@@ -38,6 +41,22 @@ class SpritePanel extends JPanel
 	
 	SpritePanel(int windowX, int windowY, LinkedList<Sprite> newSpriteList)
 	{
-		
+		this.windowX = Math.max(windowX,0);
+		this.windowY = Math.max(windowY,0);
+		this.SpriteList = newSpriteList;
+		this.setIgnoreRepaint(true);
+	}
+	
+	public void paintComponent(Graphics g)
+	{
+		Graphics2D g2 = (Graphics2D)g;
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		synchronized (this.SpriteList)
+		{
+			for (Sprite sprite : this.SpriteList)
+			{
+				sprite.draw(g2);
+			}
+		}
 	}
 }
