@@ -17,7 +17,7 @@ import java.awt.event.MouseWheelEvent;
 class Controller implements MouseListener, MouseWheelListener, MouseMotionListener, KeyListener
 {
 	Model model;
-	public static Point2D mousePos = new Point2D(0,0);
+	public static Vector2D mousePos = new Vector2D(0,0);
 	boolean draggingMap = false, draggingWindow = false;
 	boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false;
 
@@ -34,7 +34,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 				model.mv.mainMenu.mouseDown(e);
 				break;
 			case GAME:
-				Point2D position = new Point2D(e.getX(), e.getY());
+				Vector2D position = new Vector2D(e.getX(), e.getY());
 		
 				if (e.getButton() == MouseEvent.BUTTON1)
 					this.model.onLeftClick(position);
@@ -55,9 +55,9 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 				break;
 			case GAME:
 				if (e.getButton() == MouseEvent.BUTTON1)
-					this.model.onLeftClickRelease(new Point2D(e.getX(), e.getY()));
+					this.model.onLeftClickRelease(new Vector2D(e.getX(), e.getY()));
 				if (e.getButton() == MouseEvent.BUTTON3)
-					this.model.onRightClickRelease(new Point2D(e.getX(), e.getY()));
+					this.model.onRightClickRelease(new Vector2D(e.getX(), e.getY()));
 				
 				System.out.println("Click released");
 				draggingMap = false;
@@ -90,7 +90,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 				model.mv.mainMenu.mouseDrag(e);
 				break;
 			case GAME:
-				this.mousePos = new Point2D(e.getX(), e.getY());
+				this.mousePos = new Vector2D(e.getX(), e.getY());
 				break;
 			default:
 				break;
@@ -105,7 +105,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 				model.mv.mainMenu.mouseMove(e);
 				break;
 			case GAME:
-				this.mousePos = new Point2D(e.getX(), e.getY());
+				this.mousePos = new Vector2D(e.getX(), e.getY());
 				break;
 			default:
 				break;

@@ -2,6 +2,6 @@ public class SpaceShip extends Sprite
 {
 	public SpaceShip()
 	{
-		super(new Point2D(0,0));
+		super(new Vector2D(0,0));
 	}
 }

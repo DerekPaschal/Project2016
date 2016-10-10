@@ -12,8 +12,8 @@ public class ActionButton
 {
 	//Member variables
 	private String text;
-	private Point2D pos;
-	private Point2D dimensions;
+	private Vector2D pos;
+	private Vector2D dimensions;
 	
 	private BufferedImage buttonImages[] = new BufferedImage[5];
 	private BufferedImage currentImage;
@@ -32,31 +32,31 @@ public class ActionButton
 	
 	public ActionButton()
 	{
-		initializeButton("TEST BUTTON", new Point2D(0, 0));
+		initializeButton("TEST BUTTON", new Vector2D(0, 0));
 	}
 	
 	public ActionButton(String description)
 	{
-		initializeButton(description, new Point2D(0, 0));
+		initializeButton(description, new Vector2D(0, 0));
 	}
 	
-	public ActionButton(Point2D position)
+	public ActionButton(Vector2D position)
 	{
 		initializeButton("TEST BUTTON", position);
 	}
 	
-	public ActionButton(String description, Point2D position)
+	public ActionButton(String description, Vector2D position)
 	{
 		initializeButton(description, position);
 	}
 	
-	private void initializeButton(String description, Point2D position)
+	private void initializeButton(String description, Vector2D position)
 	{
 		this.previousState = null;
 		this.isDisabled = false;
 		this.isToggleButton = true;
 		this.text = description;
-		this.pos = new Point2D(position);
+		this.pos = new Vector2D(position);
 		this.buttonAction = GUIButtonActions.DO_NOTHING;
 		this.font = new Font("MONOSPACE", Font.BOLD, 20);
 		
@@ -139,73 +139,73 @@ public class ActionButton
 	
 	public void setPos(ReferencePositions refPoint, int x, int y)
 	{
-		setPos(refPoint, new Point2D(x, y));
+		setPos(refPoint, new Vector2D(x, y));
 	}
-	public void setPos(ReferencePositions refPoint, Point2D newPos)
+	public void setPos(ReferencePositions refPoint, Vector2D newPos)
 	{
 		switch (refPoint)
 		{
 			case TOP_LEFT:
-				this.pos = new Point2D(newPos);
+				this.pos = new Vector2D(newPos);
 				break;
 			case TOP_CENTER:
-				this.pos = new Point2D((int) (newPos.x - this.dimensions.x / 2), (int) newPos.y);
+				this.pos = new Vector2D((int) (newPos.x - this.dimensions.x / 2), (int) newPos.y);
 				break;
 			case TOP_RIGHT:
-				this.pos = new Point2D((int) (newPos.x - this.dimensions.x), (int) newPos.y);
+				this.pos = new Vector2D((int) (newPos.x - this.dimensions.x), (int) newPos.y);
 				break;
 			case CENTER_LEFT:
-				this.pos = new Point2D((int) newPos.x, (int) (newPos.y - this.dimensions.y / 2));
+				this.pos = new Vector2D((int) newPos.x, (int) (newPos.y - this.dimensions.y / 2));
 				break;
 			case CENTER:
-				this.pos = new Point2D((int) (newPos.x - this.dimensions.x / 2), (int) (newPos.y - this.dimensions.y / 2));
+				this.pos = new Vector2D((int) (newPos.x - this.dimensions.x / 2), (int) (newPos.y - this.dimensions.y / 2));
 				break;
 			case CENTER_RIGHT:
-				this.pos = new Point2D((int) (newPos.x - this.dimensions.x), (int) (newPos.y - this.dimensions.y / 2));
+				this.pos = new Vector2D((int) (newPos.x - this.dimensions.x), (int) (newPos.y - this.dimensions.y / 2));
 				break;
 			case BOTTOM_LEFT:
-				this.pos = new Point2D((int) newPos.x, (int) (newPos.y - this.dimensions.y));
+				this.pos = new Vector2D((int) newPos.x, (int) (newPos.y - this.dimensions.y));
 				break;
 			case BOTTOM_CENTER:
-				this.pos = new Point2D((int) (newPos.x - this.dimensions.x / 2), (int) (newPos.y - this.dimensions.y));
+				this.pos = new Vector2D((int) (newPos.x - this.dimensions.x / 2), (int) (newPos.y - this.dimensions.y));
 				break;
 			case BOTTOM_RIGHT:
-				this.pos = new Point2D((int) (newPos.x - this.dimensions.x), (int) (newPos.y - this.dimensions.y));
+				this.pos = new Vector2D((int) (newPos.x - this.dimensions.x), (int) (newPos.y - this.dimensions.y));
 				break;
 		}
 	}
-	public Point2D getPos()
+	public Vector2D getPos()
 	{
 		return this.pos;
 	}
-	public Point2D getPos(ReferencePositions refPoint)
+	public Vector2D getPos(ReferencePositions refPoint)
 	{
 		switch (refPoint)
 		{
 			case TOP_LEFT:
 				return this.pos;
 			case TOP_CENTER:
-				return new Point2D((int) (this.pos.x + this.dimensions.x / 2), (int) this.pos.y);
+				return new Vector2D((int) (this.pos.x + this.dimensions.x / 2), (int) this.pos.y);
 			case TOP_RIGHT:
-				return new Point2D((int) (this.pos.x + this.dimensions.x), (int) this.pos.y);
+				return new Vector2D((int) (this.pos.x + this.dimensions.x), (int) this.pos.y);
 			case CENTER_LEFT:
-				return new Point2D((int) this.pos.x, (int) (this.pos.y + this.dimensions.y / 2));
+				return new Vector2D((int) this.pos.x, (int) (this.pos.y + this.dimensions.y / 2));
 			case CENTER:
-				return new Point2D((int) (this.pos.x + this.dimensions.x / 2), (int) (this.pos.y + this.dimensions.y / 2));
+				return new Vector2D((int) (this.pos.x + this.dimensions.x / 2), (int) (this.pos.y + this.dimensions.y / 2));
 			case CENTER_RIGHT:
-				return new Point2D((int) (this.pos.x + this.dimensions.x), (int) (this.pos.y + this.dimensions.y / 2));
+				return new Vector2D((int) (this.pos.x + this.dimensions.x), (int) (this.pos.y + this.dimensions.y / 2));
 			case BOTTOM_LEFT:
-				return new Point2D((int) this.pos.x, (int) (this.pos.y + this.dimensions.y));
+				return new Vector2D((int) this.pos.x, (int) (this.pos.y + this.dimensions.y));
 			case BOTTOM_CENTER:
-				return new Point2D((int) (this.pos.x + this.dimensions.x / 2), (int) (this.pos.y + this.dimensions.y));
+				return new Vector2D((int) (this.pos.x + this.dimensions.x / 2), (int) (this.pos.y + this.dimensions.y));
 			case BOTTOM_RIGHT:
-				return new Point2D((int) (this.pos.x + this.dimensions.x), (int) (this.pos.y + this.dimensions.y));
+				return new Vector2D((int) (this.pos.x + this.dimensions.x), (int) (this.pos.y + this.dimensions.y));
 			default:
 				return this.pos;
 		}
 	}
 	
-	public void setSize(Point2D newSize)
+	public void setSize(Vector2D newSize)
 	{
 		this.dimensions = newSize;
 	}
@@ -243,7 +243,7 @@ public class ActionButton
 		}
 		
 		this.previousState = this.buttonState;
-		this.dimensions = new Point2D(currentImage.getWidth(), currentImage.getHeight());
+		this.dimensions = new Vector2D(currentImage.getWidth(), currentImage.getHeight());
 		this.buttonState = newState;
 	}
 	
@@ -291,7 +291,7 @@ public class ActionButton
 		
 	}
 	
-	public boolean isWithin(Point2D point)
+	public boolean isWithin(Vector2D point)
 	{
 		if (point.x >= this.pos.x && point.x <= this.pos.x + this.dimensions.x
 			&& point.y >= this.pos.y && point.y <= this.pos.y + this.dimensions.y)

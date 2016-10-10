@@ -45,7 +45,7 @@ class Model
 	 ***************************/
 	public void init_Game()
 	{
-		mv.playerShip = new PlayerShip(new Point2D(Game.CENTERX, Game.CENTERY));
+		mv.playerShip = new PlayerShip(new Vector2D(Game.CENTERX, Game.CENTERY));
 		
 		//Sprite testSprite = new Sprite(new Point2D(Game.CENTERX, Game.CENTERY));
 		//mv.gameSprites.add(testSprite);
@@ -98,16 +98,16 @@ class Model
 	}
 
 	//Function called when left mouse button is clicked
-	public void onLeftClick(Point2D point){}
+	public void onLeftClick(Vector2D point){}
 	
 	//Function called when right mouse button is clicked
-	public void onRightClick(Point2D point){}
+	public void onRightClick(Vector2D point){}
 	
 	//Function called when left mouse button is released
-	public void onLeftClickRelease(Point2D point){}
+	public void onLeftClickRelease(Vector2D point){}
 	
 	//Function called when right mouse button is released
-	public void onRightClickRelease(Point2D point){}
+	public void onRightClickRelease(Vector2D point){}
 	
 	
 }

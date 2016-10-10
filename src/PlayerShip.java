@@ -5,7 +5,7 @@ public class PlayerShip extends Sprite
 	public boolean left, right, forward, backward, firing;
 	private double turnRate = 5, thrustPower = 0.2;
 	
-	public PlayerShip(Point2D position)
+	public PlayerShip(Vector2D position)
 	{
 		super(position);
 		
@@ -34,13 +34,11 @@ public class PlayerShip extends Sprite
 	{
 		if (forward)
 		{
-			this.velocity.addX(Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower);
-			this.velocity.addY(Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower);
+			this.velocity = this.velocity.add(new Vector2D(Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower, Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower));
 		}
 		if (backward)
 		{
-			this.velocity.addX(-Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower);
-			this.velocity.addY(-Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower);
+			this.velocity = this.velocity.add(new Vector2D(-Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower,-Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower));
 		}
 		if (left)
 		{
@@ -51,8 +49,7 @@ public class PlayerShip extends Sprite
 			this.rotation.addAmount(this.turnRate);
 		}
 		
-		this.mapPos.addX(this.velocity.x);
-		this.mapPos.addY(this.velocity.y);
+		this.mapPos = this.mapPos.add(new Vector2D(this.velocity.x, this.velocity.y));
 	}
 }
 

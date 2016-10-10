@@ -51,7 +51,7 @@ public abstract class DrawnFeature
 			if (currImg != null)
 			{
 				//Get position of current
-				Point2D currPos = new Point2D(curr.drawArea.x, curr.drawArea.y);
+				Vector2D currPos = new Vector2D(curr.drawArea.x, curr.drawArea.y);
 				
 				//Translate current position to position relative to parent draw area
 				int relXCoord = (int) (getRelativeCoord(currPos).x);
@@ -63,7 +63,7 @@ public abstract class DrawnFeature
 		//Scope created to restrict time these variables exist
 		{
 			//Get position of current
-			Point2D currPos = new Point2D(this.drawArea.x, this.drawArea.y);
+			Vector2D currPos = new Vector2D(this.drawArea.x, this.drawArea.y);
 			
 			//Translate current position to position relative to parent draw area
 			int relXCoord = (int) (getRelativeCoord(currPos).x);
@@ -92,7 +92,7 @@ public abstract class DrawnFeature
 			if (currImg != null)
 			{
 				//Get position of current
-				Point2D currPos = new Point2D(curr.drawArea.x, curr.drawArea.y);
+				Vector2D currPos = new Vector2D(curr.drawArea.x, curr.drawArea.y);
 				
 				//Translate current position to position relative to parent draw area
 				int relXCoord = (int) (getRelativeCoord(currPos).x);
@@ -109,7 +109,7 @@ public abstract class DrawnFeature
 	
 	abstract BufferedImage draw(Graphics g);
 	
-	public boolean contains(Point2D p)
+	public boolean contains(Vector2D p)
 	{
 		return drawArea.contains(p.x, p.y);
 	}
@@ -144,7 +144,7 @@ public abstract class DrawnFeature
 	}
 	
 	//Return true if the point is on or within the draw area
-	public boolean isWithin(Point2D point)
+	public boolean isWithin(Vector2D point)
 	{
 		if (point.x >= this.drawArea.x && point.x <= this.drawArea.x + this.drawArea.width
 			&& point.y >= this.drawArea.y && point.y <= this.drawArea.y + this.drawArea.height)
@@ -155,9 +155,9 @@ public abstract class DrawnFeature
 	
 	//Parameter is a coordinate on the window, translates to the coordinates
 	//relative to the image on the screen it is part of
-	public Point2D getRelativeCoord(Point2D point)
+	public Vector2D getRelativeCoord(Vector2D point)
 	{
-		return new Point2D((int) (point.x + drawArea.x), (int) (point.y + drawArea.y));
+		return new Vector2D((int) (point.x + drawArea.x), (int) (point.y + drawArea.y));
 	}
 }
 

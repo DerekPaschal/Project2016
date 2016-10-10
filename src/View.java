@@ -47,7 +47,7 @@ class View extends JPanel
 	/***************************
 	 * Constructor
 	 ***************************/
-	public void mouseClick(Point2D position)
+	public void mouseClick(Vector2D position)
 	{
 		//Loop through screen elements to determine what was clicked
 		//Currently only the ViewWindow

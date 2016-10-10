@@ -34,10 +34,10 @@ public class FullScreenMenu extends DrawnFeature
 	{	
 		this.menuTexts.add(new MenuText("GRIDGAME", Game.CENTERX, 100, Color.GREEN, Color.BLACK));
 		
-		ActionButton buttonA = new ActionButton("Start Game", new Point2D(200, 200));
+		ActionButton buttonA = new ActionButton("Start Game", new Vector2D(200, 200));
 		buttonA.setButtonAction(GUIButtonActions.START_GAME);
 		buttonA.setIsToggleButton(false);
-		ActionButton buttonB = new ActionButton("Happy Button", new Point2D(200, 320));
+		ActionButton buttonB = new ActionButton("Happy Button", new Vector2D(200, 320));
 		
 		this.menuButtons.add(buttonA);
 		this.menuButtons.add(buttonB);
@@ -63,7 +63,7 @@ public class FullScreenMenu extends DrawnFeature
 	{
 		this.needsRedraw = true;
 		
-		Point2D mousePoint = new Point2D(e.getX(), e.getY());
+		Vector2D mousePoint = new Vector2D(e.getX(), e.getY());
 		
 		for (ActionButton curr : menuButtons)
 			if (curr.isWithin(mousePoint) && !curr.isDisabled())
@@ -78,7 +78,7 @@ public class FullScreenMenu extends DrawnFeature
 	{
 		this.needsRedraw = true;
 		
-		Point2D mousePoint = new Point2D(e.getX(), e.getY());
+		Vector2D mousePoint = new Vector2D(e.getX(), e.getY());
 		
 		if (this.currentButton != null)
 		{
@@ -105,7 +105,7 @@ public class FullScreenMenu extends DrawnFeature
 	{
 		this.needsRedraw = true;
 		
-		Point2D mousePoint = new Point2D(e.getX(), e.getY());
+		Vector2D mousePoint = new Vector2D(e.getX(), e.getY());
 		
 		for (ActionButton curr : menuButtons)
 		{

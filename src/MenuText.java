@@ -5,7 +5,7 @@ import java.awt.Font;
 public class MenuText
 {
 	private String text;
-	private Point2D pos;
+	private Vector2D pos;
 	private Color textColor, shadowColor;
 	private Font font;
 	
@@ -16,11 +16,11 @@ public class MenuText
 	public MenuText()
 	{
 		this.text = "SAMPLE TEXT";
-		this.pos = new Point2D(200, 200);
+		this.pos = new Vector2D(200, 200);
 	}
 	
 	//Universal constructor
-	private void constrMenuText(String s, Point2D position, Color colorText, Color colorShadow)
+	private void constrMenuText(String s, Vector2D position, Color colorText, Color colorShadow)
 	{
 		if (s != null)
 			this.text = s;
@@ -28,9 +28,9 @@ public class MenuText
 			this.text = "SAMPLE TEXT";
 		
 		if (position != null)
-			this.pos = new Point2D((int) position.x, (int) position.y);
+			this.pos = new Vector2D((int) position.x, (int) position.y);
 		else
-			this.pos = new Point2D(200, 200);
+			this.pos = new Vector2D(200, 200);
 		
 		if (colorText != null)
 			this.textColor = colorText;
@@ -48,15 +48,15 @@ public class MenuText
 	
 	public MenuText(String s) { constrMenuText(s, null, null, null); }
 	
-	public MenuText(Point2D position) { constrMenuText(null, new Point2D((int) position.x, (int) position.y), null, null); }
+	public MenuText(Vector2D position) { constrMenuText(null, new Vector2D((int) position.x, (int) position.y), null, null); }
 	
-	public MenuText(String s, Point2D position) { constrMenuText(s, new Point2D((int) position.x, (int) position.y), null, null); }
-	public MenuText(String s, Point2D position, Color colorText) { constrMenuText(s, new Point2D((int) position.x, (int) position.y), colorText, null); }
-	public MenuText(String s, Point2D position, Color colorText, Color colorShadow) { constrMenuText(s, new Point2D((int) position.x, (int) position.y), colorText, colorShadow); }
+	public MenuText(String s, Vector2D position) { constrMenuText(s, new Vector2D((int) position.x, (int) position.y), null, null); }
+	public MenuText(String s, Vector2D position, Color colorText) { constrMenuText(s, new Vector2D((int) position.x, (int) position.y), colorText, null); }
+	public MenuText(String s, Vector2D position, Color colorText, Color colorShadow) { constrMenuText(s, new Vector2D((int) position.x, (int) position.y), colorText, colorShadow); }
 	
-	public MenuText(String s, int posX, int posY) { constrMenuText(s, new Point2D(posX, posY), null, null); }
-	public MenuText(String s, int posX, int posY, Color colorText) { constrMenuText(s, new Point2D(posX, posY), textColor, null); }
-	public MenuText(String s, int posX, int posY, Color colorText, Color colorShadow) { constrMenuText(s, new Point2D(posX, posY), textColor, colorShadow); }
+	public MenuText(String s, int posX, int posY) { constrMenuText(s, new Vector2D(posX, posY), null, null); }
+	public MenuText(String s, int posX, int posY, Color colorText) { constrMenuText(s, new Vector2D(posX, posY), textColor, null); }
+	public MenuText(String s, int posX, int posY, Color colorText, Color colorShadow) { constrMenuText(s, new Vector2D(posX, posY), textColor, colorShadow); }
 	
 	/*******************
 	 * Getters/Setters
@@ -64,9 +64,9 @@ public class MenuText
 	public String getText() { return this.text; }
 	public void setText(String s) { this.text = s; }
 	
-	public Point2D getPos() { return this.pos; }
-	public void setPos(Point2D point) {	 this.pos = new Point2D((int) point.x, (int) point.y); }
-	public void setPos(int posX, int posY) { this.pos = new Point2D(posX, posY); }
+	public Vector2D getPos() { return this.pos; }
+	public void setPos(Vector2D point) {	 this.pos = new Vector2D((int) point.x, (int) point.y); }
+	public void setPos(int posX, int posY) { this.pos = new Vector2D(posX, posY); }
 	
 	public Color getTextColor() { return this.textColor; }
 	public void setTextColor(Color color) { this.textColor = color; }

@@ -14,14 +14,17 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class Sprite extends GameEntity
+public class Sprite
 {
+	Vector2D mapPos;
+	public Vector2D velocity;
 	public BufferedImage currentImage;
 	public Rotation rotation;
 	
-	public Sprite(Point2D position)
+	public Sprite(Vector2D position)
 	{
-		this.mapPos = new Point2D(position);
+		this.mapPos = new Vector2D(position);
+		this.velocity = new Vector2D(0,0);
 		this.rotation = new Rotation(0);
 		try
 		{
@@ -34,7 +37,7 @@ public class Sprite extends GameEntity
 		}
 	}
 	
-	public void draw(Graphics2D g2d)
+	public void draw(Graphics2D g2)
 	{
 		AffineTransform at = new AffineTransform();
 		at.scale(.5, .5);
@@ -48,6 +51,6 @@ public class Sprite extends GameEntity
 		at.rotate(this.rotation.getRadians(), rotateX, rotateY);
 		
 		
-		g2d.drawImage(currentImage, at, null);
+		g2.drawImage(currentImage, at, null);
 	}
 }
