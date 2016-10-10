@@ -1,6 +1,6 @@
 import java.io.IOException;
 
-public class PlayerShip extends Sprite
+public class PlayerShip extends PhysicsSprite
 {
 	public boolean left, right, forward, backward, firing;
 	private double turnRate = 5, thrustPower = 0.2;
@@ -34,11 +34,11 @@ public class PlayerShip extends Sprite
 	{
 		if (forward)
 		{
-			this.velocity = this.velocity.add(new Vector2D(Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower, Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower));
+			this.vel = this.vel.add(new Vector2D(Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower, Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower));
 		}
 		if (backward)
 		{
-			this.velocity = this.velocity.add(new Vector2D(-Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower,-Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower));
+			this.vel = this.vel.add(new Vector2D(-Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower,-Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower));
 		}
 		if (left)
 		{
@@ -49,7 +49,7 @@ public class PlayerShip extends Sprite
 			this.rotation.addAmount(this.turnRate);
 		}
 		
-		this.mapPos = this.mapPos.add(new Vector2D(this.velocity.x, this.velocity.y));
+		this.pos = this.pos.add(this.vel);
 	}
 }
 
