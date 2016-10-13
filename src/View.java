@@ -41,7 +41,7 @@ class View extends JPanel
 	{
 		this.model = m;
 		
-		this.currFrame = new BufferedImage(Game.WIDTH - 1, Game.HEIGHT - 1, BufferedImage.TYPE_INT_ARGB);
+		this.currFrame = new BufferedImage((int)Game.camera.windowDim.x - 1, (int)Game.camera.windowDim.y - 1, BufferedImage.TYPE_INT_ARGB);
 	}
 	
 	/***************************
@@ -77,7 +77,7 @@ class View extends JPanel
 	{
 		this.drawingNextFrame = true;
 		
-		this.nextFrame = new BufferedImage(Game.WIDTH - 1, Game.HEIGHT - 1, BufferedImage.TYPE_INT_ARGB);
+		this.nextFrame = new BufferedImage((int)Game.camera.windowDim.x - 1, (int)Game.camera.windowDim.x - 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D nfg = (Graphics2D) nextFrame.getGraphics();
 		
 		switch (model.mv.getGameState())
@@ -93,13 +93,13 @@ class View extends JPanel
 				else
 				{
 					nfg.setColor(Color.GRAY);
-					nfg.fillRect(0, 0, Game.WIDTH - 1, Game.HEIGHT - 1);
+					nfg.fillRect(0, 0, (int)Game.camera.windowDim.x - 1, (int)Game.camera.windowDim.y - 1);
 				}
 				break;
 				
 			case GAME:
 				nfg.setColor(Color.BLACK);
-				nfg.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
+				nfg.fillRect(0, 0, (int)Game.camera.windowDim.x, (int)Game.camera.windowDim.y);
 				
 				model.mv.playerShip.draw(nfg);
 				

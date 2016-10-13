@@ -36,6 +36,11 @@ public class Sprite
 		}
 	}
 	
+	public Sprite()
+	{
+		this(new Vector2D(0,0));
+	}
+	
 	public void draw(Graphics2D g2, ViewCamera camera)
 	{
 		AffineTransform at = new AffineTransform();

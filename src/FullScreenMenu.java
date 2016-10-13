@@ -15,7 +15,7 @@ public class FullScreenMenu extends DrawnFeature
 	
 	public FullScreenMenu()
 	{
-		super(new Rectangle(Game.WIDTH - 1, Game.HEIGHT - 1));
+		super(new Rectangle((int)Game.camera.windowDim.x - 1, (int)Game.camera.windowDim.y - 1));
 		menuButtons = new LinkedList<ActionButton>();
 		menuTexts = new LinkedList<MenuText>();
 		this.currentButton = null;
@@ -32,7 +32,7 @@ public class FullScreenMenu extends DrawnFeature
 	
 	public void setTestMenu()
 	{	
-		this.menuTexts.add(new MenuText("GRIDGAME", Game.CENTERX, 100, Color.GREEN, Color.BLACK));
+		this.menuTexts.add(new MenuText("GRIDGAME", (int)Game.camera.pos.x, 100, Color.GREEN, Color.BLACK));
 		
 		ActionButton buttonA = new ActionButton("Start Game", new Vector2D(200, 200));
 		buttonA.setButtonAction(GUIButtonActions.START_GAME);
@@ -46,7 +46,7 @@ public class FullScreenMenu extends DrawnFeature
 	public BufferedImage draw(Graphics g)
 	{
 		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0, 0, Game.WIDTH - 1, Game.HEIGHT - 1);
+		g.fillRect(0, 0, (int)Game.camera.windowDim.x - 1, (int)Game.camera.windowDim.y - 1);
 		
 		for (ActionButton curr : menuButtons)
 		{

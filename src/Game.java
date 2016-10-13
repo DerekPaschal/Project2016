@@ -1,4 +1,5 @@
 /***************************
+
  * Purpose: Game class, starting location for the program,
  * Initializes and configures core game values and builds game loop to run model
  *
@@ -15,45 +16,58 @@ public class Game extends JFrame implements ActionListener
 {
 	Model model;
 	ButtonController buttonController;
-	
-	public static int WIDTH = 1680;
-	public static int HEIGHT = 1000;
-	public static int CENTERX = WIDTH / 2;
-	public static int CENTERY = HEIGHT / 2;
+
 	public static int FRAME_RATE = 1;
 	public static int UPDATE_RATE = 60;
 	private static long lastFrameTime = 0;
+	
+	public static ViewCamera camera = new ViewCamera();
 	
 	//public static int magnification = 10;	//Value is true magnification multiplied by 10
 
 	public Game() throws Exception
 	{
+		this.camera.Zoom = 1.0;
+		this.camera.windowDim = new Vector2D(800, 600);
+		this.camera.pos = this.camera.windowDim.divide(new Vector2D(2.0,2.0));
+		
 		this.model = new Model();
-		this.buttonController = new ButtonController(this.model);
-		Controller controller = new Controller(this.model);
 		View view = new View(this.model);
-		view.addMouseListener(controller);
-		view.addMouseMotionListener(controller);
-		view.addMouseWheelListener(controller);
-		addKeyListener(controller);
 		
 		//Set up Java window
 		this.setTitle("GridGame");
-		this.setSize(WIDTH - 1, HEIGHT - 1);
 		this.getContentPane().add(view);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setExtendedState(MAXIMIZED_BOTH);
 		//this.setUndecorated(true);
 		this.setVisible(true);
+		
+		
+		//Setup Model and Controller and Create View
+		this.buttonController = new ButtonController(this.model);
+		Controller controller = new Controller(this.model);
+		this.addKeyListener(controller);
+		
+		
+		this.camera.Zoom = 1.0;
+		this.camera.windowDim = new Vector2D(this.getWidth(), this.getHeight());
+		this.camera.pos = this.camera.windowDim.divide(new Vector2D(2.0,2.0));
+		
+		//Setup View
+		view.addMouseListener(controller);
+		view.addMouseMotionListener(controller);
+		view.addMouseWheelListener(controller);
+		
 		new Timer((int) (1000.0 / GameConstant.goalFrameRate), this).start(); // Indirectly calls actionPerformed at regular intervals
 	}
 
 	public void actionPerformed(ActionEvent evt)
 	{
-		WIDTH = getWidth();
-		HEIGHT = getHeight();
-		
-		this.setSize(WIDTH, HEIGHT);
+		//WIDTH = getWidth();
+		//HEIGHT = getHeight();
+		this.camera.windowDim.x = getWidth();
+		this.camera.windowDim.y = getHeight();
+		//this.setSize(WIDTH, HEIGHT);
 		
 		//Calculate current frame rate
 		if (lastFrameTime == 0)

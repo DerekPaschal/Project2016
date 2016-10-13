@@ -1,6 +1,7 @@
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -20,6 +21,8 @@ public class SpriteView extends JPanel
 	ViewCamera camera;
 	private ArrayList<Sprite> ForeGroundSprites;
 	private ArrayList<Sprite> BackGroundSprites;
+	
+	private BufferedImage bufferedImage;
 	
 	SpriteView(ViewCamera camera, ArrayList<Sprite> ForeGroundSprites, ArrayList<Sprite> BackGroundSprites)
 	{
