@@ -1,12 +1,10 @@
 import java.awt.Color;
-import java.util.Random;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.awt.Graphics;
-import java.io.IOException;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Random;
 
 public class ActionButton
 {

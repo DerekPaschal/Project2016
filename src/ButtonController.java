@@ -4,7 +4,7 @@ public class ButtonController
 	
 	public ButtonController(Model m)
 	{
-		this.model = m;
+		ButtonController.model = m;
 	}
 	
 	public static void doAction(GUIButtonActions action, ActionButton button)

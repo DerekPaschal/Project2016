@@ -7,14 +7,11 @@
  * Original Author: Zachary Johnson
  ***************************/
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-public class Sprite
+abstract class Sprite
 {
 	Vector2D pos;
 	public BufferedImage currentImage;
@@ -26,14 +23,6 @@ public class Sprite
 		this.pos = new Vector2D(position);
 		this.rotation = new Rotation(0);
 		this.visible = true;
-		try
-		{
-			this.currentImage = GameFunction.loadBufferedImage("/resources/ships/debugship_blue.png");
-		} 
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 	}
 	
 	public Sprite()
@@ -45,7 +34,6 @@ public class Sprite
 	{
 		AffineTransform at = new AffineTransform();
 		at.scale(camera.Zoom, camera.Zoom);
-		double a = this.pos.x, b = currentImage.getWidth(), c = at.getScaleX();
 		double transX = (this.pos.x - ((double)currentImage.getWidth() * at.getScaleX() * camera.Zoom))/at.getScaleX();
 		double transY = (this.pos.y - ((double)currentImage.getHeight() * at.getScaleY() * camera.Zoom))/at.getScaleY();
 		at.translate(transX, transY);
@@ -58,7 +46,7 @@ public class Sprite
 		g2.drawImage(currentImage, at, null);
 	}
 	
-	public void draw(Graphics2D g2)
+	/*public void draw(Graphics2D g2)
 	{
 		AffineTransform at = new AffineTransform();
 		at.scale(1.0, 1.0);
@@ -73,5 +61,5 @@ public class Sprite
 		
 		
 		g2.drawImage(currentImage, at, null);
-	}
+	}*/
 }

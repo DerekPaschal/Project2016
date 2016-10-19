@@ -6,12 +6,7 @@
  ***************************/
 
 import java.io.IOException;
-import javax.swing.ImageIcon;
-import java.util.*;
-import java.awt.Image;
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.awt.Color;
+import java.util.Random;
 
 class Model
 {

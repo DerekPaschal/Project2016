@@ -5,14 +5,13 @@
  * Original Author: Zachary Johnson
  ***************************/
 
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseWheelListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 class Controller implements MouseListener, MouseWheelListener, MouseMotionListener, KeyListener
 {
@@ -90,7 +89,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 				model.mv.mainMenu.mouseDrag(e);
 				break;
 			case GAME:
-				this.mousePos = new Vector2D(e.getX(), e.getY());
+				Controller.mousePos = new Vector2D(e.getX(), e.getY());
 				break;
 			default:
 				break;
@@ -105,7 +104,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 				model.mv.mainMenu.mouseMove(e);
 				break;
 			case GAME:
-				this.mousePos = new Vector2D(e.getX(), e.getY());
+				Controller.mousePos = new Vector2D(e.getX(), e.getY());
 				break;
 			default:
 				break;

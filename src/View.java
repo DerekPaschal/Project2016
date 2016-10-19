@@ -5,24 +5,16 @@
  * Original Author: Zachary Johnson
  ***************************/
 
-import javax.swing.JPanel;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
-
-import javax.imageio.ImageIO;
-import java.io.IOException;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.io.File;
-import javax.swing.ImageIcon;
-import java.util.Iterator;
-import java.util.Map;
-import java.awt.Color;
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.swing.JPanel;
 
 
+@SuppressWarnings("serial")
 class View extends JPanel
 {
 	Model model;
@@ -31,7 +23,7 @@ class View extends JPanel
 	//Tracking variable to allow only one instance of painting next frame at a time
 	private boolean drawingNextFrame = false;
 	
-	private static FullScreenMenu mainMenu;
+	//private static FullScreenMenu mainMenu;
 
 	/***************************
 	 * Constructor
@@ -101,11 +93,11 @@ class View extends JPanel
 				nfg.setColor(Color.BLACK);
 				nfg.fillRect(0, 0, (int)Game.camera.windowDim.x, (int)Game.camera.windowDim.y);
 				
-				model.mv.playerShip.draw(nfg);
+				model.mv.playerShip.draw(nfg,Game.camera);
 				
 				for (Sprite curr : this.model.mv.gameSprites)
 				{
-					curr.draw(nfg);
+					curr.draw(nfg,Game.camera);
 				}
 				//this.window.draw(nfg);
 				

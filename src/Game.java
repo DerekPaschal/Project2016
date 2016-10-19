@@ -6,12 +6,13 @@
  * Original Author: Zachary Johnson
  ***************************/
 
-import javax.swing.JFrame;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.Timer;
-import java.io.IOException;
+import java.awt.event.ActionListener;
 
+import javax.swing.JFrame;
+import javax.swing.Timer;
+
+@SuppressWarnings("serial")
 public class Game extends JFrame implements ActionListener
 {
 	Model model;
@@ -27,9 +28,9 @@ public class Game extends JFrame implements ActionListener
 
 	public Game() throws Exception
 	{
-		this.camera.Zoom = 1.0;
-		this.camera.windowDim = new Vector2D(800, 600);
-		this.camera.pos = this.camera.windowDim.divide(new Vector2D(2.0,2.0));
+		Game.camera.Zoom = 1.0;
+		Game.camera.windowDim = new Vector2D(800, 600);
+		Game.camera.pos = Game.camera.windowDim.divide(new Vector2D(2.0,2.0));
 		
 		this.model = new Model();
 		View view = new View(this.model);
@@ -49,9 +50,9 @@ public class Game extends JFrame implements ActionListener
 		this.addKeyListener(controller);
 		
 		
-		this.camera.Zoom = 1.0;
-		this.camera.windowDim = new Vector2D(this.getWidth(), this.getHeight());
-		this.camera.pos = this.camera.windowDim.divide(new Vector2D(2.0,2.0));
+		Game.camera.Zoom = 1.0;
+		Game.camera.windowDim = new Vector2D(this.getWidth(), this.getHeight());
+		Game.camera.pos = Game.camera.windowDim.divide(new Vector2D(2.0,2.0));
 		
 		//Setup View
 		view.addMouseListener(controller);
@@ -65,8 +66,8 @@ public class Game extends JFrame implements ActionListener
 	{
 		//WIDTH = getWidth();
 		//HEIGHT = getHeight();
-		this.camera.windowDim.x = getWidth();
-		this.camera.windowDim.y = getHeight();
+		Game.camera.windowDim.x = getWidth();
+		Game.camera.windowDim.y = getHeight();
 		//this.setSize(WIDTH, HEIGHT);
 		
 		//Calculate current frame rate

@@ -1,5 +1,5 @@
 
-public class PhysicsSprite extends Sprite
+abstract class PhysicsSprite extends Sprite
 {
 	public Vector2D vel;
 	public Vector2D acc;
