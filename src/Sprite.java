@@ -35,8 +35,8 @@ abstract class Sprite
 	{
 		AffineTransform at = new AffineTransform();
 		at.scale(camera.Zoom, camera.Zoom);
-		double transX = (this.pos.x - ((double)currentImage.getWidth() * at.getScaleX() * camera.Zoom))/at.getScaleX();
-		double transY = (this.pos.y - ((double)currentImage.getHeight() * at.getScaleY() * camera.Zoom))/at.getScaleY();
+		double transX = ((this.pos.x - (camera.pos.x - (camera.windowDim.x*camera.Zoom)/2)) - ((double)currentImage.getWidth() * at.getScaleX() * camera.Zoom))/at.getScaleX();
+		double transY = ((this.pos.y - (camera.pos.y - (camera.windowDim.y*camera.Zoom)/2)) - ((double)currentImage.getHeight() * at.getScaleY() * camera.Zoom))/at.getScaleY();
 		
 		if (!(transX <= camera.windowDim.x/camera.Zoom && transX+currentImage.getWidth()  >= 0 && 
 				transY <= camera.windowDim.y/camera.Zoom && transY+currentImage.getHeight() >= 0))
