@@ -7,6 +7,7 @@
  * Original Author: Zachary Johnson
  ***************************/
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -36,6 +37,13 @@ abstract class Sprite
 		at.scale(camera.Zoom, camera.Zoom);
 		double transX = (this.pos.x - ((double)currentImage.getWidth() * at.getScaleX() * camera.Zoom))/at.getScaleX();
 		double transY = (this.pos.y - ((double)currentImage.getHeight() * at.getScaleY() * camera.Zoom))/at.getScaleY();
+		
+		if (!(transX <= camera.windowDim.x/camera.Zoom && transX+currentImage.getWidth()  >= 0 && 
+				transY <= camera.windowDim.y/camera.Zoom && transY+currentImage.getHeight() >= 0))
+		{
+			return;
+		}
+		
 		at.translate(transX, transY);
 		
 		double rotateX = currentImage.getWidth() / 2;

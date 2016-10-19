@@ -41,15 +41,21 @@ class Model
 	public void init_Game()
 	{
 		mv.playerShip = new PlayerShip(new Vector2D(Game.camera.pos.x, Game.camera.pos.y));
-		mv.gameSprites.add(mv.playerShip);
-		//Sprite testSprite = new Sprite(new Point2D(Game.CENTERX, Game.CENTERY));
-		//mv.gameSprites.add(testSprite);
+		synchronized(mv.gameSprites)
+		{
+			mv.gameSprites.add(mv.playerShip);
+		}
+		
 		return;
 	}
 	
 	public void gameUpdate()
-	{
-		mv.playerShip.update();
+	{		
+		for(Sprite sprite : mv.gameSprites)
+		{
+			if (sprite instanceof PhysicsSprite)
+				((PhysicsSprite) sprite).update();
+		}
 	}
 	
 	/***************************

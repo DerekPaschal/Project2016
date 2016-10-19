@@ -17,7 +17,7 @@ public class Game extends JFrame implements ActionListener
 {
 	Model model;
 	ButtonController buttonController;
-
+	
 	public static int FRAME_RATE = 1;
 	public static int UPDATE_RATE = 60;
 	private static long lastFrameTime = 0;
