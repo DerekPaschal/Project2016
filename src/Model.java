@@ -41,7 +41,7 @@ class Model
 	public void init_Game()
 	{
 		mv.playerShip = new PlayerShip(new Vector2D(Game.camera.pos.x, Game.camera.pos.y));
-		
+		mv.gameSprites.add(mv.playerShip);
 		//Sprite testSprite = new Sprite(new Point2D(Game.CENTERX, Game.CENTERY));
 		//mv.gameSprites.add(testSprite);
 		return;

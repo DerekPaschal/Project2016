@@ -39,12 +39,12 @@ class View extends JPanel
 	/***************************
 	 * Constructor
 	 ***************************/
-	public void mouseClick(Vector2D position)
+	/*public void mouseClick(Vector2D position)
 	{
 		//Loop through screen elements to determine what was clicked
 		//Currently only the ViewWindow
 		
-	}
+	}*/
 	
 	/***************************
 	 * Primary painting function
@@ -93,20 +93,13 @@ class View extends JPanel
 				nfg.setColor(Color.BLACK);
 				nfg.fillRect(0, 0, (int)Game.camera.windowDim.x, (int)Game.camera.windowDim.y);
 				
-				model.mv.playerShip.draw(nfg,Game.camera);
+				//model.mv.playerShip.draw(nfg,Game.camera);
 				
 				for (Sprite curr : this.model.mv.gameSprites)
 				{
 					curr.draw(nfg,Game.camera);
 				}
-				//this.window.draw(nfg);
 				
-//				nfg.setColor(Color.WHITE);
-//				nfg.drawString("Magnification: " + this.window.magnification / 10 + "." + this.window.magnification % 10 + "x", 15, 15);
-//				nfg.drawString("sourceMin: (" + GameConstant.sx1 + ", " + GameConstant.sy1 + ")", 15, 35);
-//				nfg.drawString("sourceMax: (" + GameConstant.sx2 + ", " + GameConstant.sy2 + ")", 15, 55);
-//				nfg.drawString("FPS: " + GameDebugVars.frameRate, 15, 75);
-//				nfg.drawString("PPS: " + GameDebugVars.paintsPerSecond, 15, 95);
 				break;
 			default:
 				break;
