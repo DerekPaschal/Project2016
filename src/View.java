@@ -8,6 +8,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -73,9 +74,9 @@ class View extends JPanel
 				//Fully synchronized sprite list
 				synchronized(this.model.mv.gameSprites)
 				{
-					for (Sprite curr : this.model.mv.gameSprites)
+					for (int i = this.model.mv.gameSprites.size()-1; i >= 0; i--)
 					{
-						curr.draw(g2,Game.camera);
+						this.model.mv.gameSprites.get(i).draw(g2, Game.camera);
 					}
 				}
 				

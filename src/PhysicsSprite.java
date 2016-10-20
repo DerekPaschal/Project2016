@@ -11,6 +11,13 @@ abstract class PhysicsSprite extends Sprite
 		this.acc = new Vector2D(0.0,0.0);
 	}
 	
-	public abstract void update();
+	public void update()
+	{
+		//Integrate Acceleration
+		this.vel = this.vel.add(this.acc);
+			
+		//Integrate Velocity
+		this.pos = this.pos.add(this.vel);
+	}
 
 }

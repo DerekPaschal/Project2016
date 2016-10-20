@@ -5,6 +5,7 @@
  * Original Author: Zachary Johnson
  ***************************/
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.Random;
 
@@ -44,6 +45,17 @@ class Model
 		synchronized(mv.gameSprites)
 		{
 			mv.gameSprites.add(mv.playerShip);
+			Bullet adding;
+			for (int i = 0; i < 100; i++)
+			{
+				adding = new Bullet(new Vector2D());
+				adding.pos = new Vector2D(Math.random()*1920,Math.random()*1080);
+				adding.vel = new Vector2D(Math.random(), Math.random());
+				adding.size = 5+(Math.random() * 20);
+				adding.color = new Color((int)(Math.random()*128)+127, (int)(Math.random()*128)+127, (int)(Math.random()*128)+127);
+				mv.gameSprites.add((Sprite)adding);
+			}
+			
 		}
 		
 		return;
@@ -56,6 +68,7 @@ class Model
 			if (sprite instanceof PhysicsSprite)
 				((PhysicsSprite) sprite).update();
 		}
+		Game.camera.pos = mv.playerShip.pos;
 	}
 	
 	/***************************

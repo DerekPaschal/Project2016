@@ -1,3 +1,5 @@
+import java.awt.Graphics2D;
+
 abstract class SpaceShip extends PhysicsSprite
 {
 	public boolean left, right, forward, backward, firing;
@@ -14,11 +16,7 @@ abstract class SpaceShip extends PhysicsSprite
 		firing = false;
 	}
 	
-	//public void forward() { this.forward = true; }
-	//public void backward() { this.backward = true; }
-	//public void left() { this.left = true; }
-	//public void right() { this.right = true; }
-	
+	@Override
 	public void update()
 	{
 		this.acc = new Vector2D();
@@ -32,19 +30,12 @@ abstract class SpaceShip extends PhysicsSprite
 		//Apply Friction Force
 		this.acc = this.acc.subtract(this.vel.multiply(new Vector2D(0.02,0.02)));
 		
-		//Integrate Acceleration
-		this.vel = this.vel.add(this.acc);
-		
-		
-		
-		//Integrate Velocity
-		this.pos = this.pos.add(this.vel);
-		
 		//Add Rotation
 		if (left)
 			this.rotation.addAmount(-this.turnRate);
 		if (right)
 			this.rotation.addAmount(this.turnRate);
 		
+		super.update();
 	}
 }
