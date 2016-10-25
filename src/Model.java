@@ -53,7 +53,6 @@ class Model
 			{
 				adding = new Asteroid(new Vector2D(Math.random()*1920,Math.random()*1080), 5+(Math.random() * 20));
 				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
-				adding.color = new Color((int)(Math.random()*128)+127, (int)(Math.random()*128)+127, (int)(Math.random()*128)+127);
 				mv.gameSprites.add((Sprite)adding);
 			}
 			

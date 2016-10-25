@@ -12,7 +12,16 @@ public class Asteroid extends PhysicsSprite
 		
 		super(position, Math.round(size));
 		this.vel = new Vector2D();
-		this.color = Color.WHITE;
+		int color_value = (int)(128+(Math.random()*64));
+		this.color = new Color(color_value,color_value,color_value);
+	}
+	
+	@Override
+	public void updateAcc()
+	{		
+		this.acc = new Vector2D();
+		
+		super.CollisionDetect();
 	}
 	
 	@Override
@@ -20,10 +29,16 @@ public class Asteroid extends PhysicsSprite
 	{
 		this.currentImage = new BufferedImage((int)Math.round(this.size*2), (int)Math.round(this.size*2), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D c2 = (Graphics2D) currentImage.getGraphics();
-		c2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON);
+		//c2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON);
 		c2.setColor(this.color);
 		c2.fillOval(0, 0, (int)Math.round(this.size*2), (int)Math.round(this.size*2));
 		
 		super.draw(g2, camera);
+	}
+
+	@Override
+	public void collisionAlert(PhysicsSprite impactor) 
+	{
+	
 	}
 }

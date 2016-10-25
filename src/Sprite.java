@@ -37,8 +37,8 @@ abstract class Sprite
 	{
 		AffineTransform at = new AffineTransform();
 		at.scale(camera.Zoom, camera.Zoom);
-		double transX = this.pos.x - (this.currentImage.getWidth()/2) - camera.pos.x + (camera.windowDim.x/2);
-		double transY = this.pos.y - (this.currentImage.getHeight()/2) - camera.pos.y + (camera.windowDim.y/2);
+		double transX = this.pos.x - (this.currentImage.getWidth()/2) - camera.pos.x + (camera.windowDim.x/2)/camera.Zoom;
+		double transY = this.pos.y - (this.currentImage.getHeight()/2) - camera.pos.y + (camera.windowDim.y/2)/camera.Zoom;
 		
 		
 		if (!(transX <= camera.windowDim.x/camera.Zoom && transX+currentImage.getWidth()  >= 0 && 
@@ -56,26 +56,5 @@ abstract class Sprite
 		
 		g2.drawImage(currentImage, at, null);
 		
-		/*Color temp = g2.getColor();
-		g2.setColor(Color.white);
-		g2.fillOval((int)(this.pos.x - camera.pos.x), (int)(this.pos.y - camera.pos.y),4 ,4 );
-		g2.setColor(temp);*/
 	}
-	
-	/*public void draw(Graphics2D g2)
-	{
-		AffineTransform at = new AffineTransform();
-		at.scale(1.0, 1.0);
-		double a = this.pos.x, b = currentImage.getWidth(), c = at.getScaleX();
-		double transX = (this.pos.x - ((double)currentImage.getWidth() * at.getScaleX() * 1.0))/at.getScaleX();
-		double transY = (this.pos.y - ((double)currentImage.getHeight() * at.getScaleY() * 1.0))/at.getScaleY();
-		at.translate(transX, transY);
-		
-		double rotateX = currentImage.getWidth() / 2;
-		double rotateY = currentImage.getHeight() / 2;
-		at.rotate(this.rotation.getRadians(), rotateX, rotateY);
-		
-		
-		g2.drawImage(currentImage, at, null);
-	}*/
 }

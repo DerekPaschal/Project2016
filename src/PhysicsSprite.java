@@ -13,24 +13,25 @@ abstract class PhysicsSprite extends Sprite
 		this.acc = new Vector2D(0.0,0.0);
 	}
 	
-	public void updateAcc()
+	public abstract void updateAcc();
+	
+	public abstract void collisionAlert(PhysicsSprite impactor);
+	
+	public void CollisionDetect()
 	{
-		if (this.remove)
-			return;
-		
-		this.acc = new Vector2D();
-		
+		//Physics Collision Detection
 		double distance;
 		Vector2D UnitVector;
 		for(Sprite sprite : PhysicsVars.SpriteList)
 		{
-			if (!sprite.remove && sprite instanceof PhysicsSprite && this != sprite)
+			if (sprite instanceof PhysicsSprite && this != sprite)
 			{
 				distance = this.pos.distance(sprite.pos);
 				if (distance < (this.size + ((PhysicsSprite)sprite).size))
 				{
 					UnitVector  = this.pos.subtract(sprite.pos).divide(distance);
 					this.acc = this.acc.add(UnitVector.multiply(3*(Math.min((this.size + ((PhysicsSprite)sprite).size) - distance,Math.min(this.size, ((PhysicsSprite)sprite).size))/this.size)));
+					this.collisionAlert((PhysicsSprite)sprite);
 				}
 			}
 		}

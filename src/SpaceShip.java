@@ -19,7 +19,9 @@ abstract class SpaceShip extends PhysicsSprite
 	@Override
 	public void updateAcc()
 	{	
-		super.updateAcc();
+		this.acc = new Vector2D();
+		
+		super.CollisionDetect();
 		
 		//Add Acceleration from Thrusters
 		if (forward)
@@ -35,5 +37,11 @@ abstract class SpaceShip extends PhysicsSprite
 			this.rotation.addAmount(-this.turnRate);
 		if (right)
 			this.rotation.addAmount(this.turnRate);
+	}
+	
+	@Override
+	public void collisionAlert(PhysicsSprite impactor)
+	{
+
 	}
 }
