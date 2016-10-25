@@ -14,16 +14,18 @@ import java.awt.image.BufferedImage;
 
 abstract class Sprite
 {
-	Vector2D pos;
+	public Vector2D pos;
 	public BufferedImage currentImage;
 	public Rotation rotation;
 	public boolean visible;
+	public boolean remove;
 	
 	public Sprite(Vector2D position)
 	{
 		this.pos = new Vector2D(position);
 		this.rotation = new Rotation(0);
 		this.visible = true;
+		this.remove = false;
 	}
 	
 	public Sprite()
@@ -35,8 +37,9 @@ abstract class Sprite
 	{
 		AffineTransform at = new AffineTransform();
 		at.scale(camera.Zoom, camera.Zoom);
-		double transX = ((this.pos.x - (camera.pos.x - (camera.windowDim.x*camera.Zoom)/2)) - ((double)currentImage.getWidth() * at.getScaleX() * camera.Zoom))/at.getScaleX();
-		double transY = ((this.pos.y - (camera.pos.y - (camera.windowDim.y*camera.Zoom)/2)) - ((double)currentImage.getHeight() * at.getScaleY() * camera.Zoom))/at.getScaleY();
+		double transX = this.pos.x - (this.currentImage.getWidth()/2) - camera.pos.x + (camera.windowDim.x/2);
+		double transY = this.pos.y - (this.currentImage.getHeight()/2) - camera.pos.y + (camera.windowDim.y/2);
+		
 		
 		if (!(transX <= camera.windowDim.x/camera.Zoom && transX+currentImage.getWidth()  >= 0 && 
 				transY <= camera.windowDim.y/camera.Zoom && transY+currentImage.getHeight() >= 0))
@@ -52,6 +55,11 @@ abstract class Sprite
 		
 		
 		g2.drawImage(currentImage, at, null);
+		
+		/*Color temp = g2.getColor();
+		g2.setColor(Color.white);
+		g2.fillOval((int)(this.pos.x - camera.pos.x), (int)(this.pos.y - camera.pos.y),4 ,4 );
+		g2.setColor(temp);*/
 	}
 	
 	/*public void draw(Graphics2D g2)

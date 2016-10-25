@@ -5,9 +5,9 @@ abstract class SpaceShip extends PhysicsSprite
 	public boolean left, right, forward, backward, firing;
 	private double turnRate = 5, thrustPower = 0.2;
 	
-	public SpaceShip(Vector2D position)
+	public SpaceShip(Vector2D position, double size)
 	{
-		super(position);
+		super(position,size);
 		
 		left = false;
 		right = false;
@@ -17,9 +17,9 @@ abstract class SpaceShip extends PhysicsSprite
 	}
 	
 	@Override
-	public void update()
-	{
-		this.acc = new Vector2D();
+	public void updateAcc()
+	{	
+		super.updateAcc();
 		
 		//Add Acceleration from Thrusters
 		if (forward)
@@ -35,7 +35,5 @@ abstract class SpaceShip extends PhysicsSprite
 			this.rotation.addAmount(-this.turnRate);
 		if (right)
 			this.rotation.addAmount(this.turnRate);
-		
-		super.update();
 	}
 }

@@ -34,20 +34,36 @@ public class Vector2D
 	{
 		return new Vector2D(this.x + vect.x, this.y + vect.y);
 	}
+	public Vector2D add(double value) {
+		
+		return new Vector2D(this.x + value, this.y + value);
+	}
 	
 	public Vector2D subtract(Vector2D vect)
 	{
 		return new Vector2D(this.x - vect.x, this.y - vect.y);
+	}
+	public Vector2D subtract(double value) {
+		
+		return new Vector2D(this.x - value, this.y - value);
 	}
 	
 	public Vector2D multiply(Vector2D vect)
 	{
 		return new Vector2D(this.x * vect.x, this.y * vect.y);
 	}
+	public Vector2D multiply(double value) {
+		
+		return new Vector2D(this.x * value, this.y * value);
+	}
 	
 	public Vector2D divide(Vector2D vect)
 	{
 		return new Vector2D(this.x / vect.x, this.y / vect.y);
+	}
+	public Vector2D divide(double value) {
+		
+		return new Vector2D(this.x / value, this.y / value);
 	}
 	
 	
@@ -65,4 +81,6 @@ public class Vector2D
 	{
 		return (this.x * vect.x) + (this.y * vect.y);
 	}
+
+	
 }

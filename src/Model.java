@@ -41,17 +41,18 @@ class Model
 	 ***************************/
 	public void init_Game()
 	{
-		mv.playerShip = new PlayerShip(new Vector2D(Game.camera.pos.x, Game.camera.pos.y));
+		PhysicsVars.SpriteList = mv.gameSprites;
+		PhysicsVars.timestep = 1.0;
+		
+		mv.playerShip = new PlayerShip(new Vector2D(0.0, 0.0));
 		synchronized(mv.gameSprites)
 		{
 			mv.gameSprites.add(mv.playerShip);
-			Bullet adding;
+			Asteroid adding;
 			for (int i = 0; i < 100; i++)
 			{
-				adding = new Bullet(new Vector2D());
-				adding.pos = new Vector2D(Math.random()*1920,Math.random()*1080);
-				adding.vel = new Vector2D(Math.random(), Math.random());
-				adding.size = 5+(Math.random() * 20);
+				adding = new Asteroid(new Vector2D(Math.random()*1920,Math.random()*1080), 5+(Math.random() * 20));
+				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
 				adding.color = new Color((int)(Math.random()*128)+127, (int)(Math.random()*128)+127, (int)(Math.random()*128)+127);
 				mv.gameSprites.add((Sprite)adding);
 			}
@@ -62,13 +63,36 @@ class Model
 	}
 	
 	public void gameUpdate()
-	{		
-		for(Sprite sprite : mv.gameSprites)
+	{	
+		synchronized(mv.gameSprites)
 		{
-			if (sprite instanceof PhysicsSprite)
-				((PhysicsSprite) sprite).update();
+			for(Sprite sprite : mv.gameSprites)
+			{
+				if (sprite instanceof PhysicsSprite)
+					((PhysicsSprite) sprite).updateAcc();
+			}
+			
+			for(Sprite sprite : mv.gameSprites)
+			{
+				if (sprite instanceof PhysicsSprite)
+					((PhysicsSprite) sprite).updateVelPos();
+			}
+			
+			Sprite sprite;
+			int sprite_count = mv.gameSprites.size();
+			for (int i = 0; i < sprite_count; i++)
+			{
+				if (mv.gameSprites.get(i).remove)
+				{
+					mv.gameSprites.remove(mv.gameSprites.get(i));
+					i--;
+					sprite_count--;
+				}
+			}
 		}
+		
 		Game.camera.pos = mv.playerShip.pos;
+		
 	}
 	
 	/***************************

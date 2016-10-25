@@ -8,6 +8,7 @@
  * Original Author: Zachary Johnson
  ***************************/
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -70,7 +71,7 @@ public class ModelVars
 				this.mainMenu = new FullScreenMenu();
 				break;
 			case GAME:
-				this.gameSprites = new LinkedList<Sprite>();
+				this.gameSprites = new ArrayList<Sprite>();
 				break;
 			default:
 				break;
@@ -87,7 +88,7 @@ public class ModelVars
 	/***************************
 	 * GAME Public Variables
 	 ***************************/
-	LinkedList<Sprite> gameSprites;
+	ArrayList<Sprite> gameSprites;
 	PlayerShip playerShip;
 	
 	/***************************
