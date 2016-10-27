@@ -28,7 +28,7 @@ abstract class PhysicsSprite extends Sprite
 		Vector2D UnitVector;
 		for(Sprite sprite : PhysicsVars.SpriteList)
 		{
-			if (sprite instanceof PhysicsSprite && this != sprite)
+			if (sprite instanceof PhysicsSprite && sprite != this)
 			{
 				distance = this.pos.distance(sprite.pos);
 				if (distance < (this.size + ((PhysicsSprite)sprite).size))

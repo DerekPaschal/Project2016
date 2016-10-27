@@ -6,6 +6,7 @@
  ***************************/
 
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.Random;
 
@@ -45,8 +46,14 @@ class Model
 		PhysicsVars.timestep = 1.0;
 		
 		mv.playerShip = new PlayerShip(new Vector2D(0.0, 0.0));
+		
 		synchronized(mv.gameSprites)
 		{
+			//Add map boundary
+			MapBoundary boundary = new MapBoundary();
+			boundary.setBounds(new Rectangle((int)ViewCamera.renderRes.x, (int)ViewCamera.renderRes.y));
+			mv.gameSprites.add(boundary);
+			
 			mv.gameSprites.add(mv.playerShip);
 			Asteroid adding;
 			for (int i = 0; i < 10; i++)
