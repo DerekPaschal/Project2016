@@ -2,19 +2,20 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
 
-public class ActionButton
+public class ActionButton extends Sprite
 {
 	//Member variables
 	private String text;
-	private Vector2D pos;
+	//private Vector2D pos;
 	private Vector2D dimensions;
 	
 	private BufferedImage buttonImages[] = new BufferedImage[5];
-	private BufferedImage currentImage;
+	//private BufferedImage currentImage;
 	
 	private Color shadowColor = Color.GRAY;
 	private Color textColor = Color.YELLOW;
@@ -57,6 +58,9 @@ public class ActionButton
 		this.pos = new Vector2D(position);
 		this.buttonAction = GUIButtonActions.DO_NOTHING;
 		this.font = new Font("MONOSPACE", Font.BOLD, 20);
+		this.rotation = new Rotation(0);
+		this.visible = true;
+		this.remove = false;
 		
 		String imagePath = "resources/buttons/testButton/";
 		
@@ -255,19 +259,20 @@ public class ActionButton
 		return true;
 	}
 	
-	void draw(Graphics g)
+	@Override
+	public void draw(Graphics2D g2, ViewCamera camera)
 	{
 		//Save original values
-		Color oldColor = g.getColor();
-		Font oldFont = g.getFont();
+		Color oldColor = g2.getColor();
+		Font oldFont = g2.getFont();
 		
-		g.setFont(this.font);
+		g2.setFont(this.font);
 		
 		//Draw button
-		g.drawImage(currentImage, (int) pos.x, (int) pos.y, null);
+		g2.drawImage(currentImage, (int) pos.x, (int) pos.y, null);
 		
         //Get dimensions of button text
-        FontMetrics metrics = g.getFontMetrics();
+        FontMetrics metrics = g2.getFontMetrics();
         int textWidth = metrics.stringWidth(text);
 		int textHeight = metrics.getHeight();
 		
@@ -276,16 +281,16 @@ public class ActionButton
 		int textPosY = (int) (this.pos.y + this.dimensions.y / 2 + textHeight / 2);
 		
 		//Draw shadow of button text slight off center
-		g.setColor(this.shadowColor);
-		g.drawString(this.text, textPosX + 3, textPosY + 3);
+		g2.setColor(this.shadowColor);
+		g2.drawString(this.text, textPosX + 3, textPosY + 3);
 		
 		//Draw button text centered
-		g.setColor(this.textColor);
-		g.drawString(this.text, textPosX, textPosY);
+		g2.setColor(this.textColor);
+		g2.drawString(this.text, textPosX, textPosY);
 		
 		//Restore original values
-		g.setFont(oldFont);
-		g.setColor(oldColor);
+		g2.setFont(oldFont);
+		g2.setColor(oldColor);
 		
 	}
 	
