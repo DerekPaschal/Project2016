@@ -27,14 +27,13 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 
 	public void mousePressed(MouseEvent e)
 	{
+		Vector2D position = new Vector2D(e.getX()/ViewCamera.renderScale,e.getY()/ViewCamera.renderScale);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.mainMenu.mouseDown(e);
+				model.mv.mainMenu.mouseDown(e,position);
 				break;
-			case GAME:
-				Vector2D position = new Vector2D(e.getX(), e.getY());
-		
+			case GAME:		
 				if (e.getButton() == MouseEvent.BUTTON1)
 					this.model.onLeftClick(position);
 				if (e.getButton() == MouseEvent.BUTTON3)
@@ -47,10 +46,11 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 
 	public void mouseReleased(MouseEvent e)
 	{
+		Vector2D position = new Vector2D(e.getX()/ViewCamera.renderScale,e.getY()/ViewCamera.renderScale);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.mainMenu.mouseUp(e);
+				model.mv.mainMenu.mouseUp(e,position);
 				break;
 			case GAME:
 				if (e.getButton() == MouseEvent.BUTTON1)
@@ -69,10 +69,11 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	
 	public void mouseWheelMoved(MouseWheelEvent e)
 	{
+		Vector2D position = new Vector2D(e.getX()/ViewCamera.renderScale,e.getY()/ViewCamera.renderScale);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.mainMenu.mouseScroll(e);
+				model.mv.mainMenu.mouseScroll(e,position);
 				break;
 			case GAME:
 				break;
@@ -83,10 +84,11 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	
 	public void mouseDragged(MouseEvent e)
 	{
+		Vector2D position = new Vector2D(e.getX()/ViewCamera.renderScale,e.getY()/ViewCamera.renderScale);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.mainMenu.mouseDrag(e);
+				model.mv.mainMenu.mouseDrag(e,position);
 				break;
 			case GAME:
 				Controller.mousePos = new Vector2D(e.getX(), e.getY());
@@ -98,13 +100,14 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	
 	public void mouseMoved(MouseEvent e)
 	{
+		Vector2D position = new Vector2D(e.getX()/ViewCamera.renderScale,e.getY()/ViewCamera.renderScale);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.mainMenu.mouseMove(e);
+				model.mv.mainMenu.mouseMove(e,position);
 				break;
 			case GAME:
-				Controller.mousePos = new Vector2D(e.getX(), e.getY());
+				Controller.mousePos = position;
 				break;
 			default:
 				break;

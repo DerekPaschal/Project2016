@@ -33,16 +33,16 @@ abstract class Sprite
 		this(new Vector2D(0,0));
 	}
 	
-	public void draw(Graphics2D g2, ViewCamera camera)
+	public void draw(Graphics2D g2)
 	{
 		AffineTransform at = new AffineTransform();
-		at.scale(camera.Zoom, camera.Zoom);
-		double transX = this.pos.x - (this.currentImage.getWidth()/2) - camera.pos.x + (camera.windowDim.x/2)/camera.Zoom;
-		double transY = this.pos.y - (this.currentImage.getHeight()/2) - camera.pos.y + (camera.windowDim.y/2)/camera.Zoom;
+		//at.scale(camera.Zoom, camera.Zoom);
+		double transX = this.pos.x - (this.currentImage.getWidth()/2) - ViewCamera.pos.x + (ViewCamera.renderRes.x/2);
+		double transY = this.pos.y - (this.currentImage.getHeight()/2) - ViewCamera.pos.y + (ViewCamera.renderRes.y/2);
 		
 		
-		if (!(transX <= camera.windowDim.x/camera.Zoom && transX+currentImage.getWidth()  >= 0 && 
-				transY <= camera.windowDim.y/camera.Zoom && transY+currentImage.getHeight() >= 0))
+		if (!(transX <= ViewCamera.renderRes.x && transX+currentImage.getWidth()  >= 0 && 
+				transY <= ViewCamera.renderRes.y && transY+currentImage.getHeight() >= 0))
 		{
 			return;
 		}

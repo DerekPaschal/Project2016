@@ -28,7 +28,6 @@ public class Game extends JFrame implements ActionListener
 
 	public Game() throws Exception
 	{
-		Game.camera.Zoom = 1.0;
 		Game.camera.windowDim = new Vector2D(800, 600);
 		Game.camera.pos = Game.camera.windowDim.divide(new Vector2D(2.0,2.0));
 		
@@ -50,7 +49,6 @@ public class Game extends JFrame implements ActionListener
 		this.addKeyListener(controller);
 		
 		
-		Game.camera.Zoom = 1.0;
 		Game.camera.windowDim = new Vector2D(this.getWidth(), this.getHeight());
 		Game.camera.pos = Game.camera.windowDim.divide(new Vector2D(2.0,2.0));
 		

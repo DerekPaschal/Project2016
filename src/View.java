@@ -39,8 +39,12 @@ class View extends JPanel
 		if (!View.drawingFrame)
 		{
 			View.drawingFrame = true;
+			double currentRenderScale = ViewCamera.renderScale;
 			drawNextFrame();
-			g.drawImage(this.Frame, 0, 0, null);
+			Graphics2D g2d = (Graphics2D)g;
+			g2d.scale(currentRenderScale, currentRenderScale);
+			g2d.drawImage(this.Frame, 0, 0, null);
+			g2d.scale(1/currentRenderScale, 1/currentRenderScale);
 			View.drawingFrame = false;
 		}
 		
@@ -69,14 +73,14 @@ class View extends JPanel
 				
 			case GAME:
 				g2.setColor(Color.BLACK);
-				g2.fillRect(0, 0, (int)Game.camera.windowDim.x, (int)Game.camera.windowDim.y);
+				g2.fillRect(0, 0, (int)ViewCamera.renderRes.x, (int)ViewCamera.renderRes.y);
 				
 				//Fully synchronized sprite list
 				synchronized(this.model.mv.gameSprites)
 				{
 					for (int i = this.model.mv.gameSprites.size()-1; i >= 0; i--)
 					{
-						this.model.mv.gameSprites.get(i).draw(g2, Game.camera);
+						this.model.mv.gameSprites.get(i).draw(g2);
 					}
 				}
 				

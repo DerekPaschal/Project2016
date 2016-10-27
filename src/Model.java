@@ -49,9 +49,9 @@ class Model
 		{
 			mv.gameSprites.add(mv.playerShip);
 			Asteroid adding;
-			for (int i = 0; i < 100; i++)
+			for (int i = 0; i < 10; i++)
 			{
-				adding = new Asteroid(new Vector2D(Math.random()*1920,Math.random()*1080), 5+(Math.random() * 20));
+				adding = new Asteroid(new Vector2D(Math.random()*ViewCamera.renderRes.x,Math.random()*ViewCamera.renderRes.y), 4+(Math.random() * 8));
 				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
 				mv.gameSprites.add((Sprite)adding);
 			}

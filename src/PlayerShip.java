@@ -14,7 +14,7 @@ public class PlayerShip extends SpaceShip
 		
 		try
 		{
-			this.size = 50; //Size of 'collision bubble' of ship
+			this.size = 25; //Size of 'collision bubble' of ship
 			this.currentImage = new BufferedImage((int)this.size*2, (int)this.size*2, BufferedImage.TYPE_INT_ARGB); //create blank current image
 			Graphics2D c2 = this.currentImage.createGraphics(); //Create graphics object for current Image
 			//c2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON); //Set Anti Aliasing

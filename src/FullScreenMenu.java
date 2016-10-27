@@ -15,7 +15,7 @@ public class FullScreenMenu extends DrawnFeature
 	
 	public FullScreenMenu()
 	{
-		super(new Rectangle((int)Game.camera.windowDim.x - 1, (int)Game.camera.windowDim.y - 1));
+		super(new Rectangle((int)ViewCamera.renderRes.x - 1, (int)ViewCamera.renderRes.y - 1));
 		menuButtons = new LinkedList<ActionButton>();
 		menuTexts = new LinkedList<MenuText>();
 		this.currentButton = null;
@@ -59,11 +59,11 @@ public class FullScreenMenu extends DrawnFeature
 		return this.nextImage;
 	}
 	
-	public void mouseDown(MouseEvent e)
+	public void mouseDown(MouseEvent e, Vector2D position)
 	{
 		this.needsRedraw = true;
 		
-		Vector2D mousePoint = new Vector2D(e.getX(), e.getY());
+		Vector2D mousePoint = position;
 		
 		for (ActionButton curr : menuButtons)
 			if (curr.isWithin(mousePoint) && !curr.isDisabled())
@@ -74,11 +74,11 @@ public class FullScreenMenu extends DrawnFeature
 			}
 	}
 	
-	public void mouseUp(MouseEvent e)
+	public void mouseUp(MouseEvent e, Vector2D position)
 	{
 		this.needsRedraw = true;
 		
-		Vector2D mousePoint = new Vector2D(e.getX(), e.getY());
+		Vector2D mousePoint = position;
 		
 		if (this.currentButton != null)
 		{
@@ -91,21 +91,21 @@ public class FullScreenMenu extends DrawnFeature
 		}
 	}
 	
-	public void mouseScroll(MouseWheelEvent e)
+	public void mouseScroll(MouseWheelEvent e, Vector2D position)
 	{
 		this.needsRedraw = true;
 	}
 	
-	public void mouseDrag(MouseEvent e)
+	public void mouseDrag(MouseEvent e, Vector2D position)
 	{
 		this.needsRedraw = true;
 	}
 	
-	public void mouseMove(MouseEvent e)
+	public void mouseMove(MouseEvent e, Vector2D position)
 	{
 		this.needsRedraw = true;
 		
-		Vector2D mousePoint = new Vector2D(e.getX(), e.getY());
+		Vector2D mousePoint = position;
 		
 		for (ActionButton curr : menuButtons)
 		{
