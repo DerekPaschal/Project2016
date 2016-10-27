@@ -33,10 +33,13 @@ abstract class Sprite
 	
 	public void draw(Graphics2D g2)
 	{
+		if (this.currentImage == null)
+			return;
+		
 		AffineTransform at = new AffineTransform();
 		//at.scale(camera.Zoom, camera.Zoom);
-		double transX = this.pos.x - (this.currentImage.getWidth()/2) - ViewCamera.pos.x + (ViewCamera.renderRes.x/2);
-		double transY = this.pos.y - (this.currentImage.getHeight()/2) - ViewCamera.pos.y + (ViewCamera.renderRes.y/2);
+		double transX = this.pos.x - (this.currentImage.getWidth()/2) - ViewCamera.pos.x + (ViewCamera.renderRes.x*0.5);
+		double transY = this.pos.y - (this.currentImage.getHeight()/2) - ViewCamera.pos.y + (ViewCamera.renderRes.y*0.5);
 		
 		
 		if (!(transX <= ViewCamera.renderRes.x && transX+currentImage.getWidth()  >= 0 && 

@@ -35,6 +35,7 @@ abstract class PhysicsSprite extends Sprite
 				{
 					UnitVector  = this.pos.subtract(sprite.pos).divide(distance);
 					this.acc = this.acc.add(UnitVector.multiply(3*(Math.min((this.size + ((PhysicsSprite)sprite).size) - distance,Math.min(this.size, ((PhysicsSprite)sprite).size))/this.size)));
+					
 					this.collisionAlert((PhysicsSprite)sprite);
 				}
 			}

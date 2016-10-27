@@ -8,7 +8,9 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -28,7 +30,7 @@ class View extends JPanel
 	{
 		this.model = m;
 		
-		this.Frame = new BufferedImage((int)Game.camera.windowDim.x - 1, (int)Game.camera.windowDim.y - 1, BufferedImage.TYPE_INT_ARGB);
+		this.Frame = new BufferedImage((int)ViewCamera.windowDim.x - 1, (int)ViewCamera.windowDim.y - 1, BufferedImage.TYPE_INT_ARGB);
 	}
 	
 	/***************************
@@ -39,20 +41,24 @@ class View extends JPanel
 		if (!View.drawingFrame)
 		{
 			View.drawingFrame = true;
-			double currentRenderScale = ViewCamera.renderScale;
+			
 			drawNextFrame();
-			Graphics2D g2d = (Graphics2D)g;
-			g2d.scale(currentRenderScale, currentRenderScale);
-			g2d.drawImage(this.Frame, 0, 0, null);
-			g2d.scale(1/currentRenderScale, 1/currentRenderScale);
+			
+			g.drawImage(this.Frame, 0 , 0 , null);
+			
 			View.drawingFrame = false;
 		}
 		
 	}
 	public void drawNextFrame()
 	{
-		this.Frame = new BufferedImage((int)Game.camera.windowDim.x - 1, (int)Game.camera.windowDim.x - 1, BufferedImage.TYPE_INT_ARGB);
+		double currentRenderScale = ViewCamera.renderScale;
+		this.Frame = new BufferedImage((int)ViewCamera.windowDim.x - 1, (int)ViewCamera.windowDim.x - 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = (Graphics2D) Frame.getGraphics();
+		
+		g2.scale(currentRenderScale, currentRenderScale);
+		
+		g2.clipRect(0, 0, (int)ViewCamera.renderRes.x, (int)ViewCamera.renderRes.y);
 		
 		switch (model.mv.getGameState())
 		{
@@ -62,7 +68,7 @@ class View extends JPanel
 				else
 				{
 					g2.setColor(Color.GRAY);
-					g2.fillRect(0, 0, (int)Game.camera.windowDim.x - 1, (int)Game.camera.windowDim.y - 1);
+					g2.fillRect(0, 0, (int)ViewCamera.windowDim.x - 1, (int)ViewCamera.windowDim.y - 1);
 				}
 				break;
 				
@@ -83,6 +89,8 @@ class View extends JPanel
 			default:
 				break;
 		}
+		
+		g2.scale(1/currentRenderScale, 1/currentRenderScale);
 	}
 }
 

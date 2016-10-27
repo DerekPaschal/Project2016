@@ -97,7 +97,7 @@ class Model
 			}
 		}
 		
-		Game.camera.pos = mv.playerShip.pos;
+		ViewCamera.pos = mv.playerShip.pos;
 		
 	}
 	

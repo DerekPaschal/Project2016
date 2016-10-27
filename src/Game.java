@@ -21,15 +21,14 @@ public class Game extends JFrame implements ActionListener
 	public static int FRAME_RATE = 1;
 	public static int UPDATE_RATE = 60;
 	private static long lastFrameTime = 0;
-	
-	public static ViewCamera camera = new ViewCamera();
+
 	
 	//public static int magnification = 10;	//Value is true magnification multiplied by 10
 
 	public Game() throws Exception
 	{
-		Game.camera.windowDim = new Vector2D(800, 600);
-		Game.camera.pos = Game.camera.windowDim.divide(new Vector2D(2.0,2.0));
+		ViewCamera.windowDim = new Vector2D(800, 600);
+		ViewCamera.pos = ViewCamera.windowDim.divide(new Vector2D(2.0,2.0));
 		
 		this.model = new Model();
 		View view = new View(this.model);
@@ -49,8 +48,8 @@ public class Game extends JFrame implements ActionListener
 		this.addKeyListener(controller);
 		
 		
-		Game.camera.windowDim = new Vector2D(this.getWidth(), this.getHeight());
-		Game.camera.pos = Game.camera.windowDim.divide(new Vector2D(2.0,2.0));
+		ViewCamera.windowDim = new Vector2D(this.getWidth(), this.getHeight());
+		ViewCamera.pos = ViewCamera.windowDim.divide(new Vector2D(2.0,2.0));
 		
 		//Setup View
 		view.addMouseListener(controller);
@@ -64,8 +63,10 @@ public class Game extends JFrame implements ActionListener
 	{
 		//WIDTH = getWidth();
 		//HEIGHT = getHeight();
-		Game.camera.windowDim.x = getWidth();
-		Game.camera.windowDim.y = getHeight();
+		ViewCamera.windowDim.x = getWidth();
+		ViewCamera.windowDim.y = getHeight();
+		ViewCamera.renderScale = (int) Math.max(Math.min(ViewCamera.windowDim.x/ViewCamera.renderRes.x, ViewCamera.windowDim.y/ViewCamera.renderRes.y),1);
+		
 		//this.setSize(WIDTH, HEIGHT);
 		
 		//Calculate current frame rate

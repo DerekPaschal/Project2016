@@ -35,7 +35,7 @@ public class FullScreenMenu
 	
 	public void setTestMenu()
 	{	
-		this.menuTexts.add(new MenuText("GRIDGAME", (int)Game.camera.pos.x, 100, Color.GREEN, Color.BLACK));
+		this.menuTexts.add(new MenuText("GRIDGAME", (int)ViewCamera.pos.x, 100, Color.GREEN, Color.BLACK));
 		
 		ActionButton buttonA = new ActionButton("Start Game", new Vector2D(200, 200));
 		buttonA.setButtonAction(GUIButtonActions.START_GAME);
@@ -49,7 +49,7 @@ public class FullScreenMenu
 	public void draw(Graphics2D g2)
 	{
 		g2.setColor(Color.DARK_GRAY);
-		g2.fillRect(0, 0, (int)Game.camera.windowDim.x - 1, (int)Game.camera.windowDim.y - 1);
+		g2.fillRect(0, 0, (int)ViewCamera.windowDim.x - 1, (int)ViewCamera.windowDim.y - 1);
 		
 		for (ActionButton curr : menuButtons)
 		{
