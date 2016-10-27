@@ -1,8 +1,6 @@
 /***************************
  * Purpose: Sprite class to handle essential
  * attributes of most ingame sprite objects.
- * 
- * Inherits from GameEntity
  *
  * Original Author: Zachary Johnson
  ***************************/

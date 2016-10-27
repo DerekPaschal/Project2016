@@ -260,7 +260,7 @@ public class ActionButton extends Sprite
 	}
 	
 	@Override
-	public void draw(Graphics2D g2, ViewCamera camera)
+	public void draw(Graphics2D g2)
 	{
 		//Save original values
 		Color oldColor = g2.getColor();

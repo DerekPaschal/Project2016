@@ -52,7 +52,7 @@ abstract class PhysicsSprite extends Sprite
 		//Integrate Velocity
 		this.pos = this.pos.add(this.vel.multiply(PhysicsVars.timestep));
 		
-		//Integrate Rotaional Velocity
+		//Integrate Rotational Velocity
 		this.rotation.addAmount(this.rot_vel);
 	}
 

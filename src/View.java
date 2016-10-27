@@ -58,7 +58,7 @@ class View extends JPanel
 		{
 			case MAIN_MENU:
 				if (model.mv.mainMenu != null)
-					model.mv.mainMenu.draw(g2, Game.camera);
+					model.mv.mainMenu.draw(g2);
 				else
 				{
 					g2.setColor(Color.GRAY);

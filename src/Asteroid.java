@@ -27,16 +27,16 @@ public class Asteroid extends PhysicsSprite
 	@Override
 	public void updateVelPos()
 	{
-		/*if (this.pos.x < 0 && this.vel.x < 0)
-			this.vel.x = -this.vel.x;
-		else if (this.pos.x > ViewCamera.renderRes.x && this.vel.x > 0)
-			this.vel.x = -this.vel.x;
-		
-		if (this.pos.y < 0 && this.vel.y < 0)
-			this.vel.y = -this.vel.y;
-		else if (this.pos.y > ViewCamera.renderRes.y && this.vel.y > 0)
-			this.vel.y = -this.vel.y;*/
-		
+//		if (this.pos.x < 0 && this.vel.x < 0)
+//			this.vel.x = -this.vel.x;
+//		else if (this.pos.x > ViewCamera.renderRes.x && this.vel.x > 0)
+//			this.vel.x = -this.vel.x;
+//		
+//		if (this.pos.y < 0 && this.vel.y < 0)
+//			this.vel.y = -this.vel.y;
+//		else if (this.pos.y > ViewCamera.renderRes.y && this.vel.y > 0)
+//			this.vel.y = -this.vel.y;
+
 		super.updateVelPos();
 	}
 	
