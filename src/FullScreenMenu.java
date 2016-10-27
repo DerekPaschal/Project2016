@@ -1,21 +1,24 @@
 import java.util.*;
 import java.awt.image.*;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseWheelEvent;
 
-public class FullScreenMenu extends DrawnFeature
+public class FullScreenMenu
 {
 	LinkedList<ActionButton> menuButtons;
 	ActionButton currentButton;
 	LinkedList<MenuText> menuTexts;
 	
+	Rectangle drawArea;
+	
 	public FullScreenMenu()
 	{
-		super(new Rectangle((int)Game.camera.windowDim.x - 1, (int)Game.camera.windowDim.y - 1));
+		this.drawArea = new Rectangle((int)Game.camera.windowDim.x - 1, (int)Game.camera.windowDim.y - 1);
 		menuButtons = new LinkedList<ActionButton>();
 		menuTexts = new LinkedList<MenuText>();
 		this.currentButton = null;
@@ -43,26 +46,23 @@ public class FullScreenMenu extends DrawnFeature
 		this.menuButtons.add(buttonB);
 	}
 	
-	public BufferedImage draw(Graphics g)
+	public void draw(Graphics2D g2, ViewCamera camera)
 	{
-		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0, 0, (int)Game.camera.windowDim.x - 1, (int)Game.camera.windowDim.y - 1);
+		g2.setColor(Color.DARK_GRAY);
+		g2.fillRect(0, 0, (int)Game.camera.windowDim.x - 1, (int)Game.camera.windowDim.y - 1);
 		
 		for (ActionButton curr : menuButtons)
 		{
-			curr.draw(g);
+			curr.draw((Graphics2D) g2, Game.camera);
 		}
 		for (MenuText curr : menuTexts)
 		{
-			curr.draw(g);
+			curr.draw(g2);
 		}
-		return this.nextImage;
 	}
 	
 	public void mouseDown(MouseEvent e)
 	{
-		this.needsRedraw = true;
-		
 		Vector2D mousePoint = new Vector2D(e.getX(), e.getY());
 		
 		for (ActionButton curr : menuButtons)
@@ -76,8 +76,6 @@ public class FullScreenMenu extends DrawnFeature
 	
 	public void mouseUp(MouseEvent e)
 	{
-		this.needsRedraw = true;
-		
 		Vector2D mousePoint = new Vector2D(e.getX(), e.getY());
 		
 		if (this.currentButton != null)
@@ -93,18 +91,16 @@ public class FullScreenMenu extends DrawnFeature
 	
 	public void mouseScroll(MouseWheelEvent e)
 	{
-		this.needsRedraw = true;
+		
 	}
 	
 	public void mouseDrag(MouseEvent e)
 	{
-		this.needsRedraw = true;
+		
 	}
 	
 	public void mouseMove(MouseEvent e)
 	{
-		this.needsRedraw = true;
-		
 		Vector2D mousePoint = new Vector2D(e.getX(), e.getY());
 		
 		for (ActionButton curr : menuButtons)

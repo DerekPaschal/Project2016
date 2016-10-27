@@ -54,12 +54,7 @@ class View extends JPanel
 		{
 			case MAIN_MENU:
 				if (model.mv.mainMenu != null)
-				{
-					if (model.mv.mainMenu.needsRedraw)
-						g2.drawImage(model.mv.mainMenu.drawRecurrsive(), 0, 0, null);
-					else
-						g2.drawImage(model.mv.mainMenu.image, 0, 0, null);
-				}
+					model.mv.mainMenu.draw(g2, Game.camera);
 				else
 				{
 					g2.setColor(Color.GRAY);

@@ -1,1 +1,13 @@
 TODO:
+- Resource loader class to automatically scan and load in resource files
+- Multithread the drawing and game update loops
+- Design main menu screens
+- Design JSON file reading system to automatically load game configurations
+	* Could be very useful for organizing saved game states, menus, etc.
+	* Would allow for some changes to be made to the game at runtime without recompile
+- Develop level bounds and restrict objects to always stay within the map
+- Create core code for shooting projectiles from ships (Done, will be merged in with next commit)
+- Design a sample level to showcase core functionality of the game
+- Autoscale the game graphics to the size of the user's window
+- Add pausing function to the main game loop
+- Remove DrawnFeature
