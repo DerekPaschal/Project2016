@@ -79,6 +79,8 @@ class View extends JPanel
 				//Fully synchronized sprite list
 				synchronized(this.model.mv.gameSprites)
 				{
+					Game.primaryModel.mv.gameMap.mapBoundary.draw(g2);
+					
 					for (int i = this.model.mv.gameSprites.size()-1; i >= 0; i--)
 					{
 						this.model.mv.gameSprites.get(i).draw(g2);

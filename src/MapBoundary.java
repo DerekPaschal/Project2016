@@ -35,6 +35,22 @@ public class MapBoundary extends Sprite
 	{
 		return this.mapBounds;
 	}
+	public int getUpperBound()
+	{
+		return this.mapBounds.y;
+	}
+	public int getLowerBound()
+	{
+		return this.mapBounds.y + (int) this.mapBounds.getHeight();
+	}
+	public int getLeftBound()
+	{
+		return this.mapBounds.x;
+	}
+	public int getRightBound()
+	{
+		return this.mapBounds.x + (int) this.mapBounds.getWidth();
+	}
 	
 	public void setForce(double force)
 	{

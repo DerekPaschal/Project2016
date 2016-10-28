@@ -16,6 +16,7 @@ import javax.swing.Timer;
 public class Game extends JFrame implements ActionListener
 {
 	Model model;
+	public static Model primaryModel;
 	View view;
 	ButtonController buttonController;
 	
@@ -32,6 +33,7 @@ public class Game extends JFrame implements ActionListener
 		ViewCamera.pos = ViewCamera.windowDim.divide(new Vector2D(2.0,2.0));
 		
 		this.model = new Model();
+		primaryModel = this.model;
 		this.view = new View(this.model);
 		
 		//Set up Java window

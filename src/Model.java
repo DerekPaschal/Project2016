@@ -49,10 +49,7 @@ class Model
 		
 		synchronized(mv.gameSprites)
 		{
-			//Add map boundary
-			MapBoundary boundary = new MapBoundary();
-			boundary.setBounds(new Rectangle(0,0,(int)ViewCamera.renderRes.x, (int)ViewCamera.renderRes.y));
-			mv.gameSprites.add(boundary);
+			mv.gameMap.mapBoundary.setBounds(new Rectangle(0,0,(int)ViewCamera.renderRes.x, (int)ViewCamera.renderRes.y));
 			
 			mv.gameSprites.add(mv.playerShip);
 			Asteroid adding;

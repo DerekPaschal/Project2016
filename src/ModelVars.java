@@ -58,6 +58,7 @@ public class ModelVars
 				this.mainMenu = null;
 				break;
 			case GAME:
+				this.gameMap = null;
 				this.gameSprites = null;
 				break;
 			default:
@@ -71,6 +72,7 @@ public class ModelVars
 				this.mainMenu = new FullScreenMenu();
 				break;
 			case GAME:
+				this.gameMap = new GameMap(Game.primaryModel);
 				this.gameSprites = new ArrayList<Sprite>();
 				break;
 			default:
@@ -88,6 +90,7 @@ public class ModelVars
 	/***************************
 	 * GAME Public Variables
 	 ***************************/
+	GameMap gameMap;
 	ArrayList<Sprite> gameSprites;
 	PlayerShip playerShip;
 	
