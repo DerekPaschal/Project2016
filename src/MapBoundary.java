@@ -53,21 +53,20 @@ public class MapBoundary extends Sprite
 		
 		
 		
-		this.currentImage = new BufferedImage((int)(this.mapBounds.width + this.boundaryWidth), (int)(this.mapBounds.height + this.boundaryWidth), BufferedImage.TYPE_INT_ARGB); 
+		this.currentImage = new BufferedImage((int)(this.mapBounds.width + (2*this.boundaryWidth)), (int)(this.mapBounds.height + (2*this.boundaryWidth)), BufferedImage.TYPE_INT_ARGB); 
 		
-		//this.currentImage = new BufferedImage((int)(1000), (int)(1000), BufferedImage.TYPE_INT_ARGB); 
 
-		this.pos = new Vector2D(currentImage.getWidth()/2, currentImage.getHeight()/2);
+		this.pos = new Vector2D(mapBounds.width/2, mapBounds.height/2);
 		Graphics2D c2 = this.currentImage.createGraphics();
 		
 		//c2.setColor(new Color(128,128,128,255));
 		//c2.fillRect(0, 0, this.mapBounds.width + this.boundaryWidth, this.mapBounds.height + this.boundaryWidth);
 		
 		c2.setColor(boundaryColor);
-		c2.fillRect(0, 0, this.boundaryWidth, this.mapBounds.height+this.boundaryWidth);
-		c2.fillRect(0, 0, this.mapBounds.width+this.boundaryWidth, this.boundaryWidth);
-		c2.fillRect(this.mapBounds.width, 0, this.boundaryWidth, this.mapBounds.height+this.boundaryWidth);
-		c2.fillRect(0, this.mapBounds.height, this.mapBounds.width+this.boundaryWidth, this.boundaryWidth);
+		c2.fillRect(0, 0, this.boundaryWidth, this.mapBounds.height+(2*this.boundaryWidth));
+		c2.fillRect(0, 0, this.mapBounds.width+(2*this.boundaryWidth), this.boundaryWidth);
+		c2.fillRect(this.mapBounds.width+this.boundaryWidth, 0, this.boundaryWidth, this.mapBounds.height+this.boundaryWidth);
+		c2.fillRect(0, this.mapBounds.height+this.boundaryWidth, this.mapBounds.width+(2*this.boundaryWidth), this.boundaryWidth);
 		
 		//c2.fillRect(0, 0, 1000, 1000);
 		c2.dispose();

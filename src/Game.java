@@ -16,6 +16,7 @@ import javax.swing.Timer;
 public class Game extends JFrame implements ActionListener
 {
 	Model model;
+	View view;
 	ButtonController buttonController;
 	
 	public static int FRAME_RATE = 1;
@@ -31,7 +32,7 @@ public class Game extends JFrame implements ActionListener
 		ViewCamera.pos = ViewCamera.windowDim.divide(new Vector2D(2.0,2.0));
 		
 		this.model = new Model();
-		View view = new View(this.model);
+		this.view = new View(this.model);
 		
 		//Set up Java window
 		this.setTitle("GridGame");
@@ -61,13 +62,16 @@ public class Game extends JFrame implements ActionListener
 
 	public void actionPerformed(ActionEvent evt)
 	{
-		//WIDTH = getWidth();
-		//HEIGHT = getHeight();
-		ViewCamera.windowDim.x = getWidth();
-		ViewCamera.windowDim.y = getHeight();
-		ViewCamera.renderScale = (int) Math.max(Math.min(ViewCamera.windowDim.x/ViewCamera.renderRes.x, ViewCamera.windowDim.y/ViewCamera.renderRes.y),1);
 		
-		//this.setSize(WIDTH, HEIGHT);
+		ViewCamera.windowDim.x = this.view.getWidth();
+		ViewCamera.windowDim.y = this.view.getHeight();
+		
+		ViewCamera.renderScale =  Math.max(Math.min(ViewCamera.windowDim.x/ViewCamera.renderRes.x, ViewCamera.windowDim.y/ViewCamera.renderRes.y),1);
+		
+		ViewCamera.scalingOffset = ViewCamera.windowDim.subtract(ViewCamera.renderRes.multiply(ViewCamera.renderScale)).divide(2);
+		ViewCamera.scalingOffset.x = Math.max(ViewCamera.scalingOffset.x, 0);
+		ViewCamera.scalingOffset.y = Math.max(ViewCamera.scalingOffset.y, 0);
+		
 		
 		//Calculate current frame rate
 		if (lastFrameTime == 0)

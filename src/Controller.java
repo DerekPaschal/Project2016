@@ -24,10 +24,15 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	{
 		this.model = m;
 	}
+	
+	private Vector2D GetPosition(MouseEvent e)
+	{
+		return new Vector2D((e.getX()-ViewCamera.scalingOffset.x)/ViewCamera.renderScale, (e.getY()-ViewCamera.scalingOffset.y)/ViewCamera.renderScale);
+	}
 
 	public void mousePressed(MouseEvent e)
 	{
-		Vector2D position = new Vector2D(e.getX()/ViewCamera.renderScale,e.getY()/ViewCamera.renderScale);
+		Vector2D position = GetPosition(e);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
@@ -46,7 +51,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 
 	public void mouseReleased(MouseEvent e)
 	{
-		Vector2D position = new Vector2D(e.getX()/ViewCamera.renderScale,e.getY()/ViewCamera.renderScale);
+		Vector2D position = GetPosition(e);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
@@ -69,7 +74,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	
 	public void mouseWheelMoved(MouseWheelEvent e)
 	{
-		Vector2D position = new Vector2D(e.getX()/ViewCamera.renderScale,e.getY()/ViewCamera.renderScale);
+		Vector2D position = GetPosition(e);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
@@ -84,7 +89,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	
 	public void mouseDragged(MouseEvent e)
 	{
-		Vector2D position = new Vector2D(e.getX()/ViewCamera.renderScale,e.getY()/ViewCamera.renderScale);
+		Vector2D position = GetPosition(e);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
@@ -100,7 +105,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	
 	public void mouseMoved(MouseEvent e)
 	{
-		Vector2D position = new Vector2D(e.getX()/ViewCamera.renderScale,e.getY()/ViewCamera.renderScale);
+		Vector2D position = GetPosition(e);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:

@@ -40,6 +40,26 @@ abstract class PhysicsSprite extends Sprite
 				}
 			}
 		}
+		
+		//Detect Collision with Map Boundry
+		if (this.pos.x-this.size < 0 && this.vel.x < 0)
+		{
+			//this.vel.x = -this.vel.x;
+			this.acc = this.acc.add(new Vector2D(0,0));
+		}
+		else if (this.pos.x+this.size > ViewCamera.renderRes.x && this.vel.x > 0)
+		{
+			this.vel.x = -this.vel.x;
+		}
+		
+		if (this.pos.y-this.size < 0 && this.vel.y < 0)
+		{
+			this.vel.y = -this.vel.y;
+		}
+		else if (this.pos.y+this.size > ViewCamera.renderRes.y && this.vel.y > 0)
+		{
+			this.vel.y = -this.vel.y;
+		}
 	}
 	
 	public void updateVelPos()
