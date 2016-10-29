@@ -24,7 +24,7 @@ public class MapBoundary extends Sprite
 		this.mapBounds = new Rectangle(500, 500);
 		this.boundaryColor = Color.RED;
 		this.boundaryWidth = 10;
-		this.repulsiveForce = 3.0;
+		this.repulsiveForce = 0.1;
 	}
 	
 	public void setBounds(Rectangle size)
@@ -59,6 +59,30 @@ public class MapBoundary extends Sprite
 	public double getForce()
 	{
 		return this.repulsiveForce;
+	}
+	
+	public void checkCollision(PhysicsSprite impactor)
+	{
+		if (impactor.pos.x - impactor.size < this.getLeftBound())// && impactor.vel.x < 0)
+		{
+//			impactor.vel.x = -impactor.vel.x;
+			impactor.vel.x += this.repulsiveForce * Math.abs(impactor.pos.x - impactor.size - this.getLeftBound());
+		}
+		else if (impactor.pos.x+impactor.size > this.getRightBound())// && impactor.vel.x > 0)
+		{
+//			impactor.vel.x = -impactor.vel.x;
+			impactor.vel.x += -this.repulsiveForce * Math.abs(impactor.pos.x + impactor.size - this.getRightBound());
+		}
+		if (impactor.pos.y-impactor.size < this.getUpperBound())// && impactor.vel.y < 0)
+		{
+//			impactor.vel.y = -impactor.vel.y;
+			impactor.vel.y += this.repulsiveForce * Math.abs(impactor.pos.y - impactor.size - this.getUpperBound());
+		}
+		else if (impactor.pos.y+impactor.size > this.getLowerBound())// && impactor.vel.y > 0)
+		{
+//			impactor.vel.y = -impactor.vel.y;
+			impactor.vel.y += -this.repulsiveForce * Math.abs(impactor.pos.y + impactor.size - this.getLowerBound());
+		}
 	}
 	
 	@Override

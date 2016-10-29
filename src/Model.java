@@ -45,7 +45,7 @@ class Model
 		PhysicsVars.SpriteList = mv.gameSprites;
 		PhysicsVars.timestep = 1.0;
 		
-		mv.playerShip = new PlayerShip(new Vector2D(0.0, 0.0));
+		mv.playerShip = new PlayerShip(new Vector2D(50.0, 50.0));
 		
 		synchronized(mv.gameSprites)
 		{
