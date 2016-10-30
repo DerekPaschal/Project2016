@@ -43,26 +43,6 @@ abstract class PhysicsSprite extends Sprite
 		
 		//Ensure sprite is within the map's MapBoundary
 		Game.primaryModel.mv.gameMap.mapBoundary.checkCollision(this);
-		
-//		MapBoundary boundary = Game.primaryModel.mv.gameMap.mapBoundary;
-//		
-//		if (this.pos.x - this.size < boundary.getLeftBound() && this.vel.x < 0)
-//		{
-//			//this.acc = this.acc.add(new Vector2D(0,0));
-//			this.vel.x = -this.vel.x;
-//		}
-//		else if (this.pos.x+this.size > boundary.getRightBound() && this.vel.x > 0)
-//		{
-//			this.vel.x = -this.vel.x;
-//		}
-//		if (this.pos.y-this.size < boundary.getUpperBound() && this.vel.y < 0)
-//		{
-//			this.vel.y = -this.vel.y;
-//		}
-//		else if (this.pos.y+this.size > boundary.getLowerBound() && this.vel.y > 0)
-//		{
-//			this.vel.y = -this.vel.y;
-//		}
 	}
 	
 	public void updateVelPos()

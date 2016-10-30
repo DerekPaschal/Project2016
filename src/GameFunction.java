@@ -25,12 +25,12 @@ public final class GameFunction
 		g.drawRect((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
 	}
 	
-	public static Image loadImage(String filename) throws IOException
-	{
-		Image img = ImageIO.read(GameFunction.class.getResource(filename));
-		
-		return img;
-	}
+//	public static Image loadImage(String filename) throws IOException
+//	{
+//		Image img = ImageIO.read(GameFunction.class.getResource(filename));
+//		
+//		return img;
+//	}
 	
 	public static File loadFile(String filename) throws IOException, URISyntaxException
 	{
@@ -41,8 +41,8 @@ public final class GameFunction
 		return file;
 	}
 	
-	public static BufferedImage loadBufferedImage(String filename) throws IOException
-	{
-		return (BufferedImage) loadImage(filename);
-	}
+//	public static BufferedImage loadBufferedImage(String filename) throws IOException
+//	{
+//		return (BufferedImage) loadImage(filename);
+//	}
 }

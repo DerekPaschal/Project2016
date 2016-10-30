@@ -10,6 +10,11 @@ import java.awt.Color;
 public class GameConstant
 {
 	/***************************/
+	//Global Variables
+	/***************************/
+	public static final boolean DEBUG = true;
+	
+	/***************************/
 	//Model Variables
 	/***************************/
 	public static final int gameSeed = 10;

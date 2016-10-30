@@ -31,6 +31,7 @@ abstract class Sprite
 		this(new Vector2D(0,0));
 	}
 	
+	//Draw the sprite with the position relative to the camera object
 	public void draw(Graphics2D g2)
 	{
 		if (this.currentImage == null)
@@ -57,5 +58,25 @@ abstract class Sprite
 		
 		g2.drawImage(currentImage, at, null);
 		
+	}
+	
+	//Draw the sprite at a static location on the screen 
+	//The position of the camera does not affect where the sprite appears on the screen
+	//(Use this for GUI elements)
+	public void drawStatic(Graphics2D g2, AffineTransform at)
+	{
+		if (this.currentImage == null)
+			return;
+		
+		if (at == null)
+			at = new AffineTransform();
+		
+		g2.drawImage(currentImage, at, null);
+	}
+	
+	//Draw static sprite with no transformation
+	public void drawStatic(Graphics2D g2)
+	{
+		drawStatic(g2, null);
 	}
 }

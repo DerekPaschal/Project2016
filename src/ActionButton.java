@@ -11,11 +11,9 @@ public class ActionButton extends Sprite
 {
 	//Member variables
 	private String text;
-	//private Vector2D pos;
 	private Vector2D dimensions;
 	
 	private BufferedImage buttonImages[] = new BufferedImage[5];
-	//private BufferedImage currentImage;
 	
 	private Color shadowColor = Color.GRAY;
 	private Color textColor = Color.YELLOW;
@@ -62,21 +60,14 @@ public class ActionButton extends Sprite
 		this.visible = true;
 		this.remove = false;
 		
-		String imagePath = "resources/buttons/testButton/";
+		//String imagePath = "resources/buttons/testButton/";
+		String imagePath = "buttons/testButton/";
 		
-		try
-		{
-			buttonImages[0] = GameFunction.loadBufferedImage(imagePath + "active.png");
-			buttonImages[1] = GameFunction.loadBufferedImage(imagePath + "disabled.png");
-			buttonImages[2] = GameFunction.loadBufferedImage(imagePath + "hover.png");
-			buttonImages[3] = GameFunction.loadBufferedImage(imagePath + "normal.png");
-			buttonImages[4] = GameFunction.loadBufferedImage(imagePath + "pressed.png");
-		}
-		catch(IOException e)
-		{
-			System.out.println("Some IO exception occurred when trying to load images (ActionButton)");
-			//TODO: PLEASE ADD CODE HERE
-		}
+		buttonImages[0] = ResourceLoader.getBufferedImage(imagePath + "active.png");
+		buttonImages[1] = ResourceLoader.getBufferedImage(imagePath + "disabled.png");
+		buttonImages[2] = ResourceLoader.getBufferedImage(imagePath + "hover.png");
+		buttonImages[3] = ResourceLoader.getBufferedImage(imagePath + "normal.png");
+		buttonImages[4] = ResourceLoader.getBufferedImage(imagePath + "pressed.png");
 		
 		this.setState(GUIButtonStates.NORMAL);
 	}

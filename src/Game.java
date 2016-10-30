@@ -15,6 +15,10 @@ import javax.swing.Timer;
 @SuppressWarnings("serial")
 public class Game extends JFrame implements ActionListener
 {
+	//Master toggle for debug mode
+	//Specific debugging functionality toggled in GameDebugVars
+	public static final boolean DEBUG = true;
+	
 	Model model;
 	public static Model primaryModel;
 	View view;
@@ -29,6 +33,8 @@ public class Game extends JFrame implements ActionListener
 
 	public Game() throws Exception
 	{
+		ResourceLoader.initialize();
+		
 		ViewCamera.windowDim = new Vector2D(800, 600);
 		ViewCamera.pos = ViewCamera.windowDim.divide(new Vector2D(2.0,2.0));
 		
@@ -95,5 +101,14 @@ public class Game extends JFrame implements ActionListener
 	public static void main(String[] args) throws Exception
 	{
 		new Game();
+	}
+	
+	//If both in debug mode and debugging type passed in is true, return true
+	public static boolean isDebugging(boolean debugTypeEnabled)
+	{
+		if (DEBUG && debugTypeEnabled)
+			return true;
+		else
+			return false;
 	}
 }
