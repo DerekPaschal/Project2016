@@ -7,10 +7,10 @@ public class Asteroid extends PhysicsSprite
 {
 	public Color color;
 	
-	public Asteroid(Vector2D position, double size)
+	public Asteroid(Vector2D position, double size, double restitution)
 	{
 		
-		super(position, Math.round(size));
+		super(position, Math.round(size),restitution);
 		this.vel = new Vector2D();
 		int color_value = (int)(128+(Math.random()*64));
 		this.color = new Color(color_value,color_value,color_value);
@@ -18,9 +18,7 @@ public class Asteroid extends PhysicsSprite
 	
 	@Override
 	public void updateAcc()
-	{		
-		this.acc = new Vector2D();
-		
+	{				
 		super.CollisionDetect();
 	}
 	

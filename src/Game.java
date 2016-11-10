@@ -82,20 +82,25 @@ public class Game extends JFrame implements ActionListener
 		
 		
 		//Calculate current frame rate
-		if (lastFrameTime == 0)
+		/*if (lastFrameTime == 0)
 			lastFrameTime = System.currentTimeMillis();
 		else
 		{
 			GameDebugVars.frameRate = 1000.0 / (System.currentTimeMillis() - lastFrameTime);
 			lastFrameTime = System.currentTimeMillis();
-		}
+		}*/
 		
 		//Call generic update function of the model
-		this.model.update();
+		try {
+			this.model.update();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		long paintStartTime = System.currentTimeMillis();
+		//long paintStartTime = System.currentTimeMillis();
 		repaint(); // Indirectly calls View.paintComponent
-		GameDebugVars.paintsPerSecond = 1000.0 / (System.currentTimeMillis() - paintStartTime);
+		//GameDebugVars.paintsPerSecond = 1000.0 / (System.currentTimeMillis() - paintStartTime);
 	}
 
 	public static void main(String[] args) throws Exception

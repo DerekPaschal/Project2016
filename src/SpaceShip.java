@@ -18,9 +18,7 @@ abstract class SpaceShip extends PhysicsSprite
 	
 	@Override
 	public void updateAcc()
-	{	
-		this.acc = new Vector2D();
-		
+	{		
 		super.CollisionDetect();
 		
 		//Add Acceleration from Thrusters

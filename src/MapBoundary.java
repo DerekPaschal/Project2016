@@ -61,27 +61,35 @@ public class MapBoundary extends Sprite
 		return this.repulsiveForce;
 	}
 	
-	public void checkCollision(PhysicsSprite impactor)
+	public void checkCollision()
 	{
-		if (impactor.pos.x - impactor.size < this.getLeftBound())// && impactor.vel.x < 0)
+		PhysicsSprite impactor;
+		for(Sprite sprite : PhysicsVars.SpriteList)
 		{
-//			impactor.vel.x = -impactor.vel.x;
-			impactor.vel.x += this.repulsiveForce * Math.abs(impactor.pos.x - impactor.size - this.getLeftBound());
-		}
-		else if (impactor.pos.x+impactor.size > this.getRightBound())// && impactor.vel.x > 0)
-		{
-//			impactor.vel.x = -impactor.vel.x;
-			impactor.vel.x += -this.repulsiveForce * Math.abs(impactor.pos.x + impactor.size - this.getRightBound());
-		}
-		if (impactor.pos.y-impactor.size < this.getUpperBound())// && impactor.vel.y < 0)
-		{
-//			impactor.vel.y = -impactor.vel.y;
-			impactor.vel.y += this.repulsiveForce * Math.abs(impactor.pos.y - impactor.size - this.getUpperBound());
-		}
-		else if (impactor.pos.y+impactor.size > this.getLowerBound())// && impactor.vel.y > 0)
-		{
-//			impactor.vel.y = -impactor.vel.y;
-			impactor.vel.y += -this.repulsiveForce * Math.abs(impactor.pos.y + impactor.size - this.getLowerBound());
+			if (sprite instanceof PhysicsSprite)
+			{
+				impactor = (PhysicsSprite) sprite;
+				if (impactor.pos.x - impactor.size < this.getLeftBound())// && impactor.vel.x < 0)
+				{
+		//			impactor.vel.x = -impactor.vel.x;
+					impactor.acc.x += this.repulsiveForce * Math.abs(impactor.pos.x - impactor.size - this.getLeftBound());
+				}
+				else if (impactor.pos.x+impactor.size > this.getRightBound())// && impactor.vel.x > 0)
+				{
+		//			impactor.vel.x = -impactor.vel.x;
+					impactor.acc.x += -this.repulsiveForce * Math.abs(impactor.pos.x + impactor.size - this.getRightBound());
+				}
+				if (impactor.pos.y-impactor.size < this.getUpperBound())// && impactor.vel.y < 0)
+				{
+		//			impactor.vel.y = -impactor.vel.y;
+					impactor.acc.y += this.repulsiveForce * Math.abs(impactor.pos.y - impactor.size - this.getUpperBound());
+				}
+				else if (impactor.pos.y+impactor.size > this.getLowerBound())// && impactor.vel.y > 0)
+				{
+		//			impactor.vel.y = -impactor.vel.y;
+					impactor.acc.y += -this.repulsiveForce * Math.abs(impactor.pos.y + impactor.size - this.getLowerBound());
+				}
+			}
 		}
 	}
 	

@@ -6,6 +6,7 @@ abstract class PhysicsSprite extends Sprite
 	public double rot_vel;
 	public double rot_acc;
 	public double size;
+	public double restitution;
 	
 	public PhysicsSprite(Vector2D position, double size) 
 	{
@@ -15,6 +16,13 @@ abstract class PhysicsSprite extends Sprite
 		this.acc = new Vector2D(0.0,0.0);
 		this.rot_vel = 0.0;
 		this.rot_acc = 0.0;
+		this.restitution = 1.0;
+	}
+	
+	public PhysicsSprite(Vector2D position, double size, double restitution)
+	{
+		this(position, size);
+		this.restitution = restitution;
 	}
 	
 	public abstract void updateAcc();
@@ -26,6 +34,8 @@ abstract class PhysicsSprite extends Sprite
 		//Physics Collision Detection
 		double distance;
 		Vector2D UnitVector;
+		double VelocityOnNormal;
+		double restitution;
 		for(Sprite sprite : PhysicsVars.SpriteList)
 		{
 			if (sprite instanceof PhysicsSprite && sprite != this)
@@ -33,8 +43,14 @@ abstract class PhysicsSprite extends Sprite
 				distance = this.pos.distance(sprite.pos);
 				if (distance < (this.size + ((PhysicsSprite)sprite).size))
 				{
+					restitution = 1.0;
 					UnitVector  = this.pos.subtract(sprite.pos).divide(distance);
-					this.acc = this.acc.add(UnitVector.multiply(3*(Math.min((this.size + ((PhysicsSprite)sprite).size) - distance,Math.min(this.size, ((PhysicsSprite)sprite).size))/this.size)));
+					VelocityOnNormal = ((PhysicsSprite)sprite).vel.subtract(this.vel).dot_product(UnitVector);
+					
+					if (VelocityOnNormal < 0)
+						restitution = Math.min(this.restitution, ((PhysicsSprite)sprite).restitution);
+					
+					this.acc = this.acc.add(UnitVector.multiply((3 * restitution)*(Math.min((this.size + ((PhysicsSprite)sprite).size) - distance,Math.min(this.size, ((PhysicsSprite)sprite).size))/this.size)));
 					
 					this.collisionAlert((PhysicsSprite)sprite);
 				}
@@ -42,7 +58,7 @@ abstract class PhysicsSprite extends Sprite
 		}
 		
 		//Ensure sprite is within the map's MapBoundary
-		Game.primaryModel.mv.gameMap.mapBoundary.checkCollision(this);
+		//Game.primaryModel.mv.gameMap.mapBoundary.checkCollision();
 	}
 	
 	public void updateVelPos()
