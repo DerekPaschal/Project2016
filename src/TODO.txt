@@ -13,6 +13,8 @@ TODO:
 - Determine how specific sprites (such as ships, asteroids, buttons) know where to request their image
 - Move ActionButton set position according to reference point to Sprite class
 - Add class to contain GUI elements ingame?
+- Allow ActionButton text to scale with the image?
+	* Fix ActionButton text centering code
 
 ####################
 

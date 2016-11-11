@@ -37,10 +37,10 @@ public class FullScreenMenu
 	{	
 		this.menuTexts.add(new MenuText("GRIDGAME", (int)ViewCamera.pos.x, 100, Color.GREEN, Color.BLACK));
 		
-		ActionButton buttonA = new ActionButton("Start Game", new Vector2D(200, 200));
+		ActionButton buttonA = new ActionButton("Start Game", new Vector2D(50, 200));
 		buttonA.setButtonAction(GUIButtonActions.START_GAME);
 		buttonA.setIsToggleButton(false);
-		ActionButton buttonB = new ActionButton("Happy Button", new Vector2D(200, 320));
+		ActionButton buttonB = new ActionButton("Happy Button", new Vector2D(200, 200));
 		
 		this.menuButtons.add(buttonA);
 		this.menuButtons.add(buttonB);

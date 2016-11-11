@@ -3,6 +3,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
@@ -25,6 +26,8 @@ public class ActionButton extends Sprite
 	private boolean isToggleButton;
 	
 	private Font font;
+	
+	private AffineTransform at;
 	
 	
 	public ActionButton()
@@ -49,13 +52,18 @@ public class ActionButton extends Sprite
 	
 	private void initializeButton(String description, Vector2D position)
 	{
+		double scaleValue = 1;
+		this.pos = new Vector2D(position);
+		this.at = new AffineTransform();
+		this.at.translate(pos.x, pos.y);
+		this.at.scale(scaleValue, scaleValue);
+		
 		this.previousState = null;
 		this.isDisabled = false;
 		this.isToggleButton = true;
 		this.text = description;
-		this.pos = new Vector2D(position);
 		this.buttonAction = GUIButtonActions.DO_NOTHING;
-		this.font = new Font("MONOSPACE", Font.BOLD, 20);
+		this.font = new Font("MONOSPACE", Font.BOLD, (int) Math.round(20 * this.at.getScaleY()));
 		this.rotation = new Rotation(0);
 		this.visible = true;
 		this.remove = false;
@@ -260,7 +268,8 @@ public class ActionButton extends Sprite
 		g2.setFont(this.font);
 		
 		//Draw button
-		g2.drawImage(currentImage, (int) pos.x, (int) pos.y, null);
+		//g2.drawImage(currentImage, (int) pos.x, (int) pos.y, null);
+		g2.drawImage(currentImage, this.at, null);
 		
         //Get dimensions of button text
         FontMetrics metrics = g2.getFontMetrics();
@@ -268,8 +277,8 @@ public class ActionButton extends Sprite
 		int textHeight = metrics.getHeight();
 		
 		//Get positions for text centered on button
-		int textPosX = (int) (this.pos.x + this.dimensions.x / 2 - textWidth / 2);
-		int textPosY = (int) (this.pos.y + this.dimensions.y / 2 + textHeight / 2);
+		int textPosX = (int) (this.pos.x + (this.dimensions.x / 2 - textWidth / 2) * this.at.getScaleX());
+		int textPosY = (int) (this.pos.y + (this.dimensions.y / 2 + textHeight / 2) * this.at.getScaleY());
 		
 		//Draw shadow of button text slight off center
 		g2.setColor(this.shadowColor);
