@@ -52,22 +52,21 @@ class Model
 	 ***************************/
 	public void init_Game()
 	{
-		PhysicsVars.SpriteList = mv.gameSprites;
 		PhysicsVars.timestep = 1.0;
 		
 		mv.playerShip = new PlayerShip(new Vector2D(50.0, 50.0));
 		
-		synchronized(mv.gameSprites)
+		synchronized(mv.gameMap.physicsSpritesLock)
 		{
 			mv.gameMap.mapBoundary.setBounds(new Rectangle(0,0,2000,2000));
-			mv.gameSprites.add(mv.gameMap.mapBoundary);
-			mv.gameSprites.add(mv.playerShip);
+			mv.addGameSprite(mv.gameMap.mapBoundary);
+			mv.addGameSprite(mv.playerShip);
 			Asteroid adding;
 			for (int i = 0; i < 1000; i++)
 			{
-				adding = new Asteroid(new Vector2D(Math.random()*mv.gameMap.mapBoundary.getRightBound(),Math.random()*mv.gameMap.mapBoundary.getLowerBound()), 4+(Math.random() * 8), 0.8);
+				adding = new Asteroid(new Vector2D(Math.random()*mv.gameMap.mapBoundary.getRightBound(),Math.random()*mv.gameMap.mapBoundary.getLowerBound()), 4+(Math.random() * 4), 0.8);
 				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
-				mv.gameSprites.add((Sprite)adding);
+				mv.addGameSprite((Sprite)adding);
 			}
 			
 		}
@@ -79,49 +78,40 @@ class Model
 	{	
 		int calc_threads = 2;
 		
+		int sprite_threads = 2;
+		int boundary_threads = 1;
+		
 		if (calc_threads < 1)
 			throw new Exception("Calculation threads cannot be less than 1.");
 		
-		synchronized(mv.gameSprites)
-		{			
-			//Reset Physics Sprite Acceleration to none.
-			for (Sprite sprite : mv.gameSprites)
+		synchronized(mv.gameSpritesLock)
+		{
+			synchronized(mv.gameMap.physicsSpritesLock)
 			{
-				if (sprite instanceof PhysicsSprite)
+				//Set all PhysicsSprite accelerations in gameMap to 0
+				mv.gameMap.clearPhysicsSpritesAcc();
+				
+				//Update accelerations of each PhysicsSprite in the game
+				CountDownLatch latch = new CountDownLatch(calc_threads);
+				double divided = mv.gameMap.getPhysicsSpritesLength() / calc_threads;
+				
+				//PhysicsSprite-PhysicsSprite collisions
+				for (int i = 0; i<calc_threads;i++)
 				{
-					((PhysicsSprite) sprite).acc.x = 0;
-					((PhysicsSprite) sprite).acc.y = 0;
+					executor.execute(new UpdateAccThread(mv.gameMap.getPhysicsSprites(), divided * i, divided * (i+1), latch));
 				}
-			}
-			
-			//Update accelerations of each PhysicsSprite in the game
-			CountDownLatch latch = new CountDownLatch(calc_threads);
-			double divided = mv.gameSprites.size()/calc_threads;
-			for (int i = 0; i<calc_threads;i++)
-			{
-				executor.execute(new UpdateAccThread(mv.gameSprites, divided * i,divided * (i+1),latch));
-			}
-			//Wait
-			try {latch.await();}catch(InterruptedException e){}
-			
-			
-			//Update the Velocity and Position of each PhysicsSprite
-			for(Sprite sprite : mv.gameSprites)
-			{
-				if (sprite instanceof PhysicsSprite)
-					((PhysicsSprite) sprite).updateVelPos();
-			}
-			
-			//Remove all Sprites that are marked for removal from the list
-			int sprite_count = mv.gameSprites.size();
-			for (int i = 0; i < sprite_count; i++)
-			{
-				if (mv.gameSprites.get(i).remove)
-				{
-					mv.gameSprites.remove(mv.gameSprites.get(i));
-					i--;
-					sprite_count--;
-				}
+				//PhysicsSprite-Boundary collisions
+				executor.execute(new UpdateAccThread(mv.gameMap.fieldBoundaries, latch));
+				//Wait
+				try {latch.await();}catch(InterruptedException e){}
+				
+				
+				//Update velocity and position of each PhysicsSprite
+				mv.gameMap.updateVelPos();
+				
+				//Remove all Sprites that are marked for removal
+				mv.cleanGameSprites();
+				//mv.gameMap.cleanPhysicsSpritesList();
 			}
 		}
 		
@@ -187,34 +177,46 @@ class Model
 
 class UpdateAccThread implements Runnable
 {
-	ArrayList<Sprite> sprites;
+	ArrayList<PhysicsSprite> sprites;
+	ArrayList<MapBoundary> boundaries;
 	int begin, end;
 	CountDownLatch latch;
 	
-	UpdateAccThread(ArrayList<Sprite> spritelist, double begin, double end, CountDownLatch latch)
+	UpdateAccThread(ArrayList<PhysicsSprite> spriteList, double begin, double end, CountDownLatch latch)
 	{
-		this.sprites = spritelist;
+		this.sprites = spriteList;
 		this.begin = (int)begin;
 		this.end = (int)end;
+		this.latch = latch;
+	}
+	
+	UpdateAccThread(ArrayList<MapBoundary> boundaryList, CountDownLatch latch)
+	{
+		this.boundaries = boundaryList;
 		this.latch = latch;
 	}
 
 	@Override
 	public void run() 
 	{
-		Sprite currentSprite;
-		for(int i = begin; i < end; i++)
+		//Determine if running PhysicsSprite-PhysicsSprite collisions or Boundary-PhysicsSprite collisions
+		if (this.sprites != null)
 		{
-			currentSprite = sprites.get(i);
-			if (currentSprite instanceof PhysicsSprite)
-				((PhysicsSprite) currentSprite).updateAcc();
-			
-			else if (currentSprite instanceof MapBoundary)
+			PhysicsSprite currentSprite;
+			for(int i = begin; i < end; i++)
 			{
-				((MapBoundary) currentSprite).checkCollision();
+				currentSprite = sprites.get(i);
+				currentSprite.updateAcc(Game.primaryModel.mv.gameMap.getPhysicsSprites());
 			}
 		}
-		
+		else
+		{
+			for(MapBoundary currentBoundary : this.boundaries)
+			{
+				currentBoundary.checkCollision();
+			}
+			
+		}
 		//CountDown the latch so main thread can join
 		latch.countDown();
 	}

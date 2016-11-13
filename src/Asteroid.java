@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Asteroid extends PhysicsSprite
 {
@@ -17,24 +18,14 @@ public class Asteroid extends PhysicsSprite
 	}
 	
 	@Override
-	public void updateAcc()
+	public void updateAcc(ArrayList<PhysicsSprite> physicsSprites)
 	{				
-		super.CollisionDetect();
+		super.CollisionDetect(physicsSprites);
 	}
 	
 	@Override
 	public void updateVelPos()
 	{
-		/*if (this.pos.x < 0 && this.vel.x < 0)
-			this.vel.x = -this.vel.x;
-		else if (this.pos.x > ViewCamera.renderRes.x && this.vel.x > 0)
-			this.vel.x = -this.vel.x;
-		
-		if (this.pos.y < 0 && this.vel.y < 0)
-			this.vel.y = -this.vel.y;
-		else if (this.pos.y > ViewCamera.renderRes.y && this.vel.y > 0)
-			this.vel.y = -this.vel.y;*/
-
 		super.updateVelPos();
 	}
 	

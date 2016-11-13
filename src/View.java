@@ -77,13 +77,16 @@ class View extends JPanel
 				g2.fillRect(0, 0, (int)ViewCamera.renderRes.x, (int)ViewCamera.renderRes.y);
 				
 				//Fully synchronized sprite list
-				synchronized(this.model.mv.gameSprites)
+				//synchronized(this.model.mv.gameSprites)
+				synchronized(this.model.mv.gameSpritesLock)
 				{
 					Game.primaryModel.mv.gameMap.mapBoundary.draw(g2);
 					
-					for (int i = this.model.mv.gameSprites.size()-1; i >= 0; i--)
+					//for (int i = this.model.mv.gameSprites.size()-1; i >= 0; i--)
+					for (int i = this.model.mv.getGameSprites().size()-1; i >= 0; i--)
 					{
-						this.model.mv.gameSprites.get(i).draw(g2);
+						//this.model.mv.gameSprites.get(i).draw(g2);
+						this.model.mv.getGameSprites().get(i).draw(g2);
 					}
 				}
 				

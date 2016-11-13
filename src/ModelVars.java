@@ -91,30 +91,64 @@ public class ModelVars
 	 * GAME Public Variables
 	 ***************************/
 	GameMap gameMap;
-	ArrayList<Sprite> gameSprites;
 	PlayerShip playerShip;
+	public Object gameSpritesLock = new Object(); 
 	
 	/***************************
 	 * GAME Private Variables
 	 ***************************/
+	private ArrayList<Sprite> gameSprites;
+	
+	//For use in view ONLY. This method not to be used for
+	//modifying the list
+	public ArrayList<Sprite> getGameSprites()
+	{
+		return this.gameSprites;
+	}
+	
+	//Synchronized adding to gameSprites and physicsSprites lists
+	public void addGameSprite(Sprite s)
+	{
+		if (this.gameState != GameState.GAME)
+			throw new IllegalArgumentException("ModelVars: Error, cannot add sprite when not in GameState GAME!");
+		
+		synchronized(this.gameSprites)
+		{
+			gameSprites.add(s);
+		}
+		
+		if (s instanceof PhysicsSprite)
+		{
+			gameMap.addPhysicsSprite((PhysicsSprite) s);
+		}
+	}
+	
+		//Synchronized removing from gameSprites and physicsSprites lists
+		public void removeGameSprite(Sprite s)
+		{
+			if (this.gameState != GameState.GAME)
+				throw new IllegalArgumentException("ModelVars: Error, cannot remove sprite when not in GameState GAME!");
+			
+			synchronized(this.gameSprites)
+			{
+				gameSprites.remove(s);
+			}
+			
+			if (s instanceof PhysicsSprite)
+			{
+				gameMap.removePhysicsSprite((PhysicsSprite) s);
+			}
+		}
+		
+		public void cleanGameSprites()
+		{
+			synchronized(gameSprites)
+			{
+				for (Sprite sprite : this.gameSprites)
+				{
+					if (sprite.remove)
+						this.gameSprites.remove(sprite);
+				}
+			}
+		}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -18,13 +19,43 @@ public class MapBoundary extends Sprite
 	public Color boundaryColor;
 	public int boundaryWidth;
 	private double repulsiveForce;
+	private ArrayList<PhysicsSprite> sprites;
 	
 	public MapBoundary()
 	{
+		this.sprites = new ArrayList<PhysicsSprite>();
 		this.mapBounds = new Rectangle(500, 500);
 		this.boundaryColor = Color.RED;
 		this.boundaryWidth = 10;
 		this.repulsiveForce = 0.1;
+	}
+	
+	public MapBoundary(ArrayList<PhysicsSprite> spriteList)
+	{
+		
+		this.sprites = spriteList;
+		this.mapBounds = new Rectangle(500, 500);
+		this.boundaryColor = Color.RED;
+		this.boundaryWidth = 10;
+		this.repulsiveForce = 0.1;
+	}
+	
+	//Add sprite to list of sprites affected by force field
+	public void addSprite(PhysicsSprite s)
+	{
+		synchronized (this.sprites)
+		{
+			this.sprites.add(s);
+		}
+	}
+	
+	//Remove sprite from list of sprites affected by force field
+	public boolean removeSprite(PhysicsSprite s)
+	{
+		synchronized (this.sprites)
+		{
+			return this.sprites.remove(s);
+		}
 	}
 	
 	public void setBounds(Rectangle size)
@@ -64,31 +95,23 @@ public class MapBoundary extends Sprite
 	public void checkCollision()
 	{
 		PhysicsSprite impactor;
-		for(Sprite sprite : PhysicsVars.SpriteList)
+		for(PhysicsSprite pSprite : this.sprites)
 		{
-			if (sprite instanceof PhysicsSprite)
+			if (pSprite instanceof PhysicsSprite)
 			{
-				impactor = (PhysicsSprite) sprite;
-				if (impactor.pos.x - impactor.size < this.getLeftBound())// && impactor.vel.x < 0)
-				{
-		//			impactor.vel.x = -impactor.vel.x;
+				impactor = (PhysicsSprite) pSprite;
+				
+				if (impactor.pos.x - impactor.size < this.getLeftBound())
 					impactor.acc.x += this.repulsiveForce * Math.abs(impactor.pos.x - impactor.size - this.getLeftBound());
-				}
-				else if (impactor.pos.x+impactor.size > this.getRightBound())// && impactor.vel.x > 0)
-				{
-		//			impactor.vel.x = -impactor.vel.x;
+				
+				else if (impactor.pos.x+impactor.size > this.getRightBound())
 					impactor.acc.x += -this.repulsiveForce * Math.abs(impactor.pos.x + impactor.size - this.getRightBound());
-				}
-				if (impactor.pos.y-impactor.size < this.getUpperBound())// && impactor.vel.y < 0)
-				{
-		//			impactor.vel.y = -impactor.vel.y;
+				
+				if (impactor.pos.y-impactor.size < this.getUpperBound())
 					impactor.acc.y += this.repulsiveForce * Math.abs(impactor.pos.y - impactor.size - this.getUpperBound());
-				}
-				else if (impactor.pos.y+impactor.size > this.getLowerBound())// && impactor.vel.y > 0)
-				{
-		//			impactor.vel.y = -impactor.vel.y;
+				
+				else if (impactor.pos.y+impactor.size > this.getLowerBound())
 					impactor.acc.y += -this.repulsiveForce * Math.abs(impactor.pos.y + impactor.size - this.getLowerBound());
-				}
 			}
 		}
 	}

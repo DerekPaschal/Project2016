@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 abstract class PhysicsSprite extends Sprite
 {
@@ -25,40 +26,39 @@ abstract class PhysicsSprite extends Sprite
 		this.restitution = restitution;
 	}
 	
-	public abstract void updateAcc();
+	public abstract void updateAcc(ArrayList<PhysicsSprite> physicsSprites);
 	
 	public abstract void collisionAlert(PhysicsSprite impactor);
 	
-	public void CollisionDetect()
+	public void CollisionDetect(ArrayList<PhysicsSprite> physicsSprites)
 	{
 		//Physics Collision Detection
 		double distance;
 		Vector2D UnitVector;
 		double VelocityOnNormal;
 		double restitution;
-		for(Sprite sprite : PhysicsVars.SpriteList)
+		
+		//for(PhysicsSprite sprite : Game.primaryModel.mv.gameMap.getPhysicsSprites())
+		for (PhysicsSprite pSprite : physicsSprites)
 		{
-			if (sprite instanceof PhysicsSprite && sprite != this)
+			if (pSprite != this)
 			{
-				distance = this.pos.distance(sprite.pos);
-				if (distance < (this.size + ((PhysicsSprite)sprite).size))
+				distance = this.pos.distance(pSprite.pos);
+				if (distance < (this.size + ((PhysicsSprite)pSprite).size))
 				{
 					restitution = 1.0;
-					UnitVector  = this.pos.subtract(sprite.pos).divide(distance);
-					VelocityOnNormal = ((PhysicsSprite)sprite).vel.subtract(this.vel).dot_product(UnitVector);
+					UnitVector  = this.pos.subtract(pSprite.pos).divide(distance);
+					VelocityOnNormal = ((PhysicsSprite)pSprite).vel.subtract(this.vel).dot_product(UnitVector);
 					
 					if (VelocityOnNormal < 0)
-						restitution = Math.min(this.restitution, ((PhysicsSprite)sprite).restitution);
+						restitution = Math.min(this.restitution, ((PhysicsSprite)pSprite).restitution);
 					
-					this.acc = this.acc.add(UnitVector.multiply((3 * restitution)*(Math.min((this.size + ((PhysicsSprite)sprite).size) - distance,Math.min(this.size, ((PhysicsSprite)sprite).size))/this.size)));
+					this.acc = this.acc.add(UnitVector.multiply((3 * restitution)*(Math.min((this.size + ((PhysicsSprite)pSprite).size) - distance,Math.min(this.size, ((PhysicsSprite)pSprite).size))/this.size)));
 					
-					this.collisionAlert((PhysicsSprite)sprite);
+					this.collisionAlert((PhysicsSprite)pSprite);
 				}
 			}
 		}
-		
-		//Ensure sprite is within the map's MapBoundary
-		//Game.primaryModel.mv.gameMap.mapBoundary.checkCollision();
 	}
 	
 	public void updateVelPos()

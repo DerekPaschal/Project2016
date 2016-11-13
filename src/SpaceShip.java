@@ -1,4 +1,5 @@
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 abstract class SpaceShip extends PhysicsSprite
 {
@@ -17,9 +18,9 @@ abstract class SpaceShip extends PhysicsSprite
 	}
 	
 	@Override
-	public void updateAcc()
+	public void updateAcc(ArrayList<PhysicsSprite> physicsSprites)
 	{		
-		super.CollisionDetect();
+		super.CollisionDetect(physicsSprites);
 		
 		//Add Acceleration from Thrusters
 		if (forward)
