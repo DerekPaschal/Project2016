@@ -5,13 +5,11 @@
  * Original Author: Zachary Johnson
  ***************************/
 
-import java.awt.Rectangle;
-import java.awt.Stroke;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class MapBoundary extends Sprite
 {

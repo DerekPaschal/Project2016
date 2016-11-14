@@ -64,13 +64,13 @@ abstract class PhysicsSprite extends Sprite
 	public void updateVelPos()
 	{
 		//Integrate Acceleration
-		this.vel = this.vel.add(this.acc.multiply(PhysicsVars.timestep));
+		this.vel = this.vel.add(this.acc);
 		
 		//Integrate Rotational Acceleration
 		this.rot_vel += this.rot_acc;
 			
 		//Integrate Velocity
-		this.pos = this.pos.add(this.vel.multiply(PhysicsVars.timestep));
+		this.pos = this.pos.add(this.vel);
 		
 		//Integrate Rotational Velocity
 		this.rotation.addAmount(this.rot_vel);

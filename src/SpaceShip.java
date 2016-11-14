@@ -1,4 +1,3 @@
-import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 abstract class SpaceShip extends PhysicsSprite

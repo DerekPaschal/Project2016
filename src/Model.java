@@ -5,8 +5,6 @@
  * Original Author: Zachary Johnson
  ***************************/
 
-import java.awt.Color;
-import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -51,22 +49,18 @@ class Model
 	 * Called when game state changes to the game
 	 ***************************/
 	public void init_Game()
-	{
-		PhysicsVars.timestep = 1.0;
-		
+	{		
 		mv.gameMap.loadMap(MapType.DEMO);
 		
 		return;
 	}
 	
 	public void gameUpdate() throws Exception
-	{	
-		int calc_threads = 2;
-		
+	{			
 		int sprite_threads = 2;
 		int boundary_threads = 1;
 		
-		if (calc_threads < 1)
+		if (sprite_threads < 1 || boundary_threads < 1)
 			throw new Exception("Calculation threads cannot be less than 1.");
 		
 		synchronized(mv.gameSpritesLock)
@@ -77,11 +71,11 @@ class Model
 				mv.gameMap.clearPhysicsSpritesAcc();
 				
 				//Update accelerations of each PhysicsSprite in the game
-				CountDownLatch latch = new CountDownLatch(calc_threads+1);
-				double divided = mv.gameMap.getPhysicsSpritesLength() / calc_threads;
+				CountDownLatch latch = new CountDownLatch(sprite_threads+boundary_threads);
+				double divided = mv.gameMap.getPhysicsSpritesLength() / sprite_threads;
 				
 				//PhysicsSprite-PhysicsSprite collisions
-				for (int i = 0; i<calc_threads;i++)
+				for (int i = 0; i<sprite_threads;i++)
 				{
 					executor.execute(new UpdateAccThread(mv.gameMap.getPhysicsSprites(), divided * i, divided * (i+1), latch));
 				}
