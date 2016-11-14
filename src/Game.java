@@ -26,7 +26,7 @@ public class Game extends JFrame implements ActionListener
 	
 	public static int FRAME_RATE = 1;
 	public static int UPDATE_RATE = 60;
-	private static long lastFrameTime = 0;
+	//private static long lastFrameTime = 0;
 
 	
 	//public static int magnification = 10;	//Value is true magnification multiplied by 10

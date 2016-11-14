@@ -77,7 +77,7 @@ class Model
 				mv.gameMap.clearPhysicsSpritesAcc();
 				
 				//Update accelerations of each PhysicsSprite in the game
-				CountDownLatch latch = new CountDownLatch(calc_threads);
+				CountDownLatch latch = new CountDownLatch(calc_threads+1);
 				double divided = mv.gameMap.getPhysicsSpritesLength() / calc_threads;
 				
 				//PhysicsSprite-PhysicsSprite collisions
