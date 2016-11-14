@@ -17,6 +17,11 @@ public class Asteroid extends PhysicsSprite
 		this.color = new Color(color_value,color_value,color_value);
 	}
 	
+	public void setColor(Color c)
+	{
+		this.color = c;
+	}
+	
 	@Override
 	public void updateAcc(ArrayList<PhysicsSprite> physicsSprites)
 	{				

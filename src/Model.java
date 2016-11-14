@@ -54,22 +54,7 @@ class Model
 	{
 		PhysicsVars.timestep = 1.0;
 		
-		mv.playerShip = new PlayerShip(new Vector2D(50.0, 50.0));
-		
-		synchronized(mv.gameMap.physicsSpritesLock)
-		{
-			mv.gameMap.mapBoundary.setBounds(new Rectangle(0,0,2000,2000));
-			mv.addGameSprite(mv.gameMap.mapBoundary);
-			mv.addGameSprite(mv.playerShip);
-			Asteroid adding;
-			for (int i = 0; i < 1000; i++)
-			{
-				adding = new Asteroid(new Vector2D(Math.random()*mv.gameMap.mapBoundary.getRightBound(),Math.random()*mv.gameMap.mapBoundary.getLowerBound()), 4+(Math.random() * 4), 0.8);
-				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
-				mv.addGameSprite((Sprite)adding);
-			}
-			
-		}
+		mv.gameMap.loadMap(MapType.DEMO);
 		
 		return;
 	}
@@ -111,7 +96,6 @@ class Model
 				
 				//Remove all Sprites that are marked for removal
 				mv.cleanGameSprites();
-				//mv.gameMap.cleanPhysicsSpritesList();
 			}
 		}
 		

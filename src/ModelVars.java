@@ -72,8 +72,8 @@ public class ModelVars
 				this.mainMenu = new FullScreenMenu();
 				break;
 			case GAME:
-				this.gameMap = new GameMap(Game.primaryModel);
 				this.gameSprites = new ArrayList<Sprite>();
+				this.gameMap = new GameMap(Game.primaryModel);
 				break;
 			default:
 				break;
@@ -109,9 +109,6 @@ public class ModelVars
 	//Synchronized adding to gameSprites and physicsSprites lists
 	public void addGameSprite(Sprite s)
 	{
-		if (this.gameState != GameState.GAME)
-			throw new IllegalArgumentException("ModelVars: Error, cannot add sprite when not in GameState GAME!");
-		
 		synchronized(this.gameSprites)
 		{
 			gameSprites.add(s);
@@ -126,9 +123,6 @@ public class ModelVars
 		//Synchronized removing from gameSprites and physicsSprites lists
 		public void removeGameSprite(Sprite s)
 		{
-			if (this.gameState != GameState.GAME)
-				throw new IllegalArgumentException("ModelVars: Error, cannot remove sprite when not in GameState GAME!");
-			
 			synchronized(this.gameSprites)
 			{
 				gameSprites.remove(s);
