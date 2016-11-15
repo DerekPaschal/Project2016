@@ -9,20 +9,21 @@ abstract class PhysicsSprite extends Sprite
 	public double size;
 	public double restitution;
 	
-	public PhysicsSprite(Vector2D position, double size) 
+	public PhysicsSprite(Vector2D position, Rotation rotation, double size) 
 	{
 		super(position);
 		this.size = size;
 		this.vel = new Vector2D(0.0,0.0);
 		this.acc = new Vector2D(0.0,0.0);
+		this.rotation = rotation;
 		this.rot_vel = 0.0;
 		this.rot_acc = 0.0;
 		this.restitution = 1.0;
 	}
 	
-	public PhysicsSprite(Vector2D position, double size, double restitution)
+	public PhysicsSprite(Vector2D position, Rotation rotation, double size, double restitution)
 	{
-		this(position, size);
+		this(position, rotation, size);
 		this.restitution = restitution;
 	}
 	
@@ -34,26 +35,32 @@ abstract class PhysicsSprite extends Sprite
 	{
 		//Physics Collision Detection
 		double distance;
+		double overlap;
 		Vector2D UnitVector;
 		double VelocityOnNormal;
 		double restitution;
-		
-		//for(PhysicsSprite sprite : Game.primaryModel.mv.gameMap.getPhysicsSprites())
-		for (PhysicsSprite pSprite : physicsSprites)
+	
+		for (PhysicsSprite pSprite : physicsSprites) //For each Physics Sprite
 		{
-			if (pSprite != this)
+			if (pSprite != this) //If it is not itself
 			{
-				distance = this.pos.distance(pSprite.pos);
-				if (distance < (this.size + ((PhysicsSprite)pSprite).size))
+				distance = this.pos.distance(pSprite.pos); //Calculate Distance between Sprites
+				overlap = (this.size + ((PhysicsSprite)pSprite).size) - distance; //overlap of the Sprites
+				if (overlap > 0) //If the Sprites are Colliding
 				{
-					restitution = 1.0;
-					UnitVector  = this.pos.subtract(pSprite.pos).divide(distance);
-					VelocityOnNormal = ((PhysicsSprite)pSprite).vel.subtract(this.vel).dot_product(UnitVector);
+					restitution = 1.0; //Reset local Restitution variable to default
+					UnitVector  = this.pos.subtract(pSprite.pos).divide(distance); //Find Unit Vector between Sprites
+					VelocityOnNormal = ((PhysicsSprite)pSprite).vel.subtract(this.vel).dot_product(UnitVector); //Portion of velocity on the Unit Vector
 					
-					if (VelocityOnNormal < 0)
-						restitution = Math.min(this.restitution, ((PhysicsSprite)pSprite).restitution);
+					if (VelocityOnNormal < 0) //If Velocity on the Normal is Negative (Sprites are moving away from each other)
+						restitution = Math.min(this.restitution, ((PhysicsSprite)pSprite).restitution); //Modify Restitution to simulate inelastic collisions
 					
-					this.acc = this.acc.add(UnitVector.multiply((3 * restitution)*(Math.min((this.size + ((PhysicsSprite)pSprite).size) - distance,Math.min(this.size, ((PhysicsSprite)pSprite).size))/this.size)));
+					
+					
+					//Add to acceleration based on collision depth and restitution and size of current sprite
+					this.acc = this.acc.add(UnitVector.multiply( (3 * restitution) * (Math.min( overlap , Math.min(this.size, ((PhysicsSprite)pSprite).size) ) /this.size)));
+					
+					
 					
 					this.collisionAlert((PhysicsSprite)pSprite);
 				}

@@ -3,11 +3,11 @@ import java.util.ArrayList;
 abstract class SpaceShip extends PhysicsSprite
 {
 	public boolean left, right, forward, backward, firing;
-	private double turnRate = 5, thrustPower = 0.2;
+	private double turnRate = 2, thrustPower = 0.2;
 	
-	public SpaceShip(Vector2D position, double size)
+	public SpaceShip(Vector2D position, Rotation rotation, double size)
 	{
-		super(position,size);
+		super(position,rotation,size);
 		
 		left = false;
 		right = false;
@@ -27,14 +27,19 @@ abstract class SpaceShip extends PhysicsSprite
 		if (backward)
 			this.acc = this.acc.add(new Vector2D(-Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower,-Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower));
 		
-		//Apply Friction Force
+		//Apply Friction Force (In Space?)
 		this.acc = this.acc.subtract(this.vel.multiply(new Vector2D(0.02,0.02)));
 		
 		//Add Rotation
 		if (left)
-			this.rotation.addAmount(-this.turnRate);
+			//this.rotation.addAmount(-this.turnRate);
+			this.rot_acc =+ -this.turnRate;
 		if (right)
-			this.rotation.addAmount(this.turnRate);
+			//this.rotation.addAmount(this.turnRate);
+			this.rot_acc =+ this.turnRate;
+		
+		//Apply Rotation Friction (In Space?)
+		this.rot_acc = this.rot_acc - (this.rot_vel * 0.2);
 	}
 	
 	@Override

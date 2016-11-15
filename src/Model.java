@@ -50,7 +50,7 @@ class Model
 	 ***************************/
 	public void init_Game()
 	{		
-		mv.gameMap.loadMap(MapType.DEMO);
+		mv.gameMap.loadMap(GameMap.MapType.DEMO);
 		
 		return;
 	}

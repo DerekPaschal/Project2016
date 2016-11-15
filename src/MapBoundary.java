@@ -158,12 +158,12 @@ public class MapBoundary extends Sprite
 		super.draw(g2);
 	}
 	
-	public String getInfo()
+	/*public String getInfo()
 	{
 		String s = "Boundary Color: " + this.boundaryColor.toString() + "\n" +
 				"Coordinates: (" + this.mapBounds.x + ", " + this.mapBounds.y + ") to (" + (this.mapBounds.x + this.mapBounds.width) + ", " + (this.mapBounds.y + this.mapBounds.height) + ")" +
 				"Affected Sprites: " + this.sprites.size() + "\n";
 		
 		return s;
-	}
+	}*/
 }

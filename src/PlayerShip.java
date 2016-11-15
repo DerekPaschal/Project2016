@@ -7,7 +7,7 @@ public class PlayerShip extends SpaceShip
 
 	public PlayerShip(Vector2D position) 
 	{
-		super(position,0.0);
+		super(position,new Rotation(0),0.0);
 		
 		this.size = 25; //Size of 'collision bubble' of ship
 		this.currentImage = new BufferedImage((int)this.size*2, (int)this.size*2, BufferedImage.TYPE_INT_ARGB); //create blank current image

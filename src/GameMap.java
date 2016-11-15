@@ -10,6 +10,9 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 
 public class GameMap {
+	
+	enum MapType {DEMO, BLANK, FILE;};
+	
 	public ArrayList<MapBoundary> fieldBoundaries;
 	private ArrayList<PhysicsSprite> physicsSprites;
 	public Object physicsSpritesLock = new Object();
@@ -88,13 +91,14 @@ public class GameMap {
 			for (int i = 0; i < numAsteroids; i++)
 			{
 				adding = new Asteroid(new Vector2D(asteroidField.getLeftBound() + Math.random()*asteroidField.getWidth(), 
-						asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), 4+(Math.random() * 6), 0.8);
+						asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), new Rotation(Math.random()*360),
+						4+(Math.random() * 6), 0.8);
 				//adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
 				this.addPhysicsSprite(adding);
 				asteroidField.addSprite(adding);
 			}
 			fieldBoundaries.add(asteroidField);
-			System.out.println(asteroidField.getInfo());
+			//System.out.println(asteroidField.getInfo());
 			
 			//Create outer map bounds
 			this.mapBoundary = new MapBoundary(new Rectangle(0,0,2000,2000));
@@ -102,7 +106,7 @@ public class GameMap {
 				mapBoundary.addSprite(pSprite);
 			model.mv.addGameSprite(this.mapBoundary);
 			fieldBoundaries.add(this.mapBoundary);
-			System.out.println(this.mapBoundary.getInfo());
+			//System.out.println(this.mapBoundary.getInfo());
 			
 		}
 	}
@@ -144,6 +148,7 @@ public class GameMap {
 		{
 			pSprite.acc.x = 0;
 			pSprite.acc.y = 0;
+			pSprite.rot_acc = 0;
 		}
 	}
 	
