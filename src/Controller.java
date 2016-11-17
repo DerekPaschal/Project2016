@@ -1,8 +1,10 @@
 /***************************
  * Purpose: Controller class, takes input from the user
- * and calls functions to interface with the program
+ * and sends actions to the Model
  *
- * Original Author: Zachary Johnson
+ * Contributors:
+ *  - Zachary Johnson
+ *  - Derek Paschal
  ***************************/
 
 import java.awt.event.KeyEvent;
@@ -136,19 +138,23 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 				{
 					case KeyEvent.VK_UP:
 						upPressed = true;
-						model.mv.playerShip.forward = true;
+						//model.mv.playerShip.forward = true;
+						SpriteList.getPlayerShip().forward = true;
 						break;
 					case KeyEvent.VK_DOWN:
 						downPressed = true;
-						model.mv.playerShip.backward = true;
+						//model.mv.playerShip.backward = true;
+						SpriteList.getPlayerShip().backward = true;
 						break;
 					case KeyEvent.VK_LEFT:
 						leftPressed = true;
-						model.mv.playerShip.left = true;
+						//model.mv.playerShip.left = true;
+						SpriteList.getPlayerShip().left = true;
 						break;
 					case KeyEvent.VK_RIGHT:
 						rightPressed = true;
-						model.mv.playerShip.right = true;
+						//model.mv.playerShip.right = true;
+						SpriteList.getPlayerShip().right = true;
 						break;
 				}
 				break;
@@ -159,44 +165,39 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	public void keyReleased(KeyEvent e)
 	{
 		int keyCode = e.getKeyCode();
-		
-		switch (keyCode)
+		switch (model.mv.getGameState())
 		{
-			case KeyEvent.VK_UP:
-				upPressed = false;
-				model.mv.playerShip.forward = false;
+			case MAIN_MENU:
 				break;
-			case KeyEvent.VK_DOWN:
-				downPressed = false;
-				model.mv.playerShip.backward = false;
+			case GAME:
+				switch (keyCode)
+				{
+					case KeyEvent.VK_UP:
+						upPressed = false;
+//						model.mv.playerShip.forward = false;
+						SpriteList.getPlayerShip().forward = false;
+						break;
+					case KeyEvent.VK_DOWN:
+						downPressed = false;
+//						model.mv.playerShip.backward = false;
+						SpriteList.getPlayerShip().backward = false;
+						break;
+					case KeyEvent.VK_LEFT:
+						leftPressed = false;
+//						model.mv.playerShip.left = false;
+						SpriteList.getPlayerShip().left = false;
+						break;
+					case KeyEvent.VK_RIGHT:
+						rightPressed = false;
+//						model.mv.playerShip.right = false;
+						SpriteList.getPlayerShip().right = false;
+						break;
+				}
 				break;
-			case KeyEvent.VK_LEFT:
-				leftPressed = false;
-				model.mv.playerShip.left = false;
-				break;
-			case KeyEvent.VK_RIGHT:
-				rightPressed = false;
-				model.mv.playerShip.right = false;
+			default:
 				break;
 		}
 	}
 	public void keyTyped(KeyEvent k) {    }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

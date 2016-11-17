@@ -1,3 +1,16 @@
+/***************************
+ * Purpose: ActionButton class containing the
+ * functionality of a button that can be clicked to
+ * perform an action. The possible states for a
+ * button are defined in the GUIButtonStates enum,
+ * while the possible actions for a button are
+ * defined in the GUIButtonActions enum.
+ *
+ * Contributors:
+ * - Zachary Johnson
+ * - Derek Paschal
+ ***************************/
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -301,38 +314,3 @@ public class ActionButton extends Sprite
 			return false;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

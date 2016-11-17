@@ -1,3 +1,14 @@
+/***************************
+ * Purpose: MenuText helper class for drawing
+ * text with additional features (such as
+ * font, shadow, position). Used as part of
+ * ActionButton.
+ *
+ * Contributors:
+ * - Zachary Johnson
+ * - Derek Paschal
+ ***************************/
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Font;
@@ -99,41 +110,3 @@ public class MenuText
 		g.setColor(oldColor);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

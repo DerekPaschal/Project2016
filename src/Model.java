@@ -1,8 +1,10 @@
 /***************************
- * Purpose: Model class of Model-View-Controller paradigm,
- * Core game model starts in this class
+ * Purpose: Model class of the Model-View-Controller
+ * paradigm; core game model starts in this class
  *
- * Original Author: Zachary Johnson
+ * Contributors:
+ * - Zachary Johnson
+ * - Derek Paschal
  ***************************/
 
 import java.io.IOException;
@@ -63,7 +65,8 @@ class Model
 		if (sprite_threads < 1 || boundary_threads < 1)
 			throw new Exception("Calculation threads cannot be less than 1.");
 		
-		synchronized(mv.gameSpritesLock)
+		//synchronized(mv.gameSpritesLock)
+		synchronized(SpriteList.spriteListLock)
 		{
 			synchronized(mv.gameMap.physicsSpritesLock)
 			{
@@ -77,7 +80,8 @@ class Model
 				//PhysicsSprite-PhysicsSprite collisions
 				for (int i = 0; i<sprite_threads;i++)
 				{
-					executor.execute(new UpdateAccThread(mv.gameMap.getPhysicsSprites(), divided * i, divided * (i+1), latch));
+					//executor.execute(new UpdateAccThread(mv.gameMap.getPhysicsSprites(), divided * i, divided * (i+1), latch));
+					executor.execute(new UpdateAccThread(SpriteList.getList(), divided * i, divided * (i+1), latch));
 				}
 				//PhysicsSprite-Boundary collisions
 				executor.execute(new UpdateAccThread(mv.gameMap.fieldBoundaries, latch));
@@ -89,12 +93,13 @@ class Model
 				mv.gameMap.updateVelPos();
 				
 				//Remove all Sprites that are marked for removal
-				mv.cleanGameSprites();
+				mv.gameMap.cleanPhysicsSpritesList();
+				//mv.cleanGameSprites();
 			}
 		}
 		
-		ViewCamera.pos = mv.playerShip.pos;
-		
+		//ViewCamera.pos = mv.playerShip.pos;
+		ViewCamera.pos = SpriteList.getPlayerShip().pos;
 	}
 	
 	/***************************
@@ -155,12 +160,12 @@ class Model
 
 class UpdateAccThread implements Runnable
 {
-	ArrayList<PhysicsSprite> sprites;
+	ArrayList<Sprite> sprites;
 	ArrayList<MapBoundary> boundaries;
 	int begin, end;
 	CountDownLatch latch;
 	
-	UpdateAccThread(ArrayList<PhysicsSprite> spriteList, double begin, double end, CountDownLatch latch)
+	UpdateAccThread(ArrayList<Sprite> spriteList, double begin, double end, CountDownLatch latch)
 	{
 		this.sprites = spriteList;
 		this.begin = (int)begin;
@@ -180,11 +185,12 @@ class UpdateAccThread implements Runnable
 		//Determine if running PhysicsSprite-PhysicsSprite collisions or Boundary-PhysicsSprite collisions
 		if (this.sprites != null)
 		{
-			PhysicsSprite currentSprite;
+			Sprite currentSprite;
 			for(int i = begin; i < end; i++)
 			{
 				currentSprite = sprites.get(i);
-				currentSprite.updateAcc(Game.primaryModel.mv.gameMap.getPhysicsSprites());
+				if (currentSprite instanceof PhysicsSprite)
+					((PhysicsSprite) currentSprite).updateAcc(Game.primaryModel.mv.gameMap.getPhysicsSprites());
 			}
 		}
 		else
@@ -198,5 +204,4 @@ class UpdateAccThread implements Runnable
 		//CountDown the latch so main thread can join
 		latch.countDown();
 	}
-	
 }

@@ -1,8 +1,10 @@
 /***************************
  * Purpose: Sprite class to handle essential
- * attributes of most ingame sprite objects.
+ * attributes of most ingame sprite objects
  *
- * Original Author: Zachary Johnson
+ * Contributors:
+ * - Derek Paschal
+ * - Zachary Johnson
  ***************************/
 
 import java.awt.Graphics2D;

@@ -1,3 +1,13 @@
+/***************************
+ * Purpose: PhysicsSprite class extending Sprite.
+ * Contains essential variables and behaviors for
+ * sprites that respond to physics.
+ *
+ * Contributors:
+ * - Derek Paschal
+ * - Zachary Johnson
+ ***************************/
+
 import java.util.ArrayList;
 
 abstract class PhysicsSprite extends Sprite
@@ -57,8 +67,6 @@ abstract class PhysicsSprite extends Sprite
 						restitution = Math.min(this.restitution, ((PhysicsSprite)pSprite).restitution); //Modify Restitution to simulate inelastic collisions
 					}
 					
-					
-					
 					//Add to acceleration based on collision depth and restitution and size of current sprite
 					//synchronized (this.acc)
 					//{
@@ -70,6 +78,7 @@ abstract class PhysicsSprite extends Sprite
 					{
 						
 					}*/
+					this.collisionAlert((PhysicsSprite)pSprite);
 				}
 			}
 		}
@@ -89,5 +98,4 @@ abstract class PhysicsSprite extends Sprite
 		//Integrate Rotational Velocity
 		this.rotation.addAmount(this.rot_vel);
 	}
-
 }

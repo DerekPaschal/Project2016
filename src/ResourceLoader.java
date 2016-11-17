@@ -1,12 +1,13 @@
 /***************************
- * Purpose: Static resource loader class that handles loading
- * of all resources from file
+ * Purpose: Static ResourceLoader class handling
+ * the loading of all resources from the file system.
  * 
- * Currently supports BufferedImage loading in resources
- * directory. Future versions will also handle JSON
- * data file parsing.
+ * Currently supports BufferedImage loading in
+ * resources directory. Future versions will also
+ * handle JSON data file parsing.
  *
- * Original Author: Zachary Johnson
+ * Contributors:
+ * - Zachary Johnson
  ***************************/
 
 import java.awt.image.BufferedImage;

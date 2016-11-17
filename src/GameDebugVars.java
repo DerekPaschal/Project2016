@@ -1,8 +1,9 @@
 /***************************
- * Purpose: GameDebugVars class, centralized location to view
- * status variables set during execution for debugging purposes
+ * Purpose: GameDebugVars class, contains toggles
+ * for various debugging features.
  *
- * Original Author: Zachary Johnson
+ * Contributors:
+ * - Zachary Johnson
  ***************************/
 
 public class GameDebugVars

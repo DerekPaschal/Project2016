@@ -1,8 +1,9 @@
 /***************************
- * Purpose: Rotation class to handle the rotation
- * of sprites.
+ * Purpose: Rotation class to handle the
+ * rotation of sprites.
  *
- * Original Author: Zachary Johnson
+ * Contributors:
+ * - Zachary Johnson
  ***************************/
 
 public class Rotation

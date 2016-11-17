@@ -1,8 +1,10 @@
 /***************************
- * Purpose: GameConstant class, centralized location to view
- * critical game values for quick changes
+ * Purpose: GameConstant class, centralized location
+ * to view critical game values for quick changes
  *
- * Original Author: Zachary Johnson
+ * Contributors:
+ * - Zachary Johnson
+ * - Derek Paschal
  ***************************/
 
 

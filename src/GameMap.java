@@ -1,8 +1,12 @@
 /***************************
- * Purpose: GameMap class, containing all relevant data
- * to a single game map
+ * Purpose: GameMap class containing all relevant
+ * data for a single loaded map in the game.
+ * Methods for adding and removing from the GameMap
+ * automatically update SpriteList for drawing.
  *
- * Original Author: Zachary Johnson
+ * Contributors:
+ * - Zachary Johnson
+ * - Derek Paschal
  ***************************/
 
 import java.awt.Color;
@@ -65,10 +69,6 @@ public class GameMap {
 	
 	private void loadDemo()
 	{
-		model.mv.playerShip = new PlayerShip(new Vector2D(50.0, 50.0));
-		
-		//Clear any existing resources on the map
-		//this.mapBoundary = null;
 		synchronized(this.fieldBoundaries)
 		{
 			this.fieldBoundaries.clear();
@@ -78,84 +78,116 @@ public class GameMap {
 			this.physicsSprites.clear();
 		}
 		
-		synchronized(this.physicsSpritesLock)
+		PlayerShip playerShip = new PlayerShip(new Vector2D(500.0, 500.0));
+		addPhysicsSprite(playerShip);
+		SpriteList.setPlayerShip(playerShip);
+		
+		//Create inner asteroid field
+		int numAsteroids = 500;
+		MapBoundary asteroidField = new MapBoundary(new Rectangle(500,500,1000,1000));
+		asteroidField.boundaryColor = Color.BLUE;
+		asteroidField.setForce(0.0005);
+		Asteroid adding;
+		for (int i = 0; i < numAsteroids; i++)
 		{
-			model.mv.addGameSprite(model.mv.playerShip);
+			adding = new Asteroid(new Vector2D(asteroidField.getLeftBound() + Math.random()*asteroidField.getWidth(), 
+					asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), new Rotation(Math.random()*360),
+					4+(Math.random() * 6), 0.8);
+			//adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
+			this.addPhysicsSprite(adding);
+			asteroidField.addSprite(adding);
+		}
+		//fieldBoundaries.add(asteroidField);
+		addBoundary(asteroidField);
+		
+		
+		//Create outer map bounds
+		this.mapBoundary = new MapBoundary(new Rectangle(0,0,2000,2000));
+		for (PhysicsSprite pSprite : physicsSprites)
+			mapBoundary.addSprite(pSprite); //Already synchronized
+//		model.mv.addGameSprite(this.mapBoundary);
+//		fieldBoundaries.add(this.mapBoundary);
+		addBoundary(mapBoundary);
 			
-			//Create inner asteroid field
-			int numAsteroids = 500;
-			MapBoundary asteroidField = new MapBoundary(new Rectangle(500,500,1000,1000));
-			asteroidField.boundaryColor = Color.BLUE;
-			asteroidField.setForce(0.0005);
-			Asteroid adding;
-			for (int i = 0; i < numAsteroids; i++)
-			{
-				adding = new Asteroid(new Vector2D(asteroidField.getLeftBound() + Math.random()*asteroidField.getWidth(), 
-						asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), new Rotation(Math.random()*360),
-						4+(Math.random() * 6), 0.8);
-				//adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
-				this.addPhysicsSprite(adding);
-				asteroidField.addSprite(adding);
-			}
-			fieldBoundaries.add(asteroidField);
-			//System.out.println(asteroidField.getInfo());
-			
-			//Create outer map bounds
-			this.mapBoundary = new MapBoundary(new Rectangle(0,0,2000,2000));
-			for (PhysicsSprite pSprite : physicsSprites)
-				mapBoundary.addSprite(pSprite);
-			model.mv.addGameSprite(this.mapBoundary);
-			fieldBoundaries.add(this.mapBoundary);
-			//System.out.println(this.mapBoundary.getInfo());
-			
+		
+	}
+	
+	/*
+	 * Add a MapBoundary to the GameMap (and automatically
+	 * add it to the master sprite list)
+	 */
+	public boolean addBoundary(MapBoundary mb)
+	{
+		this.fieldBoundaries.add(mb);
+		
+		synchronized(SpriteList.spriteListLock)
+		{
+			return SpriteList.addSprite(mb);
 		}
 	}
 	
-	//Add a physics sprite to the map
-	//The physics sprite will automatically be added to the
-	//map boundary's list
+	/*
+	 * Add a PhysicsSprite to the GameMap (and automatically
+	 * add it to the master sprite list). New PhysicsSprites
+	 * will be affected by the mapBoundary.
+	 */
 	public void addPhysicsSprite(PhysicsSprite sprite)
 	{
 		synchronized (this.physicsSprites)
 		{
 			this.physicsSprites.add(sprite);
-			
-			if (sprite instanceof Asteroid || sprite instanceof PlayerShip)
-			{
-				this.mapBoundary.addSprite(sprite);
-			}
 		}
+		
+		this.mapBoundary.addSprite(sprite); //Already synchronized
+		
+		SpriteList.addSprite(sprite); //Already synchronized
 	}
 	
-	//Safely remove a physics sprite completely from the list
+	/*
+	 * Completely remove a PhysicsSprite from GameMap (and
+	 * master sprite list). The PhysicsSprite will also be
+	 * removed from all MapBoundary list of affected sprites
+	 */
 	public void removePhysicsSprite(PhysicsSprite sprite)
 	{
 		synchronized (this.physicsSprites)
 		{
-			//Remove from master physics sprites list
 			this.physicsSprites.remove(sprite);
-			
-			//Remove sprite entry in all sprite boundaries
-			for (MapBoundary currBoundary : this.fieldBoundaries)
-				currBoundary.removeSprite(sprite);
 		}
+		
+		for (MapBoundary currBoundary : this.fieldBoundaries)
+				currBoundary.removeSprite(sprite); //Already synchronized
+		
+		SpriteList.removeSprite(sprite); //Already synchronized
 	}
 	
-	//Set acceleration of all physics sprites to 0
+	/*
+	 * Set the acceleration of all PhysicsSprites in GameMap
+	 * to 0 (first step for physics calculations)
+	 */
 	public void clearPhysicsSpritesAcc()
 	{
-		for (PhysicsSprite pSprite : this.physicsSprites)
+		synchronized (this.physicsSprites)
 		{
-			pSprite.acc.x = 0;
-			pSprite.acc.y = 0;
-			pSprite.rot_acc = 0;
+			for (PhysicsSprite pSprite : this.physicsSprites)
+			{
+				pSprite.acc.x = 0;
+				pSprite.acc.y = 0;
+				pSprite.rot_acc = 0;
+			}
 		}
 	}
 	
-	//Get the length of the map's physicsSprites list
+	/*
+	 * Get size of the list of PhysicsSprites for use
+	 * in physics calculations
+	 */
 	public int getPhysicsSpritesLength()
 	{
-		return this.physicsSprites.size();
+		synchronized (this.physicsSprites)
+		{
+			return this.physicsSprites.size();
+		}
 	}
 	
 	//Use only for read-only and sprite update loops
@@ -167,19 +199,24 @@ public class GameMap {
 	
 	public void updateVelPos()
 	{
-		for (PhysicsSprite pSprite : this.physicsSprites)
+		synchronized(SpriteList.spriteListLock)
 		{
-			pSprite.updateVelPos();
+			for (PhysicsSprite pSprite : this.physicsSprites)
+			{
+				pSprite.updateVelPos();
+			}
 		}
 	}
 	
-	//Iterate through physicsSprites list and remove all
-	//sprites marked for removal
+	/*
+	 * Clear all sprites from the list of PhysicsSprites
+	 * that are marked for removal
+	 */
 	public void cleanPhysicsSpritesList()
 	{
 		for (PhysicsSprite pSprite : this.physicsSprites)
 		{
-			if (pSprite.remove)
+			if (pSprite != null && pSprite.remove)
 				this.physicsSprites.remove(pSprite);
 		}
 	}

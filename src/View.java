@@ -1,16 +1,18 @@
 /***************************
- * Purpose: View component of Model-View-Controller paradigm,
- * starting point for drawing to the screen
+ * Purpose: View component of Model-View-Controller
+ * paradigm, starting point for drawing to the screen
  *
- * Original Author: Zachary Johnson
+ * Contributors:
+ * - Zachary Johnson
+ * - Derek Paschal
  ***************************/
-
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -74,21 +76,13 @@ class View extends JPanel
 				g2.setColor(Color.BLACK);
 				g2.fillRect(0, 0, (int)ViewCamera.renderRes.x, (int)ViewCamera.renderRes.y);
 				
-				//Fully synchronized sprite list
-				//synchronized(this.model.mv.gameSprites)
-				synchronized(this.model.mv.gameSpritesLock)
+				synchronized(SpriteList.spriteListLock)
 				{
-					//Draw map boundaries
-					for (MapBoundary b : Game.primaryModel.mv.gameMap.fieldBoundaries)
-						b.draw(g2);
-					
-					for (int i = this.model.mv.getGameSprites().size()-1; i >= 0; i--)
+					ArrayList<Sprite> spriteList = SpriteList.getList();
+					for (Sprite currSprite : spriteList)
 					{
-						this.model.mv.getGameSprites().get(i).draw(g2);
+						currSprite.draw(g2);
 					}
-					
-					for (int i = this.model.mv.gameMap.getPhysicsSprites().size()-1; i >= 0; i--)
-						this.model.mv.gameMap.getPhysicsSprites().get(i).draw(g2);
 				}
 				
 				break;
