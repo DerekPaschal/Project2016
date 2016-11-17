@@ -81,6 +81,4 @@ public class Vector2D
 	{
 		return (this.x * vect.x) + (this.y * vect.y);
 	}
-
-	
 }

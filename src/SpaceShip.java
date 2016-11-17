@@ -1,3 +1,12 @@
+/***************************
+ * Purpose: SpaceShip class containing common
+ * functionality for spaceship behavior.
+ *
+ * Contributors:
+ * - Zachary Johnson
+ * - Derek Paschal
+ ***************************/
+
 import java.util.ArrayList;
 
 abstract class SpaceShip extends PhysicsSprite

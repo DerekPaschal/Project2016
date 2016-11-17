@@ -1,9 +1,11 @@
 /***************************
-
- * Purpose: Game class, starting location for the program,
- * Initializes and configures core game values and builds game loop to run model
+ * Purpose: Game class, starting location for the
+ * program. Initializes and configures core game
+ * values and builds game loop to run model
  *
- * Original Author: Zachary Johnson
+ * Contributors:
+ * - Zachary Johnson
+ * - Derek Paschal
  ***************************/
 
 import java.awt.event.ActionEvent;
@@ -23,13 +25,6 @@ public class Game extends JFrame implements ActionListener
 	public static Model primaryModel;
 	View view;
 	ButtonController buttonController;
-	
-	//public static int FRAME_RATE = 1;
-	//public static int UPDATE_RATE = 60;
-	//private static long lastFrameTime = 0;
-
-	
-	//public static int magnification = 10;	//Value is true magnification multiplied by 10
 
 	public Game() throws Exception
 	{

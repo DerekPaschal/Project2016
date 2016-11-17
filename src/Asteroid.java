@@ -1,3 +1,13 @@
+/***************************
+ * Purpose: Asteroid class containing the
+ * functionality for an asteroid object on the
+ * GameMap with physics interactions.
+ *
+ * Contributors:
+ * - Derek Paschal
+ * - Zachary Johnson
+ ***************************/
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;

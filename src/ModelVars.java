@@ -1,14 +1,15 @@
 /***************************
- * Purpose: ModelVars class to contain primary variables of
- * the model class. Note that functionality in this class is
- * oriented towards managing variables themselves; the model
- * handles behavior of the variables, and may add to and remove
- * from lists.
+ * Purpose: ModelVars class to contain primary
+ * variables of the model class. Note that functionality
+ * in this class is oriented towards managing variables
+ * themselves, which model handles behavior of the variables,
+ * and the model may add to or remove from lists.
  *
- * Original Author: Zachary Johnson
+ * Contributors:
+ * - Zachary Johnson
+ * - Derek Paschal
  ***************************/
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class ModelVars
@@ -28,7 +29,7 @@ public class ModelVars
 	 ***************************/
 	public Model m;
 	Random rand;
-	int seed = GameConstant.gameSeed; //Old value is 10
+	int seed = GameConstant.gameSeed;
 	
 	
 	/***************************
@@ -58,7 +59,6 @@ public class ModelVars
 				break;
 			case GAME:
 				this.gameMap = null;
-				this.gameSprites = null;
 				break;
 			default:
 				break;
@@ -71,7 +71,6 @@ public class ModelVars
 				this.mainMenu = new FullScreenMenu();
 				break;
 			case GAME:
-				this.gameSprites = new ArrayList<Sprite>();
 				this.gameMap = new GameMap(Game.primaryModel);
 				break;
 			default:
@@ -90,58 +89,8 @@ public class ModelVars
 	 * GAME Public Variables
 	 ***************************/
 	GameMap gameMap;
-	PlayerShip playerShip;
-	public Object gameSpritesLock = new Object(); 
 	
 	/***************************
 	 * GAME Private Variables
 	 ***************************/
-	private ArrayList<Sprite> gameSprites;
-	
-	//For use in view ONLY. This method not to be used for
-	//modifying the list
-	public ArrayList<Sprite> getGameSprites()
-	{
-		return this.gameSprites;
-	}
-	
-	//Synchronized adding to gameSprites and physicsSprites lists
-	public void addGameSprite(Sprite s)
-	{
-		synchronized(this.gameSprites)
-		{
-			gameSprites.add(s);
-		}
-		
-		if (s instanceof PhysicsSprite)
-		{
-			gameMap.addPhysicsSprite((PhysicsSprite) s);
-		}
-	}
-	
-		//Synchronized removing from gameSprites and physicsSprites lists
-		public void removeGameSprite(Sprite s)
-		{
-			synchronized(this.gameSprites)
-			{
-				gameSprites.remove(s);
-			}
-			
-			if (s instanceof PhysicsSprite)
-			{
-				gameMap.removePhysicsSprite((PhysicsSprite) s);
-			}
-		}
-		
-		public void cleanGameSprites()
-		{
-			synchronized(gameSprites)
-			{
-				for (Sprite sprite : this.gameSprites)
-				{
-					if (sprite.remove)
-						this.gameSprites.remove(sprite);
-				}
-			}
-		}
 }

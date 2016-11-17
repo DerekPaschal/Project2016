@@ -1,4 +1,11 @@
-
+/***************************
+ * Purpose: ViewCamera class used for
+ * determining how the game is drawn to
+ * the current window.
+ *
+ * Contributors:
+ * - Derek Paschal
+ ***************************/
 public class ViewCamera 
 {
 	public static Vector2D pos = new Vector2D();

@@ -1,3 +1,11 @@
+/***************************
+ * Purpose: FullScreenMenu class.
+ *
+ * Contributors:
+ * - Zachary Johnson
+ * - Derek Paschal
+ ***************************/
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -124,35 +132,3 @@ public class FullScreenMenu
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

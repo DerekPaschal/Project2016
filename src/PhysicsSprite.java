@@ -1,3 +1,13 @@
+/***************************
+ * Purpose: PhysicsSprite class extending Sprite.
+ * Contains essential variables and behaviors for
+ * sprites that respond to physics.
+ *
+ * Contributors:
+ * - Derek Paschal
+ * - Zachary Johnson
+ ***************************/
+
 import java.util.ArrayList;
 
 abstract class PhysicsSprite extends Sprite
@@ -48,6 +58,8 @@ abstract class PhysicsSprite extends Sprite
 				overlap = (this.size + ((PhysicsSprite)pSprite).size) - distance; //overlap of the Sprites
 				if (overlap > 0) //If the Sprites are Colliding
 				{
+					if (this instanceof PlayerShip)
+						System.out.println("Whoopwhoop!");
 					restitution = 1.0; //Reset local Restitution variable to default
 					UnitVector  = this.pos.subtract(pSprite.pos).divide(distance); //Find Unit Vector between Sprites
 					VelocityOnNormal = ((PhysicsSprite)pSprite).vel.subtract(this.vel).dot_product(UnitVector); //Portion of velocity on the Unit Vector
@@ -82,5 +94,4 @@ abstract class PhysicsSprite extends Sprite
 		//Integrate Rotational Velocity
 		this.rotation.addAmount(this.rot_vel);
 	}
-
 }

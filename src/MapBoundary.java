@@ -1,8 +1,20 @@
 /***************************
- * Purpose: Map boundary object for use in maps
- * to contain game objects within the given area.
+ * Purpose: MapBoundary object representing a
+ * rectangular area on the GameMap used to contain
+ * sprites within the given area. PhysicsSprites
+ * in the MapBoundary's internal list of sprites
+ * are affected by the MapBoundary in the following
+ * ways:
+ * 	1) 	Sprites inside the MapBoundary experience
+ * 		no additional forces
+ *  2)	Sprites outside the MapBoundary experience
+ *  	a force linearly proportional to the distance
+ *  	the sprite is from the MapBoundary, and in
+ *  	the direction of the MapBoundary.
  *
- * Original Author: Zachary Johnson
+ * Contributors:
+ * - Zachary Johnson
+ * - Derek Paschal
  ***************************/
 
 import java.awt.Color;
@@ -38,7 +50,10 @@ public class MapBoundary extends Sprite
 		this.repulsiveForce = 0.1;
 	}
 	
-	//Add sprite to list of sprites affected by force field
+	/*
+	 * Add the given PhysicsSprite to the list of sprites
+	 * affected by the MapBoundary.
+	 */
 	public void addSprite(PhysicsSprite s)
 	{
 		synchronized (this.sprites)
@@ -47,7 +62,10 @@ public class MapBoundary extends Sprite
 		}
 	}
 	
-	//Remove sprite from list of sprites affected by force field
+	/*
+	 * Remove the given PhysicsSprite from the list of
+	 * sprites affected by the MapBoundary
+	 */
 	public boolean removeSprite(PhysicsSprite s)
 	{
 		synchronized (this.sprites)
@@ -56,13 +74,17 @@ public class MapBoundary extends Sprite
 		}
 	}
 	
-	public void setBounds(Rectangle size)
+	/*
+	 * Change the size of the MapBoundary (Thread-safe)
+	 */
+	public void setSize(Rectangle size)
 	{
 		synchronized (this.mapBounds)
 		{
 			this.mapBounds = size;
 		}
 	}
+	
 	public int getUpperBound()
 	{
 		synchronized (this.mapBounds)
@@ -106,36 +128,46 @@ public class MapBoundary extends Sprite
 		}
 	}
 	
+	/*
+	 * Set the force coefficient PhysicsObjects
+	 * outside the MapBoundary will experience.
+	 */
 	public void setForce(double force)
 	{
 		this.repulsiveForce = force;
 	}
+	/*
+	 * Get the force coefficient PhysicsObjects
+	 * outside the MapBoundary will experience.
+	 */
 	public double getForce()
 	{
 		return this.repulsiveForce;
 	}
 	
+	/*
+	 * Iterate through the entire list of PhysicsSprites in
+	 * the master sprite list to check for collisions
+	 * 
+	 * LOOK INTO COOL THING HERE!
+	 * 
+	 */
 	public void checkCollision()
 	{
 		PhysicsSprite impactor;
 		for(PhysicsSprite pSprite : this.sprites)
 		{
-			if (pSprite instanceof PhysicsSprite)
-			{
-				impactor = (PhysicsSprite) pSprite;
-				
-				if (impactor.pos.x - impactor.size < this.getLeftBound())
-					impactor.acc.x += this.repulsiveForce * Math.abs(impactor.pos.x - impactor.size - this.getLeftBound());
-				
-				else if (impactor.pos.x+impactor.size > this.getRightBound())
-					impactor.acc.x += -this.repulsiveForce * Math.abs(impactor.pos.x + impactor.size - this.getRightBound());
-				
-				if (impactor.pos.y-impactor.size < this.getUpperBound())
-					impactor.acc.y += this.repulsiveForce * Math.abs(impactor.pos.y - impactor.size - this.getUpperBound());
-				
-				else if (impactor.pos.y+impactor.size > this.getLowerBound())
-					impactor.acc.y += -this.repulsiveForce * Math.abs(impactor.pos.y + impactor.size - this.getLowerBound());
-			}
+			if (pSprite.pos.x - pSprite.size < this.getLeftBound())
+				pSprite.acc.x += this.repulsiveForce * Math.abs(pSprite.pos.x - pSprite.size - this.getLeftBound());
+			
+			else if (pSprite.pos.x+pSprite.size > this.getRightBound())
+				pSprite.acc.x += -this.repulsiveForce * Math.abs(pSprite.pos.x + pSprite.size - this.getRightBound());
+			
+			if (pSprite.pos.y-pSprite.size < this.getUpperBound())
+				pSprite.acc.y += this.repulsiveForce * Math.abs(pSprite.pos.y - pSprite.size - this.getUpperBound());
+			
+			else if (pSprite.pos.y+pSprite.size > this.getLowerBound())
+				pSprite.acc.y += -this.repulsiveForce * Math.abs(pSprite.pos.y + pSprite.size - this.getLowerBound());
 		}
 	}
 	
