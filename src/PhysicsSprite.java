@@ -53,16 +53,23 @@ abstract class PhysicsSprite extends Sprite
 					VelocityOnNormal = ((PhysicsSprite)pSprite).vel.subtract(this.vel).dot_product(UnitVector); //Portion of velocity on the Unit Vector
 					
 					if (VelocityOnNormal < 0) //If Velocity on the Normal is Negative (Sprites are moving away from each other)
+					{
 						restitution = Math.min(this.restitution, ((PhysicsSprite)pSprite).restitution); //Modify Restitution to simulate inelastic collisions
+					}
 					
 					
 					
 					//Add to acceleration based on collision depth and restitution and size of current sprite
-					this.acc = this.acc.add(UnitVector.multiply( (3 * restitution) * (Math.min( overlap , Math.min(this.size, ((PhysicsSprite)pSprite).size) ) /this.size)));
+					//synchronized (this.acc)
+					//{
+						this.acc = this.acc.add(UnitVector.multiply( (3 * restitution) * (Math.min( overlap , Math.min(this.size, ((PhysicsSprite)pSprite).size) ) /this.size)));
+						this.collisionAlert((PhysicsSprite)pSprite);
+					//}
 					
-					
-					
-					this.collisionAlert((PhysicsSprite)pSprite);
+					/*synchronized (pSprite.acc)
+					{
+						
+					}*/
 				}
 			}
 		}
