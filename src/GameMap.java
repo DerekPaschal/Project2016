@@ -203,9 +203,6 @@ public class GameMap {
 		{
 			for (PhysicsSprite pSprite : this.physicsSprites)
 			{
-				if (pSprite instanceof PlayerShip)
-					System.out.println("FOUND ONE!");
-				
 				pSprite.updateVelPos();
 			}
 		}

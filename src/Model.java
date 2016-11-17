@@ -86,7 +86,7 @@ class Model
 				//PhysicsSprite-Boundary collisions
 				executor.execute(new UpdateAccThread(mv.gameMap.fieldBoundaries, latch));
 				//Wait
-				try {latch.await();}catch(InterruptedException e){System.out.println("Bad karma!");}
+				try {latch.await();}catch(InterruptedException e){}
 				
 				
 				//Update velocity and position of each PhysicsSprite

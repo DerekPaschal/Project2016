@@ -58,8 +58,6 @@ abstract class PhysicsSprite extends Sprite
 				overlap = (this.size + ((PhysicsSprite)pSprite).size) - distance; //overlap of the Sprites
 				if (overlap > 0) //If the Sprites are Colliding
 				{
-					if (this instanceof PlayerShip)
-						System.out.println("Whoopwhoop!");
 					restitution = 1.0; //Reset local Restitution variable to default
 					UnitVector  = this.pos.subtract(pSprite.pos).divide(distance); //Find Unit Vector between Sprites
 					VelocityOnNormal = ((PhysicsSprite)pSprite).vel.subtract(this.vel).dot_product(UnitVector); //Portion of velocity on the Unit Vector
@@ -67,12 +65,8 @@ abstract class PhysicsSprite extends Sprite
 					if (VelocityOnNormal < 0) //If Velocity on the Normal is Negative (Sprites are moving away from each other)
 						restitution = Math.min(this.restitution, ((PhysicsSprite)pSprite).restitution); //Modify Restitution to simulate inelastic collisions
 					
-					
-					
 					//Add to acceleration based on collision depth and restitution and size of current sprite
 					this.acc = this.acc.add(UnitVector.multiply( (3 * restitution) * (Math.min( overlap , Math.min(this.size, ((PhysicsSprite)pSprite).size) ) /this.size)));
-					
-					
 					
 					this.collisionAlert((PhysicsSprite)pSprite);
 				}
