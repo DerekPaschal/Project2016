@@ -60,34 +60,16 @@ class View extends JPanel
 		
 		g2.clipRect(0, 0, (int)ViewCamera.renderRes.x, (int)ViewCamera.renderRes.y);
 		
-		switch (model.mv.getGameState())
+		g2.setColor(Color.BLACK);
+		g2.fillRect(0,  0,  (int)ViewCamera.renderRes.x, (int)ViewCamera.renderRes.y);
+		
+		synchronized(SpriteList.spriteListLock)
 		{
-			case MAIN_MENU:
-				if (model.mv.mainMenu != null)
-					model.mv.mainMenu.draw(g2);
-				else
-				{
-					g2.setColor(Color.GRAY);
-					g2.fillRect(0, 0, (int)ViewCamera.windowDim.x - 1, (int)ViewCamera.windowDim.y - 1);
-				}
-				break;
-				
-			case GAME:
-				g2.setColor(Color.BLACK);
-				g2.fillRect(0, 0, (int)ViewCamera.renderRes.x, (int)ViewCamera.renderRes.y);
-				
-				synchronized(SpriteList.spriteListLock)
-				{
-					ArrayList<Sprite> spriteList = SpriteList.getList();
-					for (Sprite currSprite : spriteList)
-					{
-						currSprite.draw(g2);
-					}
-				}
-				
-				break;
-			default:
-				break;
+			ArrayList<Sprite> spriteList = SpriteList.getList();
+			for (Sprite currSprite : spriteList)
+			{
+				currSprite.draw(g2);
+			}
 		}
 		
 		g2.scale(1/currentRenderScale, 1/currentRenderScale);

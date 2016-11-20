@@ -17,6 +17,7 @@ abstract class Sprite
 	public BufferedImage currentImage;
 	public Rotation rotation;
 	public boolean visible;
+	public boolean needsRedraw;
 	public boolean remove;
 	
 	public Sprite(Vector2D position)
@@ -68,9 +69,25 @@ abstract class Sprite
 	{
 		if (this.currentImage == null)
 			return;
-		
 		if (at == null)
+		{
 			at = new AffineTransform();
+			double transX = this.pos.x;
+			double transY = this.pos.y;
+			
+			
+			if (!(transX <= ViewCamera.renderRes.x && transX+currentImage.getWidth()  >= 0 && 
+					transY <= ViewCamera.renderRes.y && transY+currentImage.getHeight() >= 0))
+			{
+				return;
+			}
+			
+			at.translate(transX, transY);
+			
+			double rotateX = currentImage.getWidth() / 2;
+			double rotateY = currentImage.getHeight() / 2;
+			at.rotate(this.rotation.getRadians(), rotateX, rotateY);
+		}
 		
 		g2.drawImage(currentImage, at, null);
 	}

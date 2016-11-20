@@ -38,7 +38,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.mainMenu.mouseDown(e,position);
+				model.mv.gui.mouseDown(e, position);
 				break;
 			case GAME:		
 				if (e.getButton() == MouseEvent.BUTTON1)
@@ -57,7 +57,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.mainMenu.mouseUp(e,position);
+				model.mv.gui.mouseUp(e, position);
 				break;
 			case GAME:
 				if (e.getButton() == MouseEvent.BUTTON1)
@@ -80,7 +80,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.mainMenu.mouseScroll(e,position);
+				model.mv.gui.mouseScroll(e, position);
 				break;
 			case GAME:
 				break;
@@ -95,7 +95,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.mainMenu.mouseDrag(e,position);
+				model.mv.gui.mouseDrag(e, position);
 				break;
 			case GAME:
 				Controller.mousePos = new Vector2D(e.getX(), e.getY());
@@ -111,7 +111,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.mainMenu.mouseMove(e,position);
+				model.mv.gui.mouseMove(e, position);
 				break;
 			case GAME:
 				Controller.mousePos = position;
@@ -129,7 +129,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.mainMenu.keyPress(e);
+				model.mv.gui.keyPress(e);
 				break;
 			case GAME:
 				int keyCode = e.getKeyCode();
@@ -138,22 +138,18 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 				{
 					case KeyEvent.VK_UP:
 						upPressed = true;
-						//model.mv.playerShip.forward = true;
 						SpriteList.getPlayerShip().forward = true;
 						break;
 					case KeyEvent.VK_DOWN:
 						downPressed = true;
-						//model.mv.playerShip.backward = true;
 						SpriteList.getPlayerShip().backward = true;
 						break;
 					case KeyEvent.VK_LEFT:
 						leftPressed = true;
-						//model.mv.playerShip.left = true;
 						SpriteList.getPlayerShip().left = true;
 						break;
 					case KeyEvent.VK_RIGHT:
 						rightPressed = true;
-						//model.mv.playerShip.right = true;
 						SpriteList.getPlayerShip().right = true;
 						break;
 				}
@@ -174,22 +170,18 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 				{
 					case KeyEvent.VK_UP:
 						upPressed = false;
-//						model.mv.playerShip.forward = false;
 						SpriteList.getPlayerShip().forward = false;
 						break;
 					case KeyEvent.VK_DOWN:
 						downPressed = false;
-//						model.mv.playerShip.backward = false;
 						SpriteList.getPlayerShip().backward = false;
 						break;
 					case KeyEvent.VK_LEFT:
 						leftPressed = false;
-//						model.mv.playerShip.left = false;
 						SpriteList.getPlayerShip().left = false;
 						break;
 					case KeyEvent.VK_RIGHT:
 						rightPressed = false;
-//						model.mv.playerShip.right = false;
 						SpriteList.getPlayerShip().right = false;
 						break;
 				}

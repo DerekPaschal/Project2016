@@ -74,7 +74,7 @@ public class ActionButton extends Sprite
 		this.isToggleButton = true;
 		this.text = description;
 		this.buttonAction = GUIButtonActions.DO_NOTHING;
-		this.font = new Font("MONOSPACE", Font.BOLD, (int) Math.round(20 * this.at.getScaleY()));
+		this.font = new Font("MONOSPACE", Font.BOLD, (int) Math.round(15 * this.at.getScaleY()));
 		this.rotation = new Rotation(0);
 		this.visible = true;
 		this.remove = false;
@@ -89,15 +89,18 @@ public class ActionButton extends Sprite
 		buttonImages[4] = ResourceLoader.getBufferedImage(imagePath + "pressed.png");
 		
 		this.setState(GUIButtonStates.NORMAL);
+		this.needsRedraw = true;
 	}
 	
 	public void disable()
 	{
 		this.isDisabled = true;
+		this.needsRedraw = true;
 	}
 	public void enable()
 	{
 		this.isDisabled = false;
+		this.needsRedraw = true;
 	}
 	public boolean isDisabled()
 	{
@@ -116,6 +119,7 @@ public class ActionButton extends Sprite
 	public void setIsToggleButton(boolean toggleChoice)
 	{
 		this.isToggleButton = toggleChoice;
+		this.needsRedraw = true;
 	}
 	
 	//Called on mouse press while hovering over this button
@@ -124,6 +128,8 @@ public class ActionButton extends Sprite
 		this.previousState = this.getState();
 		
 		currentImage = buttonImages[4];
+		
+		this.needsRedraw = true;
 	}
 	
 	//Called if user cancels clicking button (by click and holding button, but releasing outside of button)
@@ -220,6 +226,7 @@ public class ActionButton extends Sprite
 	public void setSize(Vector2D newSize)
 	{
 		this.dimensions = newSize;
+		this.needsRedraw = true;
 	}
 	public Font getFont()
 	{
@@ -228,6 +235,7 @@ public class ActionButton extends Sprite
 	public void setFont(Font f)
 	{
 		this.font = f;
+		this.needsRedraw = true;
 	}
 	
 	public void setState(GUIButtonStates newState)
@@ -257,6 +265,7 @@ public class ActionButton extends Sprite
 		this.previousState = this.buttonState;
 		this.dimensions = new Vector2D(currentImage.getWidth(), currentImage.getHeight());
 		this.buttonState = newState;
+		this.needsRedraw = true;
 	}
 	
 	public GUIButtonStates getState()
@@ -269,40 +278,67 @@ public class ActionButton extends Sprite
 		return true;
 	}
 	
+	private BufferedImage getBackgroundImage()
+	{
+		switch(this.buttonState)
+		{
+			case ACTIVE:
+				return buttonImages[0];
+			case DISABLED:
+				return buttonImages[1];
+			case HOVER:
+				return buttonImages[2];
+			case NORMAL:
+				return buttonImages[3];
+			case PRESSED:
+				return buttonImages[4];
+			default:
+				return buttonImages[1];
+		}
+	}
+	
 	@Override
 	public void draw(Graphics2D g2)
 	{
-		//Save original values
-		Color oldColor = g2.getColor();
-		Font oldFont = g2.getFont();
+		if (this.needsRedraw || this.currentImage == null)
+		{
+			this.currentImage = new BufferedImage((int)this.dimensions.x, (int)this.dimensions.y, BufferedImage.TYPE_INT_ARGB);
 		
-		g2.setFont(this.font);
+			synchronized (this.currentImage)
+			{
+				Graphics2D c2 = this.currentImage.createGraphics();
+				
+				c2.drawImage(getBackgroundImage(), new AffineTransform(), null);
+				
+				c2.setFont(this.font);
+				
+				//Draw background image first
+				c2.drawImage(currentImage, this.at, null);
+				
+				//Get dimensions of button text
+				FontMetrics metrics = c2.getFontMetrics();
+		        int textWidth = metrics.stringWidth(text);
+				int textHeight = metrics.getHeight();
+				
+				//Get positions for text centered on button
+				int textPosX = (int) (((this.currentImage.getWidth() - 1) - textWidth) / 2);
+				int textPosY = (int) ((this.currentImage.getHeight() - 1) - textHeight - textHeight / 2);
+				
+				//System.out.println(textPosX);
+				
+				//Draw shadow of button text slight off center
+				c2.setColor(this.shadowColor);
+				c2.drawString(this.text, textPosX + 3, textPosY + 3);
+				
+				//Draw button text centered
+				c2.setColor(this.textColor);
+				c2.drawString(this.text, textPosX, textPosY);
+			}
+			
+			this.needsRedraw = false;
+		}
 		
-		//Draw button
-		//g2.drawImage(currentImage, (int) pos.x, (int) pos.y, null);
-		g2.drawImage(currentImage, this.at, null);
-		
-        //Get dimensions of button text
-        FontMetrics metrics = g2.getFontMetrics();
-        int textWidth = metrics.stringWidth(text);
-		int textHeight = metrics.getHeight();
-		
-		//Get positions for text centered on button
-		int textPosX = (int) (this.pos.x + (this.dimensions.x / 2 - textWidth / 2) * this.at.getScaleX());
-		int textPosY = (int) (this.pos.y + (this.dimensions.y / 2 + textHeight / 2) * this.at.getScaleY());
-		
-		//Draw shadow of button text slight off center
-		g2.setColor(this.shadowColor);
-		g2.drawString(this.text, textPosX + 3, textPosY + 3);
-		
-		//Draw button text centered
-		g2.setColor(this.textColor);
-		g2.drawString(this.text, textPosX, textPosY);
-		
-		//Restore original values
-		g2.setFont(oldFont);
-		g2.setColor(oldColor);
-		
+		super.drawStatic(g2);
 	}
 	
 	public boolean isWithin(Vector2D point)

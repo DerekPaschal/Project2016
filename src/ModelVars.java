@@ -21,6 +21,8 @@ public class ModelVars
 	{
 		this.m = model;
 		
+		this.gui = new GameGUI();
+		SpriteList.addSprite(this.gui);
 		this.gameState = GameState.MAIN_MENU;
 	}
 	
@@ -35,7 +37,8 @@ public class ModelVars
 	/***************************
 	 * MAIN MENU Public Variables
 	 ***************************/
-	public FullScreenMenu mainMenu;
+	//public FullScreenMenu mainMenu;
+	public GameGUI gui;
 	
 	
 	/***************************
@@ -55,7 +58,7 @@ public class ModelVars
 		switch (gameState)
 		{
 			case MAIN_MENU:
-				this.mainMenu = null;
+				//this.mainMenu = null;
 				break;
 			case GAME:
 				this.gameMap = null;
@@ -68,9 +71,10 @@ public class ModelVars
 		switch (newState)
 		{
 			case MAIN_MENU:
-				this.mainMenu = new FullScreenMenu();
+				this.gui.setMainMenu();
 				break;
 			case GAME:
+				this.gui.setGame();
 				this.gameMap = new GameMap(Game.primaryModel);
 				break;
 			default:

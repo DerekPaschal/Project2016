@@ -44,7 +44,7 @@ class Model
 	 ***************************/
 	public void init_MainMenu()
 	{
-		mv.mainMenu = new FullScreenMenu();
+		//mv.mainMenu = new FullScreenMenu();
 	}
 	 
 	 /***************************
@@ -94,7 +94,6 @@ class Model
 				
 				//Remove all Sprites that are marked for removal
 				mv.gameMap.cleanPhysicsSpritesList();
-				//mv.cleanGameSprites();
 			}
 		}
 		

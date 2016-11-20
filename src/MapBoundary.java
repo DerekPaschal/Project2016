@@ -148,9 +148,6 @@ public class MapBoundary extends Sprite
 	/*
 	 * Iterate through the entire list of PhysicsSprites in
 	 * the master sprite list to check for collisions
-	 * 
-	 * LOOK INTO COOL THING HERE!
-	 * 
 	 */
 	public void checkCollision()
 	{
