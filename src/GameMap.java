@@ -47,6 +47,33 @@ public class GameMap {
 		this.fieldBoundaries.add(mapBoundary);
 	}
 	
+	//Remove all sprites used for GameMap
+	public void removeAllSprites()
+	{
+		//Both locks required to prevent field boundaries from checking
+		//sprites that do not exist in collision detection threads
+		synchronized (this.physicsSpritesLock)
+		{
+			synchronized (this.fieldBoundaries)
+			{
+				for (PhysicsSprite pSprite : this.physicsSprites)
+				{
+					SpriteList.removeSprite(pSprite);
+				}
+				this.physicsSprites.clear();
+				
+				//All sprites in fieldBoundaries already cleared
+				//from master sprite list, so removing boundaries is
+				//safe
+				for (Sprite currBound : this.fieldBoundaries)
+				{
+					SpriteList.removeSprite(currBound);
+				}
+				this.fieldBoundaries.clear();
+			}
+		}
+	}
+	
 	//Load a map based on the given map type
 	public void loadMap(MapType type)
 	{
@@ -97,7 +124,6 @@ public class GameMap {
 			this.addPhysicsSprite(adding);
 			asteroidField.addSprite(adding);
 		}
-		//fieldBoundaries.add(asteroidField);
 		addBoundary(asteroidField);
 		
 		
@@ -105,8 +131,6 @@ public class GameMap {
 		this.mapBoundary = new MapBoundary(new Rectangle(0,0,2000,2000));
 		for (PhysicsSprite pSprite : physicsSprites)
 			mapBoundary.addSprite(pSprite); //Already synchronized
-//		model.mv.addGameSprite(this.mapBoundary);
-//		fieldBoundaries.add(this.mapBoundary);
 		addBoundary(mapBoundary);
 			
 		
@@ -118,8 +142,10 @@ public class GameMap {
 	 */
 	public boolean addBoundary(MapBoundary mb)
 	{
-		this.fieldBoundaries.add(mb);
-		
+		synchronized(this.fieldBoundaries)
+		{
+			this.fieldBoundaries.add(mb);
+		}
 		synchronized(SpriteList.spriteListLock)
 		{
 			return SpriteList.addSprite(mb);

@@ -60,12 +60,27 @@ public class SpriteList
 		return masterSpriteList;
 	}
 	
+	public static void clearPlayerShip()
+	{
+		if (playerShip == null)
+			return;
+		else
+		{
+			synchronized(spriteListLock)
+			{
+				masterSpriteList.remove(playerShip);
+				
+				playerShip = null;
+			}
+		}
+	}
+	
 	public static void setPlayerShip(PlayerShip newShip)
 	{
 		if (newShip == null)
 			throw new IllegalArgumentException("Error: Attempted to set SpriteList playerShip to null!");
 		else
-			synchronized(masterSpriteList)
+			synchronized(spriteListLock)
 			{
 				masterSpriteList.remove(playerShip);
 				
@@ -79,7 +94,7 @@ public class SpriteList
 	{
 		if (playerShip == null)
 		{
-			synchronized(masterSpriteList)
+			synchronized(spriteListLock)
 			{
 				playerShip = new PlayerShip(new Vector2D(50.0, 50.0));
 				

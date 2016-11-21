@@ -35,10 +35,10 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	public void mousePressed(MouseEvent e)
 	{
 		Vector2D position = GetPosition(e);
+		model.mv.gui.mouseDown(e, position);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.gui.mouseDown(e, position);
 				break;
 			case GAME:		
 				if (e.getButton() == MouseEvent.BUTTON1)
@@ -54,10 +54,10 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	public void mouseReleased(MouseEvent e)
 	{
 		Vector2D position = GetPosition(e);
+		model.mv.gui.mouseUp(e, position);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.gui.mouseUp(e, position);
 				break;
 			case GAME:
 				if (e.getButton() == MouseEvent.BUTTON1)
@@ -77,10 +77,10 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	public void mouseWheelMoved(MouseWheelEvent e)
 	{
 		Vector2D position = GetPosition(e);
+		model.mv.gui.mouseScroll(e, position);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.gui.mouseScroll(e, position);
 				break;
 			case GAME:
 				break;
@@ -92,10 +92,10 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	public void mouseDragged(MouseEvent e)
 	{
 		Vector2D position = GetPosition(e);
+		model.mv.gui.mouseDrag(e, position);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.gui.mouseDrag(e, position);
 				break;
 			case GAME:
 				Controller.mousePos = new Vector2D(e.getX(), e.getY());
@@ -108,10 +108,10 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	public void mouseMoved(MouseEvent e)
 	{
 		Vector2D position = GetPosition(e);
+		model.mv.gui.mouseMove(e, position);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.gui.mouseMove(e, position);
 				break;
 			case GAME:
 				Controller.mousePos = position;
@@ -126,10 +126,10 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	public void mouseExited(MouseEvent e) {    }
 	public void keyPressed(KeyEvent e)
 	{
+		model.mv.gui.keyPress(e);
 		switch (model.mv.getGameState())
 		{
 			case MAIN_MENU:
-				model.mv.gui.keyPress(e);
 				break;
 			case GAME:
 				int keyCode = e.getKeyCode();

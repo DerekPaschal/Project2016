@@ -38,7 +38,7 @@ public class ActionButton extends Sprite
 	
 	private Font font;
 	
-	private AffineTransform at;
+	public AffineTransform at;
 	
 	
 	public ActionButton()
@@ -323,8 +323,6 @@ public class ActionButton extends Sprite
 				//Get positions for text centered on button
 				int textPosX = (int) (((this.currentImage.getWidth() - 1) - textWidth) / 2);
 				int textPosY = (int) ((this.currentImage.getHeight() - 1) - textHeight - textHeight / 2);
-				
-				//System.out.println(textPosX);
 				
 				//Draw shadow of button text slight off center
 				c2.setColor(this.shadowColor);

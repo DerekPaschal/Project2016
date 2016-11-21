@@ -37,7 +37,6 @@ public class ModelVars
 	/***************************
 	 * MAIN MENU Public Variables
 	 ***************************/
-	//public FullScreenMenu mainMenu;
 	public GameGUI gui;
 	
 	
@@ -58,9 +57,10 @@ public class ModelVars
 		switch (gameState)
 		{
 			case MAIN_MENU:
-				//this.mainMenu = null;
 				break;
 			case GAME:
+				this.gameMap.removeAllSprites();
+				SpriteList.clearPlayerShip();
 				this.gameMap = null;
 				break;
 			default:

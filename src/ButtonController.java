@@ -22,9 +22,15 @@ public class ButtonController
 	
 	public static void doAction(GUIButtonActions action, ActionButton button)
 	{
-		if (action == GUIButtonActions.START_GAME)
+		switch (action)
 		{
-			model.mv.setGameState(GameState.GAME);
+			case START_GAME:
+				model.mv.setGameState(GameState.GAME);
+				break;
+			case MAIN_MENU:
+				model.mv.setGameState(GameState.MAIN_MENU);
+				break;
+			
 		}
 		return;
 	}

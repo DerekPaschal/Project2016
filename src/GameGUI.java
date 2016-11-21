@@ -12,6 +12,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -78,6 +79,18 @@ public class GameGUI extends Sprite{
 		{
 			this.guiTexts.clear();
 		}
+		
+		ActionButton endButton = new ActionButton("Main Menu", new Vector2D(0, 0));
+		endButton.setButtonAction(GUIButtonActions.MAIN_MENU);
+		endButton.setIsToggleButton(false);
+		
+		//Add the buttons
+		synchronized(this.guiButtons)
+		{
+			this.guiButtons.add(endButton);
+		}
+		
+		this.needsRedraw = true;
 	}
 	
 	@Override
