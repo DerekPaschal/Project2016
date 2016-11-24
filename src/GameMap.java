@@ -108,15 +108,8 @@ public class GameMap {
 	
 	private void loadDemo()
 	{
-		synchronized(this.fieldBoundaries)
-		{
-			this.fieldBoundaries.clear();
-		}
-		//synchronized(this.physicsSpritesLock)
-		synchronized(SpriteList.spriteListLock)
-		{
-			this.physicsSprites.clear();
-		}
+		//Remove any previous sprites
+		this.removeAllSprites();
 		
 		PlayerShip playerShip = new PlayerShip(new Vector2D(500.0, 500.0));
 		addPhysicsSprite(playerShip);
@@ -142,7 +135,7 @@ public class GameMap {
 				adding = new Asteroid(new Vector2D(asteroidField.getLeftBound() + Math.random()*asteroidField.getWidth(), 
 						asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), new Rotation(Math.random()*360),
 						4+(Math.random() * 6), 0.8);
-				//adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
+				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
 				adding.rot_vel = Math.random()*5-2.5;
 				this.addPhysicsSprite(adding);
 				asteroidField.addSprite(adding);

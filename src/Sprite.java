@@ -113,6 +113,9 @@ abstract class Sprite
 	//Draw the sprite with the position relative to the camera object
 	public void draw(Graphics2D g2)
 	{
+		if (!this.visible)
+			return;
+		
 		if (this.currentImage == null)
 			return;
 		
@@ -141,6 +144,9 @@ abstract class Sprite
 	//Primarily used for GUI elements
 	public void drawStatic(Graphics2D g2, AffineTransform at)
 	{
+		if (!this.visible)
+			return;
+		
 		if (this.currentImage == null)
 			return;
 		if (at == null)

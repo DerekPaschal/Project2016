@@ -58,7 +58,10 @@ class Model
 	}
 	
 	public void gameUpdate() throws Exception
-	{			
+	{
+		if (this.mv.paused)
+			return;
+		
 		int sprite_threads = 2;
 		int boundary_threads = 1;
 		

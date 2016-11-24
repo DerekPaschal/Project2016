@@ -76,6 +76,7 @@ public class ModelVars
 			case GAME:
 				this.gui.setGame();
 				this.gameMap = new GameMap(Game.primaryModel);
+				this.paused = false;
 				break;
 			default:
 				break;
@@ -93,6 +94,7 @@ public class ModelVars
 	 * GAME Public Variables
 	 ***************************/
 	GameMap gameMap;
+	boolean paused;
 	
 	/***************************
 	 * GAME Private Variables

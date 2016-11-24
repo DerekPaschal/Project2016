@@ -13,7 +13,6 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -46,16 +45,17 @@ public class GameGUI extends Sprite{
 		}
 		
 		//Create main menu components
-//		MenuText title = new MenuText("GRIDGAME", (int)ViewCamera.pos.x, 100, Color.GREEN, Color.BLACK);
 		MenuText title = new MenuText("FLEET PATROL", (int)(ViewCamera.renderRes.x / 2), 100, Color.GREEN, GameConstant.SLATE_GRAY);
 		title.setFont(new Font("Courier New", Font.BOLD, 40));
 		title.setPos(ReferencePositions.TOP_CENTER, new Vector2D(ViewCamera.renderRes.x / 2, 45));
 		
 		ActionButton startButton = new ActionButton("Start Game", new Vector2D(50, 200));
 		startButton.setButtonAction(GUIButtonActions.START_GAME);
+		startButton.setFontSize(18);
 		startButton.setIsToggleButton(false);
 		
 		ActionButton testToggleButton = new ActionButton("Happy Button", new Vector2D(200, 200));
+		testToggleButton.setFontSize(14);
 		
 		//Add the buttons
 		synchronized(this.guiButtons)
@@ -67,7 +67,6 @@ public class GameGUI extends Sprite{
 		synchronized(this.guiTexts)
 		{
 			this.guiTexts.add(title);
-//			this.guiTexts.add(title2);
 		}
 		
 		this.needsRedraw = true;
@@ -88,11 +87,21 @@ public class GameGUI extends Sprite{
 		ActionButton endButton = new ActionButton("Main Menu", new Vector2D(0, 0));
 		endButton.setButtonAction(GUIButtonActions.MAIN_MENU);
 		endButton.setIsToggleButton(false);
+		endButton.setTextColor(Color.YELLOW);
+		endButton.setButtonSize(new Vector2D(50, 50));
+		
+		ActionButton pauseButton = new ActionButton("PAUSE", new Vector2D(0, 60));
+		pauseButton.setFont(new Font("Monospace", Font.BOLD, 20));
+		pauseButton.setButtonAction(GUIButtonActions.TOGGLE_PAUSED);
+		pauseButton.setIsToggleButton(false);
+		pauseButton.setTextColor(Color.RED);
+		pauseButton.setButtonSize(new Vector2D(50, 50));
 		
 		//Add the buttons
 		synchronized(this.guiButtons)
 		{
 			this.guiButtons.add(endButton);
+			this.guiButtons.add(pauseButton);
 		}
 		
 		this.needsRedraw = true;

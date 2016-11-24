@@ -13,8 +13,8 @@
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.Random;
@@ -22,23 +22,16 @@ import java.util.Random;
 public class ActionButton extends Sprite
 {
 	//Member variables
-	private String text;
-	private Vector2D dimensions;
+	private MenuText text;
+	private Vector2D size;
 	
 	private BufferedImage buttonImages[] = new BufferedImage[5];
-	
-	private Color shadowColor = Color.GRAY;
-	private Color textColor = Color.YELLOW;
 	
 	private GUIButtonActions buttonAction;
 	private GUIButtonStates buttonState, previousState;
 	
 	private boolean isDisabled;
 	private boolean isToggleButton;
-	
-	private Font font;
-	
-	public AffineTransform at;
 	
 	
 	public ActionButton()
@@ -63,18 +56,13 @@ public class ActionButton extends Sprite
 	
 	private void initializeButton(String description, Vector2D position)
 	{
-		double scaleValue = 1;
 		this.pos = new Vector2D(position);
-		this.at = new AffineTransform();
-		this.at.translate(pos.x, pos.y);
-		this.at.scale(scaleValue, scaleValue);
 		
 		this.previousState = null;
 		this.isDisabled = false;
 		this.isToggleButton = true;
-		this.text = description;
+		this.text = new MenuText(description);
 		this.buttonAction = GUIButtonActions.DO_NOTHING;
-		this.font = new Font("MONOSPACE", Font.BOLD, (int) Math.round(15 * this.at.getScaleY()));
 		this.rotation = new Rotation(0);
 		this.visible = true;
 		this.remove = false;
@@ -107,6 +95,15 @@ public class ActionButton extends Sprite
 		return this.isDisabled;
 	}
 	
+	public void setText(String newText)
+	{
+		this.text.setText(newText);
+	}
+	public String getText()
+	{
+		return this.text.getText();
+	}
+	
 	public void setButtonAction(GUIButtonActions action)
 	{
 		this.buttonAction = action;
@@ -115,6 +112,25 @@ public class ActionButton extends Sprite
 	{
 		return this.buttonAction;
 	}
+	
+	public void setTextColor(Color newColor)
+	{
+		this.text.setTextColor(newColor);
+	}
+	public Color getTextColor()
+	{
+		return this.text.getTextColor();
+	}
+	
+	public void setShadowColor(Color newColor)
+	{
+		this.text.setShadowColor(newColor);
+	}
+	public Color getShadowColor()
+	{
+		return this.text.getShadowColor();
+	}
+	
 	
 	public void setIsToggleButton(boolean toggleChoice)
 	{
@@ -167,28 +183,28 @@ public class ActionButton extends Sprite
 				this.pos = new Vector2D(newPos);
 				break;
 			case TOP_CENTER:
-				this.pos = new Vector2D((int) (newPos.x - this.dimensions.x / 2), (int) newPos.y);
+				this.pos = new Vector2D((int) (newPos.x - this.size.x / 2), (int) newPos.y);
 				break;
 			case TOP_RIGHT:
-				this.pos = new Vector2D((int) (newPos.x - this.dimensions.x), (int) newPos.y);
+				this.pos = new Vector2D((int) (newPos.x - this.size.x), (int) newPos.y);
 				break;
 			case CENTER_LEFT:
-				this.pos = new Vector2D((int) newPos.x, (int) (newPos.y - this.dimensions.y / 2));
+				this.pos = new Vector2D((int) newPos.x, (int) (newPos.y - this.size.y / 2));
 				break;
 			case CENTER:
-				this.pos = new Vector2D((int) (newPos.x - this.dimensions.x / 2), (int) (newPos.y - this.dimensions.y / 2));
+				this.pos = new Vector2D((int) (newPos.x - this.size.x / 2), (int) (newPos.y - this.size.y / 2));
 				break;
 			case CENTER_RIGHT:
-				this.pos = new Vector2D((int) (newPos.x - this.dimensions.x), (int) (newPos.y - this.dimensions.y / 2));
+				this.pos = new Vector2D((int) (newPos.x - this.size.x), (int) (newPos.y - this.size.y / 2));
 				break;
 			case BOTTOM_LEFT:
-				this.pos = new Vector2D((int) newPos.x, (int) (newPos.y - this.dimensions.y));
+				this.pos = new Vector2D((int) newPos.x, (int) (newPos.y - this.size.y));
 				break;
 			case BOTTOM_CENTER:
-				this.pos = new Vector2D((int) (newPos.x - this.dimensions.x / 2), (int) (newPos.y - this.dimensions.y));
+				this.pos = new Vector2D((int) (newPos.x - this.size.x / 2), (int) (newPos.y - this.size.y));
 				break;
 			case BOTTOM_RIGHT:
-				this.pos = new Vector2D((int) (newPos.x - this.dimensions.x), (int) (newPos.y - this.dimensions.y));
+				this.pos = new Vector2D((int) (newPos.x - this.size.x), (int) (newPos.y - this.size.y));
 				break;
 		}
 	}
@@ -203,38 +219,51 @@ public class ActionButton extends Sprite
 			case TOP_LEFT:
 				return this.pos;
 			case TOP_CENTER:
-				return new Vector2D((int) (this.pos.x + this.dimensions.x / 2), (int) this.pos.y);
+				return new Vector2D((int) (this.pos.x + this.size.x / 2), (int) this.pos.y);
 			case TOP_RIGHT:
-				return new Vector2D((int) (this.pos.x + this.dimensions.x), (int) this.pos.y);
+				return new Vector2D((int) (this.pos.x + this.size.x), (int) this.pos.y);
 			case CENTER_LEFT:
-				return new Vector2D((int) this.pos.x, (int) (this.pos.y + this.dimensions.y / 2));
+				return new Vector2D((int) this.pos.x, (int) (this.pos.y + this.size.y / 2));
 			case CENTER:
-				return new Vector2D((int) (this.pos.x + this.dimensions.x / 2), (int) (this.pos.y + this.dimensions.y / 2));
+				return new Vector2D((int) (this.pos.x + this.size.x / 2), (int) (this.pos.y + this.size.y / 2));
 			case CENTER_RIGHT:
-				return new Vector2D((int) (this.pos.x + this.dimensions.x), (int) (this.pos.y + this.dimensions.y / 2));
+				return new Vector2D((int) (this.pos.x + this.size.x), (int) (this.pos.y + this.size.y / 2));
 			case BOTTOM_LEFT:
-				return new Vector2D((int) this.pos.x, (int) (this.pos.y + this.dimensions.y));
+				return new Vector2D((int) this.pos.x, (int) (this.pos.y + this.size.y));
 			case BOTTOM_CENTER:
-				return new Vector2D((int) (this.pos.x + this.dimensions.x / 2), (int) (this.pos.y + this.dimensions.y));
+				return new Vector2D((int) (this.pos.x + this.size.x / 2), (int) (this.pos.y + this.size.y));
 			case BOTTOM_RIGHT:
-				return new Vector2D((int) (this.pos.x + this.dimensions.x), (int) (this.pos.y + this.dimensions.y));
+				return new Vector2D((int) (this.pos.x + this.size.x), (int) (this.pos.y + this.size.y));
 			default:
 				return this.pos;
 		}
 	}
 	
-	public void setSize(Vector2D newSize)
+	public void setButtonSize(Vector2D newSize)
 	{
-		this.dimensions = newSize;
+		//Change font size to fit
+		this.setFontSize((int) Math.floor(this.getFontSize() * (newSize.x / this.size.x)));
+		
+		this.size = newSize;
+		
 		this.needsRedraw = true;
 	}
 	public Font getFont()
 	{
-		return this.font;
+		return this.text.getFont();
 	}
 	public void setFont(Font f)
 	{
-		this.font = f;
+		this.text.setFont(f);
+		this.needsRedraw = true;
+	}
+	public int getFontSize()
+	{
+		return this.text.getFont().getSize();
+	}
+	public void setFontSize(int fontSize)
+	{
+		this.text.setFont(new Font(this.text.getFont().getFontName(), this.text.getFont().getStyle(), fontSize));
 		this.needsRedraw = true;
 	}
 	
@@ -262,8 +291,10 @@ public class ActionButton extends Sprite
 				break;
 		}
 		
+		if (this.size == null)
+			this.size = new Vector2D(currentImage.getWidth(), currentImage.getHeight());
+		
 		this.previousState = this.buttonState;
-		this.dimensions = new Vector2D(currentImage.getWidth(), currentImage.getHeight());
 		this.buttonState = newState;
 		this.needsRedraw = true;
 	}
@@ -304,42 +335,35 @@ public class ActionButton extends Sprite
 		{
 			if (this.needsRedraw || this.currentImage == null)
 			{
-				this.currentImage = new BufferedImage((int)this.dimensions.x, (int)this.dimensions.y, BufferedImage.TYPE_INT_ARGB);
+				AffineTransform at = new AffineTransform();
+				
+				this.currentImage = new BufferedImage((int)this.size.x, (int)this.size.y, BufferedImage.TYPE_INT_ARGB);
 				Graphics2D c2 = this.currentImage.createGraphics();
-				c2.drawImage(getBackgroundImage(), new AffineTransform(), null);
-				c2.setFont(this.font);
+				BufferedImage sourceImage = getBackgroundImage();
 				
-				//Draw background image first
-				c2.drawImage(currentImage, this.at, null);
+				//Draw source image scaled to button's current size
+				c2.drawImage(sourceImage.getScaledInstance(this.currentImage.getWidth()-1, this.currentImage.getHeight()-1, Image.SCALE_SMOOTH), 
+						0, 0, null);
+				this.text.setPos(ReferencePositions.CENTER, new Vector2D(this.currentImage.getWidth()/2, this.currentImage.getHeight()/2));
+				this.text.draw(c2);
 				
-				//Get dimensions of button text
-				FontMetrics metrics = c2.getFontMetrics();
-		        int textWidth = metrics.stringWidth(text);
-				int textHeight = metrics.getHeight();
-				
-				//Get positions for text centered on button
-				int textPosX = (int) (((this.currentImage.getWidth() - 1) - textWidth) / 2);
-				int textPosY = (int) ((this.currentImage.getHeight() - 1) - textHeight - textHeight / 2);
-				
-				//Draw shadow of button text slight off center
-				c2.setColor(this.shadowColor);
-				c2.drawString(this.text, textPosX + 3, textPosY + 3);
-				
-				//Draw button text centered
-				c2.setColor(this.textColor);
-				c2.drawString(this.text, textPosX, textPosY);
+				at = new AffineTransform();
+				at.translate(this.pos.x, this.pos.y);
 				
 				this.needsRedraw = false;
+				
+				super.drawStatic(g2, at);
 			}
-			
-			super.drawStatic(g2);
+			else
+				super.drawStatic(g2);
 		}
 	}
 	
+	//Tests whether the point is within the clickable area for the button
 	public boolean isWithin(Vector2D point)
 	{
-		if (point.x >= this.pos.x && point.x <= this.pos.x + this.dimensions.x
-			&& point.y >= this.pos.y && point.y <= this.pos.y + this.dimensions.y)
+		if (point.x >= this.pos.x && point.x <= this.pos.x + this.size.x
+			&& point.y >= this.pos.y && point.y <= this.pos.y + this.size.y)
 			return true;
 		else
 			return false;

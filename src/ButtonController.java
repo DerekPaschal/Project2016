@@ -30,6 +30,10 @@ public class ButtonController
 			case MAIN_MENU:
 				model.mv.setGameState(GameState.MAIN_MENU);
 				break;
+			case TOGGLE_PAUSED:
+				model.mv.paused = !model.mv.paused;
+			default:
+				break;
 			
 		}
 		return;
