@@ -26,27 +26,40 @@ public class SpriteList
 	public static Object spriteListLock = new Object();
 	private static PlayerShip playerShip = new PlayerShip(new Vector2D(50.0, 50.0));
 	private static ArrayList<Sprite> masterSpriteList = new ArrayList<Sprite>();
+	private static ArrayList<Sprite> backgroundsFar = new ArrayList<Sprite>();
+	private static GameGUI gui;
 	
 	public SpriteList() { }
 	
 	//Add Sprite to the list
 	//Returns true if successful, false if not added to list
 	// (Usually due to sprite already present in the list)
-	public static boolean addSprite(Sprite s)
+	public static void addSprite(Sprite s)
 	{
 		synchronized(spriteListLock)
 		{	
-			return masterSpriteList.add(s);
+			if (s instanceof GameGUI)
+				gui = (GameGUI) s;
+			else if (s instanceof BackgroundSprite)
+				backgroundsFar.add(s);
+			else
+				masterSpriteList.add(s);
 		}
 	}
 	
 	//Remove Sprite from the list.
 	//Returns true if element was found in the list and removed
-	public static boolean removeSprite(Sprite s)
+	public static void removeSprite(Sprite s)
 	{
 		synchronized (spriteListLock)
 		{
-			return masterSpriteList.remove(s);
+			if (s == gui)
+				gui = null;
+			else if (s instanceof BackgroundSprite)
+				backgroundsFar.remove(s);
+			else
+				masterSpriteList.remove(s);
+//			return masterSpriteList.remove(s);
 		}
 	}
 	
@@ -55,9 +68,23 @@ public class SpriteList
 	//through this method.
 	//It is recommended to synchronize on the public lock before
 	//calling this method
+	//Returned in order they should be drawn
 	public static ArrayList<Sprite> getList()
 	{
-		return masterSpriteList;
+		ArrayList<Sprite> drawList;
+		synchronized(spriteListLock)
+		{
+			//Far backgrounds drawn first
+			drawList = new ArrayList<Sprite>(backgroundsFar);
+			
+			//Next, draw primary sprites
+			drawList.addAll(masterSpriteList);
+			
+			//Add GUI last (on top of everything
+			drawList.add(drawList.size(), gui);
+		}
+		
+		return drawList;
 	}
 	
 	public static void clearPlayerShip()

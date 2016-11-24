@@ -10,12 +10,14 @@
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Asteroid extends PhysicsSprite
 {
 	public Color color;
+	int type;
 	
 	public Asteroid(Vector2D position, Rotation rotation, double size, double restitution)
 	{
@@ -24,6 +26,7 @@ public class Asteroid extends PhysicsSprite
 		this.vel = new Vector2D();
 		int color_value = (int)(128+(Math.random()*64));
 		this.color = new Color(color_value,color_value,color_value);
+		type = (int)Math.floor(Math.random()*2);
 	}
 	
 	public void setColor(Color c)
@@ -46,18 +49,46 @@ public class Asteroid extends PhysicsSprite
 	@Override
 	public void draw(Graphics2D g2)
 	{
-		this.currentImage = new BufferedImage((int)Math.round(this.size*2), (int)Math.round(this.size*2), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D c2 = (Graphics2D) currentImage.getGraphics();
-		//c2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON);
-		c2.setColor(this.color);
-		c2.fillOval(0, 0, (int)Math.round(this.size*2), (int)Math.round(this.size*2));
-		
-		super.draw(g2);
+		synchronized (this.imageLock)
+		{
+			if (this.needsRedraw || this.currentImage == null)
+			{
+				this.currentImage = new BufferedImage((int)Math.round(this.size*2), (int)Math.round(this.size*2), 
+						BufferedImage.TYPE_INT_ARGB);
+				
+				BufferedImage tempImage;
+				
+				switch(type)
+				{
+					case 0:
+						tempImage = ResourceLoader.getBufferedImage("asteroids/asteroid1.png"); //Load Asteroid Image
+						break;
+					case 1:
+						tempImage = ResourceLoader.getBufferedImage("asteroids/asteroid2.png"); //Load Asteroid Image
+						break;
+					default:
+						tempImage = ResourceLoader.getBufferedImage("asteroids/asteroid1.png"); //Load Asteroid Image
+						break;
+				}
+				
+				Graphics2D c2 = this.currentImage.createGraphics();
+				c2.drawImage(tempImage, 
+						0, 0, this.currentImage.getWidth()-1, this.currentImage.getHeight()-1, 
+						0, 0, tempImage.getWidth()-1, tempImage.getHeight()-1, null);
+			}
+			
+			super.draw(g2);
+		}
 	}
 
 	@Override
 	public void collisionAlert(PhysicsSprite impactor) 
 	{
 		//System.out.println(this.getClass().getName() + " collided with: " + impactor.getClass().getName());
+		this.rot_vel = Math.random()*5-2.5;
+//		this.health--;
+//		
+//		if (this.health < 0)
+//			this.remove = true;
 	}
 }

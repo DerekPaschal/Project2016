@@ -8,6 +8,7 @@
  ***************************/
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -45,7 +46,10 @@ public class GameGUI extends Sprite{
 		}
 		
 		//Create main menu components
-		MenuText title = new MenuText("GRIDGAME", (int)ViewCamera.pos.x, 100, Color.GREEN, Color.BLACK);
+//		MenuText title = new MenuText("GRIDGAME", (int)ViewCamera.pos.x, 100, Color.GREEN, Color.BLACK);
+		MenuText title = new MenuText("FLEET PATROL", (int)(ViewCamera.renderRes.x / 2), 100, Color.GREEN, GameConstant.SLATE_GRAY);
+		title.setFont(new Font("Courier New", Font.BOLD, 40));
+		title.setPos(ReferencePositions.TOP_CENTER, new Vector2D(ViewCamera.renderRes.x / 2, 45));
 		
 		ActionButton startButton = new ActionButton("Start Game", new Vector2D(50, 200));
 		startButton.setButtonAction(GUIButtonActions.START_GAME);
@@ -63,6 +67,7 @@ public class GameGUI extends Sprite{
 		synchronized(this.guiTexts)
 		{
 			this.guiTexts.add(title);
+//			this.guiTexts.add(title2);
 		}
 		
 		this.needsRedraw = true;
@@ -96,9 +101,9 @@ public class GameGUI extends Sprite{
 	@Override
 	public void draw(Graphics2D g2)
 	{
-		if (this.needsRedraw)
+		synchronized (this.imageLock)
 		{
-			synchronized(this.currentImage)
+			if (this.needsRedraw || this.currentImage == null)
 			{
 				//GameGUI is always the size of the screen
 				this.currentImage = new BufferedImage((int)ViewCamera.renderRes.x - 1, (int)ViewCamera.renderRes.y - 1, 
@@ -108,8 +113,7 @@ public class GameGUI extends Sprite{
 				//Draw main menu background
 				if (Game.primaryModel.mv.getGameState() == GameState.MAIN_MENU)
 				{
-					c2.setColor(Color.DARK_GRAY);
-					c2.fillRect(0, 0, this.currentImage.getWidth() - 1, this.currentImage.getHeight() - 1);
+					c2.drawImage(ResourceLoader.getBufferedImage("backgrounds/main_menu_background.jpg"), 0, 0, null);
 				}
 				
 				//Draw Buttons
@@ -124,12 +128,13 @@ public class GameGUI extends Sprite{
 					for (MenuText curr : this.guiTexts)
 						curr.draw(c2);
 				}
+				
+				this.needsRedraw = false;
 			}
 			
-			this.needsRedraw = false;
+			super.drawStatic(g2);
 		}
 		
-		super.drawStatic(g2);
 	}
 	
 	public void mouseDown(MouseEvent e, Vector2D position)
@@ -183,21 +188,24 @@ public class GameGUI extends Sprite{
 	{
 		Vector2D mousePoint = position;
 		
-		for (ActionButton curr : this.guiButtons)
+		synchronized(this.guiButtons)
 		{
-			if (curr.isWithin(mousePoint))
+			for (ActionButton curr : this.guiButtons)
 			{
-				if (!curr.isDisabled() && curr.getState() != GUIButtonStates.ACTIVE)
+				if (curr.isWithin(mousePoint))
 				{
-					curr.setState(GUIButtonStates.HOVER);
-					this.needsRedraw = true;
-					break;
+					if (!curr.isDisabled() && curr.getState() != GUIButtonStates.ACTIVE)
+					{
+						curr.setState(GUIButtonStates.HOVER);
+						this.needsRedraw = true;
+						break;
+					}
 				}
-			}
-			else if (curr.getState() == GUIButtonStates.HOVER)
-			{
-				curr.setState(GUIButtonStates.NORMAL);
-				this.needsRedraw = true;
+				else if (curr.getState() == GUIButtonStates.HOVER)
+				{
+					curr.setState(GUIButtonStates.NORMAL);
+					this.needsRedraw = true;
+				}
 			}
 		}
 	}

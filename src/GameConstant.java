@@ -7,6 +7,7 @@
  * - Derek Paschal
  ***************************/
 
+import java.awt.Color;
 
 public class GameConstant
 {
@@ -14,6 +15,7 @@ public class GameConstant
 	//Global Variables
 	/***************************/
 	public static final boolean DEBUG = true;
+	public static final Color SLATE_GRAY = new Color(112,128,144);
 	
 	/***************************/
 	//Model Variables

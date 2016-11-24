@@ -42,7 +42,6 @@ public class MapBoundary extends Sprite
 	
 	public MapBoundary(Rectangle size, ArrayList<PhysicsSprite> spriteList)
 	{
-		
 		this.sprites = spriteList;
 		this.mapBounds = new Rectangle(size);
 		this.boundaryColor = Color.RED;
@@ -83,6 +82,8 @@ public class MapBoundary extends Sprite
 		{
 			this.mapBounds = size;
 		}
+		
+		this.needsRedraw = true;
 	}
 	
 	public int getUpperBound()
@@ -170,20 +171,28 @@ public class MapBoundary extends Sprite
 	@Override
 	public void draw(Graphics2D g2)
 	{
-		this.currentImage = new BufferedImage((int)(this.mapBounds.width + (2*this.boundaryWidth)), (int)(this.mapBounds.height + (2*this.boundaryWidth)), BufferedImage.TYPE_INT_ARGB); 
+		synchronized(this.imageLock)
+		{
+			if (this.needsRedraw || this.currentImage == null)
+			{
+				this.currentImage = new BufferedImage((int)(this.mapBounds.width + (2*this.boundaryWidth)), (int)(this.mapBounds.height + (2*this.boundaryWidth)), BufferedImage.TYPE_INT_ARGB); 
 
-		this.pos = new Vector2D(this.mapBounds.x + this.getWidth()/2, this.mapBounds.y + this.getHeight()/2);
-		Graphics2D c2 = this.currentImage.createGraphics();
-		
-		c2.setColor(boundaryColor);
-		c2.fillRect(0, 0, this.boundaryWidth, this.mapBounds.height+(2*this.boundaryWidth));
-		c2.fillRect(0, 0, this.mapBounds.width+(2*this.boundaryWidth), this.boundaryWidth);
-		c2.fillRect(this.mapBounds.width+this.boundaryWidth, 0, this.boundaryWidth, this.mapBounds.height+this.boundaryWidth);
-		c2.fillRect(0, this.mapBounds.height+this.boundaryWidth, this.mapBounds.width+(2*this.boundaryWidth), this.boundaryWidth);
-		
-		c2.dispose();
-
-		super.draw(g2);
+				this.pos = new Vector2D(this.mapBounds.x + this.getWidth()/2, this.mapBounds.y + this.getHeight()/2);
+				Graphics2D c2 = this.currentImage.createGraphics();
+				
+				c2.setColor(boundaryColor);
+				c2.fillRect(0, 0, this.boundaryWidth, this.mapBounds.height+(2*this.boundaryWidth));
+				c2.fillRect(0, 0, this.mapBounds.width+(2*this.boundaryWidth), this.boundaryWidth);
+				c2.fillRect(this.mapBounds.width+this.boundaryWidth, 0, this.boundaryWidth, this.mapBounds.height+this.boundaryWidth);
+				c2.fillRect(0, this.mapBounds.height+this.boundaryWidth, this.mapBounds.width+(2*this.boundaryWidth), this.boundaryWidth);
+				
+				c2.dispose();
+				
+				this.needsRedraw = false;
+			}
+			
+			super.draw(g2);
+		}
 	}
 	
 	/*public String getInfo()

@@ -11,14 +11,18 @@
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.awt.Font;
+import java.awt.FontMetrics;
 
-public class MenuText
+public class MenuText extends Sprite
 {
 	private String text;
-	private Vector2D pos;
 	private Color textColor, shadowColor;
 	private Font font;
+	private int textWidth, textHeight;
+	private final int shadowOffset = 3;
 	
 	/*******************
 	 * Constructors
@@ -49,12 +53,23 @@ public class MenuText
 			this.textColor = Color.WHITE;
 		
 		
-		if (shadowColor != null)
+		if (colorShadow != null)
 			this.shadowColor = colorShadow;
 		else
 			this.shadowColor = Color.BLACK;
 		
 		this.font = new Font("MONOSPACE", Font.BOLD, 20);
+		
+		this.currentImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D c2 = this.currentImage.createGraphics();
+		c2.setFont(this.font);
+		FontMetrics metrics = c2.getFontMetrics();
+        int textWidth = metrics.stringWidth(this.text);
+		int textHeight = metrics.getHeight();
+		this.currentImage = new BufferedImage(textWidth + this.shadowOffset, 
+				textHeight + this.shadowOffset, 
+				BufferedImage.TYPE_INT_ARGB);
+		
 	}
 	
 	public MenuText(String s) { constrMenuText(s, null, null, null); }
@@ -66,8 +81,8 @@ public class MenuText
 	public MenuText(String s, Vector2D position, Color colorText, Color colorShadow) { constrMenuText(s, new Vector2D((int) position.x, (int) position.y), colorText, colorShadow); }
 	
 	public MenuText(String s, int posX, int posY) { constrMenuText(s, new Vector2D(posX, posY), null, null); }
-	public MenuText(String s, int posX, int posY, Color colorText) { constrMenuText(s, new Vector2D(posX, posY), textColor, null); }
-	public MenuText(String s, int posX, int posY, Color colorText, Color colorShadow) { constrMenuText(s, new Vector2D(posX, posY), textColor, colorShadow); }
+	public MenuText(String s, int posX, int posY, Color colorText) { constrMenuText(s, new Vector2D(posX, posY), colorText, null); }
+	public MenuText(String s, int posX, int posY, Color colorText, Color colorShadow) { constrMenuText(s, new Vector2D(posX, posY), colorText, colorShadow); }
 	
 	/*******************
 	 * Getters/Setters
@@ -86,27 +101,53 @@ public class MenuText
 	public void setShadowColor(Color color) { this.shadowColor = color; }
 	
 	public Font getFont() { return this.font; }
-	public void setFont(Font f) { this.font = f; }
+	public void setFont(Font f) { this.font = f; updateImageSize(); }
 	
+	private void updateImageSize()
+	{
+		Graphics2D metricGraphics = this.currentImage.createGraphics();
+		metricGraphics.setFont(this.font);
+		FontMetrics metrics = metricGraphics.getFontMetrics();
+        textWidth = metrics.stringWidth(this.text);
+		textHeight = metrics.getHeight();
+		
+		synchronized(this.imageLock)
+		{
+			this.currentImage = new BufferedImage(textWidth + this.shadowOffset, 
+					textHeight + this.shadowOffset, 
+					BufferedImage.TYPE_INT_ARGB);
+		}
+		
+		this.needsRedraw = true;
+	}
 	
 	/*******************
 	 * Drawing
 	 ******************/
-	
-	public void draw(Graphics g)
+	@Override
+	public void draw(Graphics2D g2)
 	{
-		Color oldColor = g.getColor();
-		Font oldFont = g.getFont();
-		
-		g.setFont(this.font);
-		
-		g.setColor(this.shadowColor);
-		g.drawString(this.text, (int) this.pos.x + 3, (int) this.pos.y + 3);
-		
-		g.setColor(this.textColor);
-		g.drawString(this.text, (int) this.pos.x, (int) this.pos.y);
-		
-		g.setFont(oldFont);
-		g.setColor(oldColor);
+		synchronized(this.imageLock)
+		{
+			//Get dimensions of button text
+			//Change font to get accurate height and width values
+			if (this.needsRedraw || this.currentImage == null)
+			{
+				updateImageSize();
+				
+				Graphics2D c2 = this.currentImage.createGraphics();
+				c2.setFont(this.font);
+				
+				c2.setColor(this.shadowColor);
+				c2.drawString(this.text, this.shadowOffset, textHeight + this.shadowOffset);
+				
+				c2.setColor(this.textColor);
+				c2.drawString(this.text, 0, textHeight);
+				
+				this.needsRedraw = false;
+			}
+			
+			super.drawStatic(g2, this.pos.x, this.pos.y);
+		}
 	}
 }

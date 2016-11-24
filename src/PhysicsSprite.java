@@ -18,6 +18,7 @@ abstract class PhysicsSprite extends Sprite
 	public double rot_acc;
 	public double size;
 	public double restitution;
+//	public double health;
 	
 	public PhysicsSprite(Vector2D position, Rotation rotation, double size) 
 	{

@@ -65,7 +65,6 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 				if (e.getButton() == MouseEvent.BUTTON3)
 					this.model.onRightClickRelease(new Vector2D(e.getX(), e.getY()));
 				
-				System.out.println("Click released");
 				draggingMap = false;
 				draggingWindow = false;
 				break;

@@ -300,16 +300,13 @@ public class ActionButton extends Sprite
 	@Override
 	public void draw(Graphics2D g2)
 	{
-		if (this.needsRedraw || this.currentImage == null)
+		synchronized (this.imageLock)
 		{
-			this.currentImage = new BufferedImage((int)this.dimensions.x, (int)this.dimensions.y, BufferedImage.TYPE_INT_ARGB);
-		
-			synchronized (this.currentImage)
+			if (this.needsRedraw || this.currentImage == null)
 			{
+				this.currentImage = new BufferedImage((int)this.dimensions.x, (int)this.dimensions.y, BufferedImage.TYPE_INT_ARGB);
 				Graphics2D c2 = this.currentImage.createGraphics();
-				
 				c2.drawImage(getBackgroundImage(), new AffineTransform(), null);
-				
 				c2.setFont(this.font);
 				
 				//Draw background image first
@@ -331,12 +328,12 @@ public class ActionButton extends Sprite
 				//Draw button text centered
 				c2.setColor(this.textColor);
 				c2.drawString(this.text, textPosX, textPosY);
+				
+				this.needsRedraw = false;
 			}
 			
-			this.needsRedraw = false;
+			super.drawStatic(g2);
 		}
-		
-		super.drawStatic(g2);
 	}
 	
 	public boolean isWithin(Vector2D point)
