@@ -20,13 +20,14 @@
  ***************************/
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class SpriteList
 {
 	public static Object spriteListLock = new Object();
 	private static PlayerShip playerShip = new PlayerShip(new Vector2D(50.0, 50.0));
 	private static ArrayList<Sprite> masterSpriteList = new ArrayList<Sprite>();
-	private static ArrayList<Sprite> backgroundsFar = new ArrayList<Sprite>();
+	private static ArrayList<BackgroundSprite> backgroundsFar = new ArrayList<BackgroundSprite>();
 	private static GameGUI gui;
 	
 	public SpriteList() { }
@@ -37,13 +38,25 @@ public class SpriteList
 	public static void addSprite(Sprite s)
 	{
 		synchronized(spriteListLock)
-		{	
+		{
 			if (s instanceof GameGUI)
 				gui = (GameGUI) s;
+			else if (s instanceof PlayerShip)
+			{
+				//Replace current player ship with new one
+				removeSprite(playerShip);
+				setPlayerShip((PlayerShip) s);
+			}
 			else if (s instanceof BackgroundSprite)
-				backgroundsFar.add(s);
+			{
+				ListIterator<BackgroundSprite> i = backgroundsFar.listIterator();
+				i.add((BackgroundSprite) s);
+			}
 			else
-				masterSpriteList.add(s);
+			{
+				ListIterator<Sprite> i = masterSpriteList.listIterator();
+				i.add(s);
+			}
 		}
 	}
 	
@@ -56,10 +69,29 @@ public class SpriteList
 			if (s == gui)
 				gui = null;
 			else if (s instanceof BackgroundSprite)
-				backgroundsFar.remove(s);
+			{
+				for (ListIterator<BackgroundSprite> i = backgroundsFar.listIterator(); i.hasNext(); )
+				{
+					BackgroundSprite bSprite = i.next();
+					if (bSprite == s)
+					{
+						i.remove();
+						break;
+					}
+				}
+			}
 			else
-				masterSpriteList.remove(s);
-//			return masterSpriteList.remove(s);
+			{
+				for (ListIterator<Sprite> i = masterSpriteList.listIterator(); i.hasNext(); )
+				{
+					Sprite bSprite = i.next();
+					if (bSprite == s)
+					{
+						i.remove();
+						break;
+					}
+				}
+			}
 		}
 	}
 	
@@ -85,6 +117,24 @@ public class SpriteList
 		}
 		
 		return drawList;
+	}
+	//Returns a list of all PhysicsSPrites held in the list,
+	//for update purposes only
+	public static ArrayList<PhysicsSprite> getPhysicsSpriteList()
+	{
+		ArrayList<PhysicsSprite> physicsList = new ArrayList<PhysicsSprite>();
+		synchronized(spriteListLock)
+		{
+			for (ListIterator<Sprite> i = masterSpriteList.listIterator(); i.hasNext(); )
+			{
+				Sprite sprite = i.next();
+				
+				if (sprite instanceof PhysicsSprite)
+					physicsList.add((PhysicsSprite) sprite);
+			}
+		}
+		
+		return physicsList;
 	}
 	
 	public static void clearPlayerShip()
@@ -113,7 +163,8 @@ public class SpriteList
 				
 				playerShip = newShip;
 				
-				masterSpriteList.add(newShip);
+				ListIterator<Sprite> i = masterSpriteList.listIterator();
+				i.add(newShip);
 			}
 	}
 	
@@ -125,7 +176,8 @@ public class SpriteList
 			{
 				playerShip = new PlayerShip(new Vector2D(50.0, 50.0));
 				
-				masterSpriteList.add(playerShip);
+				ListIterator<Sprite> i = masterSpriteList.listIterator();
+				i.add(playerShip);
 			}
 		}
 		

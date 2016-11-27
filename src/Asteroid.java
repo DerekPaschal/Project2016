@@ -83,7 +83,6 @@ public class Asteroid extends PhysicsSprite
 	@Override
 	public void collisionAlert(PhysicsSprite impactor) 
 	{
-		//System.out.println(this.getClass().getName() + " collided with: " + impactor.getClass().getName());
 		this.rot_vel = Math.random()*5-2.5;
 //		this.health--;
 //		

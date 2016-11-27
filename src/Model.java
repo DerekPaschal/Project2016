@@ -9,6 +9,7 @@
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.ListIterator;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -76,20 +77,25 @@ class Model
 				//Set all PhysicsSprite accelerations in gameMap to 0
 				mv.gameMap.clearPhysicsSpritesAcc();
 				
+				//Get list of PhysicsSprites
+				ArrayList<PhysicsSprite> physicsSprites = SpriteList.getPhysicsSpriteList();
+				
 				//Update accelerations of each PhysicsSprite in the game
 				CountDownLatch latch = new CountDownLatch(sprite_threads+boundary_threads);
-				double divided = mv.gameMap.getPhysicsSpritesLength() / sprite_threads;
+				double divided = physicsSprites.size() / sprite_threads;
 				
 				//PhysicsSprite-PhysicsSprite collisions
 				for (int i = 0; i<sprite_threads;i++)
 				{
-					//executor.execute(new UpdateAccThread(mv.gameMap.getPhysicsSprites(), divided * i, divided * (i+1), latch));
-					executor.execute(new UpdateAccThread(SpriteList.getList(), divided * i, divided * (i+1), latch));
+					if ((i + 1) == sprite_threads)
+						executor.execute(new UpdateAccThread(physicsSprites, divided * i, physicsSprites.size(), latch));
+					else
+						executor.execute(new UpdateAccThread(physicsSprites, divided * i, divided * (i+1), latch));
 				}
 				//PhysicsSprite-Boundary collisions
 				executor.execute(new UpdateAccThread(mv.gameMap.fieldBoundaries, latch));
 				//Wait
-				try {latch.await();}catch(InterruptedException e){}
+				try {latch.await();}catch(InterruptedException e){e.printStackTrace();}
 				
 				
 				//Update velocity and position of each PhysicsSprite
@@ -162,12 +168,12 @@ class Model
 
 class UpdateAccThread implements Runnable
 {
-	ArrayList<Sprite> sprites;
+	ArrayList<PhysicsSprite> sprites;
 	ArrayList<MapBoundary> boundaries;
 	int begin, end;
 	CountDownLatch latch;
 	
-	UpdateAccThread(ArrayList<Sprite> spriteList, double begin, double end, CountDownLatch latch)
+	UpdateAccThread(ArrayList<PhysicsSprite> spriteList, double begin, double end, CountDownLatch latch)
 	{
 		this.sprites = spriteList;
 		this.begin = (int)begin;
@@ -188,11 +194,13 @@ class UpdateAccThread implements Runnable
 		if (this.sprites != null)
 		{
 			Sprite currentSprite;
+			
 			for(int i = begin; i < end; i++)
 			{
 				currentSprite = sprites.get(i);
 				if (currentSprite instanceof PhysicsSprite)
-					((PhysicsSprite) currentSprite).updateAcc(Game.primaryModel.mv.gameMap.getPhysicsSprites());
+					//((PhysicsSprite) currentSprite).updateAcc(Game.primaryModel.mv.gameMap.getPhysicsSprites());
+					((PhysicsSprite) currentSprite).updateAcc(this.sprites);
 			}
 		}
 		else

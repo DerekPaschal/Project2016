@@ -12,6 +12,7 @@
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class GameMap {
 	
@@ -175,14 +176,13 @@ public class GameMap {
 	 */
 	public void addPhysicsSprite(PhysicsSprite sprite)
 	{
-		synchronized (this.physicsSprites)
+		synchronized(this.physicsSprites)
 		{
-			this.physicsSprites.add(sprite);
+			ListIterator<PhysicsSprite> i = this.physicsSprites.listIterator();
+			i.add(sprite);
 		}
 		
-		this.mapBoundary.addSprite(sprite); //Already synchronized
-		
-		SpriteList.addSprite(sprite); //Already synchronized
+		SpriteList.addSprite(sprite);
 	}
 	
 	/*
@@ -206,18 +206,7 @@ public class GameMap {
 	 */
 	public void removePhysicsSprite(PhysicsSprite sprite)
 	{
-		synchronized(this.physicsSprites)
-		{
-			this.physicsSprites.remove(sprite);
-		}
-		
-		synchronized(this.fieldBoundaries)
-		{
-			for (MapBoundary currBoundary : this.fieldBoundaries)
-				currBoundary.removeSprite(sprite); //Already synchronized
-		}
-		
-		SpriteList.removeSprite(sprite); //Already synchronized
+		sprite.remove = true;
 	}
 	
 	/*
@@ -291,10 +280,14 @@ public class GameMap {
 		{
 			synchronized (this.physicsSprites)
 			{
-				for (PhysicsSprite pSprite : this.physicsSprites)
+				for (ListIterator<PhysicsSprite> i = this.physicsSprites.listIterator(); i.hasNext(); )
 				{
+					PhysicsSprite pSprite = i.next();
 					if (pSprite != null && pSprite.remove)
-						this.physicsSprites.remove(pSprite);
+					{
+						i.remove();
+						SpriteList.removeSprite(pSprite);
+					}
 				}
 			}
 		}

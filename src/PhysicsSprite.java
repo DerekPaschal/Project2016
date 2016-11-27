@@ -9,6 +9,7 @@
  ***************************/
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 abstract class PhysicsSprite extends Sprite
 {
@@ -51,8 +52,11 @@ abstract class PhysicsSprite extends Sprite
 		double VelocityOnNormal;
 		double restitution;
 	
-		for (PhysicsSprite pSprite : physicsSprites) //For each Physics Sprite
+		//for (PhysicsSprite pSprite : physicsSprites) //For each Physics Sprite
+		for (ListIterator<PhysicsSprite> i = physicsSprites.listIterator(); i.hasNext(); )
 		{
+			PhysicsSprite pSprite = i.next();
+			
 			if (pSprite != this) //If it is not itself
 			{
 				distance = this.pos.distance(pSprite.pos); //Calculate Distance between Sprites
