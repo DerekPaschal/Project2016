@@ -50,30 +50,34 @@ public class Asteroid extends PhysicsSprite
 	{
 		synchronized (this.imageLock)
 		{
-			if (this.needsRedraw || this.currentImage == null)
+			if (this.needsRedraw)
 			{
-				this.currentImage = new BufferedImage((int)Math.round(this.size*2), (int)Math.round(this.size*2), 
-						BufferedImage.TYPE_INT_ARGB);
+				//this.currentImage = new BufferedImage((int)Math.round(this.size*2), (int)Math.round(this.size*2), 
+				//		BufferedImage.TYPE_INT_ARGB);
 				
-				BufferedImage tempImage;
+				//BufferedImage tempImage;
 				
 				switch(type)
 				{
 					case 0:
-						tempImage = ResourceLoader.getBufferedImage("asteroids/asteroid1.png"); //Load Asteroid Image
+						//tempImage = ResourceLoader.getBufferedImage("asteroids/asteroid1.png"); //Load Asteroid Image
+						this.currentImage = ResourceLoader.getBufferedImage("asteroids/asteroid1.png");
 						break;
 					case 1:
-						tempImage = ResourceLoader.getBufferedImage("asteroids/asteroid2.png"); //Load Asteroid Image
+						this.currentImage = ResourceLoader.getBufferedImage("asteroids/asteroid2.png");
+						//tempImage = ResourceLoader.getBufferedImage("asteroids/asteroid2.png"); //Load Asteroid Image
 						break;
 					default:
-						tempImage = ResourceLoader.getBufferedImage("asteroids/asteroid1.png"); //Load Asteroid Image
+						//tempImage = ResourceLoader.getBufferedImage("asteroids/asteroid1.png"); //Load Asteroid Image
 						break;
 				}
 				
-				Graphics2D c2 = this.currentImage.createGraphics();
-				c2.drawImage(tempImage, 
-						0, 0, this.currentImage.getWidth()-1, this.currentImage.getHeight()-1, 
-						0, 0, tempImage.getWidth()-1, tempImage.getHeight()-1, null);
+				//Graphics2D c2 = this.currentImage.createGraphics();
+				//c2.drawImage(tempImage, 
+				//		0, 0, this.currentImage.getWidth()-1, this.currentImage.getHeight()-1, 
+				//		0, 0, tempImage.getWidth()-1, tempImage.getHeight()-1, null);
+				
+				this.scale =  (this.size*2) / Math.max(this.currentImage.getWidth(), this.currentImage.getHeight());
 			}
 			
 			super.draw(g2);

@@ -19,7 +19,9 @@ abstract class Sprite
 	public Rotation rotation;
 	public boolean visible;
 	public boolean needsRedraw = true;
-	public boolean remove;
+	public boolean remove = false;
+	private AffineTransform at = new AffineTransform();
+	public double scale = 1.0;
 	
 	public Sprite(Vector2D position)
 	{
@@ -119,22 +121,26 @@ abstract class Sprite
 		if (this.currentImage == null)
 			return;
 		
-		AffineTransform at = new AffineTransform();
-		//at.scale(camera.Zoom, camera.Zoom);
-		double transX = this.pos.x - (this.currentImage.getWidth()/2) - ViewCamera.pos.x + (ViewCamera.renderRes.x*0.5);
-		double transY = this.pos.y - (this.currentImage.getHeight()/2) - ViewCamera.pos.y + (ViewCamera.renderRes.y*0.5);
+		this.at.setToIdentity();
 		
-		if (!(transX <= ViewCamera.renderRes.x && transX+currentImage.getWidth()  >= 0 && 
-				transY <= ViewCamera.renderRes.y && transY+currentImage.getHeight() >= 0))
+		
+		
+		double transX = this.pos.x - ((this.currentImage.getWidth()*this.scale)/2) - ViewCamera.pos.x + (ViewCamera.renderRes.x*0.5);
+		double transY = this.pos.y - ((this.currentImage.getHeight()*this.scale)/2) - ViewCamera.pos.y + (ViewCamera.renderRes.y*0.5);
+		
+		if (!(transX <= ViewCamera.renderRes.x && (transX+(currentImage.getWidth()*this.scale))  >= 0 && 
+				transY <= ViewCamera.renderRes.y && (transY+(currentImage.getHeight()*this.scale)) >= 0))
 		{
 			return;
 		}
 		
 		at.translate(transX, transY);
 		
-		double rotateX = currentImage.getWidth() / 2;
-		double rotateY = currentImage.getHeight() / 2;
+		double rotateX = (currentImage.getWidth()*this.scale) / 2;
+		double rotateY = (currentImage.getHeight()*this.scale) / 2;
 		at.rotate(this.rotation.getRadians(), rotateX, rotateY);
+		
+		this.at.scale(scale, scale);
 		
 		g2.drawImage(currentImage, at, null);
 	}

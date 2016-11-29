@@ -171,6 +171,7 @@ public class MapBoundary extends Sprite
 	@Override
 	public void draw(Graphics2D g2)
 	{
+		/*
 		synchronized(this.imageLock)
 		{
 			if (this.needsRedraw || this.currentImage == null)
@@ -193,6 +194,7 @@ public class MapBoundary extends Sprite
 			
 			super.draw(g2);
 		}
+		*/
 	}
 	
 	/*public String getInfo()

@@ -76,13 +76,14 @@ abstract class PhysicsSprite extends Sprite
 					//synchronized (this.acc)
 					//{
 						this.acc = this.acc.add(UnitVector.multiply( (3 * restitution) * (Math.min( overlap , Math.min(this.size, ((PhysicsSprite)pSprite).size) ) /this.size)));
-						this.collisionAlert((PhysicsSprite)pSprite);
+						this.collisionAlert(pSprite);
 					//}
 					
-					/*synchronized (pSprite.acc)
-					{
-						
-					}*/
+					//synchronized (pSprite.acc)
+					//{
+					//	pSprite.acc = pSprite.acc.add(UnitVector.multiply( (3 * restitution) * (Math.min( overlap , Math.min(this.size, ((PhysicsSprite)pSprite).size) ) /this.size)));
+					//	pSprite.collisionAlert(this);
+					//}
 					this.collisionAlert((PhysicsSprite)pSprite);
 				}
 			}

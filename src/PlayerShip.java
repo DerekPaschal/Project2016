@@ -18,7 +18,7 @@ public class PlayerShip extends SpaceShip
 	{
 		super(position,new Rotation(0),0.0);
 		
-		this.size = 25; //Size of 'collision bubble' of ship
+		this.size = 50; //Size of 'collision bubble' of ship
 	}
 	
 	@Override
@@ -38,7 +38,7 @@ public class PlayerShip extends SpaceShip
 				double shipScale = (this.size*2) / Math.max(shipDims.x, shipDims.y); //Set scale size that will make ship image fit into size
 				
 				//Draw 'shield bubble'
-				for (float alpha = 0, i = 0; (alpha < 1.0) && (this.size - i > 1); alpha+= 0.05, i++)
+				for (float alpha = 0, i = 0; (alpha < 1.0) && (this.size - i > 1); alpha+= 0.035, i++)
 				{
 					c2.setColor(new Color((float)0, (float)0.7, (float)0.8, (float)alpha));
 					c2.drawOval((int) i, (int) i, (int)(Math.round(this.size*2)-1-i*2), (int)(Math.round(this.size*2)-1-i*2));	
