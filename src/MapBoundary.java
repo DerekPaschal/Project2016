@@ -152,19 +152,23 @@ public class MapBoundary extends Sprite
 	 */
 	public void checkCollision()
 	{
+		int i = 0;
 		for(PhysicsSprite pSprite : this.sprites)
 		{
-			if (pSprite.pos.x - pSprite.size < this.getLeftBound())
-				pSprite.acc.x += this.repulsiveForce * Math.abs(pSprite.pos.x - pSprite.size - this.getLeftBound());
-			
-			else if (pSprite.pos.x+pSprite.size > this.getRightBound())
-				pSprite.acc.x += -this.repulsiveForce * Math.abs(pSprite.pos.x + pSprite.size - this.getRightBound());
-			
-			if (pSprite.pos.y-pSprite.size < this.getUpperBound())
-				pSprite.acc.y += this.repulsiveForce * Math.abs(pSprite.pos.y - pSprite.size - this.getUpperBound());
-			
-			else if (pSprite.pos.y+pSprite.size > this.getLowerBound())
-				pSprite.acc.y += -this.repulsiveForce * Math.abs(pSprite.pos.y + pSprite.size - this.getLowerBound());
+			synchronized (pSprite.acc)
+			{
+				if (pSprite.pos.x - pSprite.size < this.getLeftBound())
+					pSprite.acc.x += this.repulsiveForce * Math.abs(pSprite.pos.x - pSprite.size - this.getLeftBound());
+				
+				else if (pSprite.pos.x+pSprite.size > this.getRightBound())
+					pSprite.acc.x += -this.repulsiveForce * Math.abs(pSprite.pos.x + pSprite.size - this.getRightBound());
+				
+				if (pSprite.pos.y-pSprite.size < this.getUpperBound())
+					pSprite.acc.y += this.repulsiveForce * Math.abs(pSprite.pos.y - pSprite.size - this.getUpperBound());
+				
+				else if (pSprite.pos.y+pSprite.size > this.getLowerBound())
+					pSprite.acc.y += -this.repulsiveForce * Math.abs(pSprite.pos.y + pSprite.size - this.getLowerBound());
+			}
 		}
 	}
 	
@@ -193,8 +197,9 @@ public class MapBoundary extends Sprite
 			}
 			
 			super.draw(g2);
-		}
-		*/
+			
+		}*/
+		
 	}
 	
 	/*public String getInfo()

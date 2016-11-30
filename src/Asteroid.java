@@ -18,10 +18,10 @@ public class Asteroid extends PhysicsSprite
 	public Color color;
 	int type;
 	
-	public Asteroid(Vector2D position, Rotation rotation, double size, double restitution)
+	public Asteroid(Vector2D position, Rotation rotation, double size, double restitution, double health)
 	{
 		
-		super(position, rotation, Math.round(size),restitution);
+		super(position, rotation, Math.round(size),restitution, health);
 		this.vel = new Vector2D();
 		int color_value = (int)(128+(Math.random()*64));
 		this.color = new Color(color_value,color_value,color_value);
@@ -34,9 +34,9 @@ public class Asteroid extends PhysicsSprite
 	}
 	
 	@Override
-	public void updateAcc(ArrayList<PhysicsSprite> physicsSprites)
+	public void updateAcc(int index)
 	{				
-		super.CollisionDetect(physicsSprites);
+		super.CollisionDetect(index);
 	}
 	
 	@Override
@@ -85,12 +85,12 @@ public class Asteroid extends PhysicsSprite
 	}
 
 	@Override
-	public void collisionAlert(PhysicsSprite impactor) 
+	public void collisionAlert(PhysicsSprite impactor, double impact) 
 	{
 		this.rot_vel = Math.random()*5-2.5;
-//		this.health--;
-//		
-//		if (this.health < 0)
-//			this.remove = true;
+		if (impactor instanceof SpaceShip)
+			this.health = this.health - impact;
+		if (this.health < 0)
+			this.remove = true;
 	}
 }

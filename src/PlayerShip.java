@@ -16,9 +16,9 @@ public class PlayerShip extends SpaceShip
 {
 	public PlayerShip(Vector2D position) 
 	{
-		super(position,new Rotation(0),0.0);
+		super(position,new Rotation(0),0.0,1000);
 		
-		this.size = 50; //Size of 'collision bubble' of ship
+		this.size = 40; //Size of 'collision bubble' of ship
 	}
 	
 	@Override

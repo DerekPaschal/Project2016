@@ -24,10 +24,10 @@ import java.util.ListIterator;
 
 public class SpriteList
 {
-	public static Object spriteListLock = new Object();
-	private static PlayerShip playerShip = new PlayerShip(new Vector2D(50.0, 50.0));
-	private static ArrayList<Sprite> masterSpriteList = new ArrayList<Sprite>();
-	private static ArrayList<BackgroundSprite> backgroundsFar = new ArrayList<BackgroundSprite>();
+	public static Object SpriteLock = new Object();
+	public static PlayerShip playerShip = new PlayerShip(new Vector2D(50.0, 50.0));
+	private static ArrayList<Sprite> OtherSpriteList = new ArrayList<Sprite>();
+	private static BackgroundSprite background;
 	private static GameGUI gui;
 	
 	public SpriteList() { }
@@ -35,42 +35,42 @@ public class SpriteList
 	//Add Sprite to the list
 	//Returns true if successful, false if not added to list
 	// (Usually due to sprite already present in the list)
-	public static void addSprite(Sprite s)
+	public static void add(Sprite s)
 	{
-		synchronized(spriteListLock)
+		synchronized(SpriteLock)
 		{
 			if (s instanceof GameGUI)
 				gui = (GameGUI) s;
 			else if (s instanceof PlayerShip)
 			{
 				//Replace current player ship with new one
-				removeSprite(playerShip);
-				setPlayerShip((PlayerShip) s);
+				//removeSprite(playerShip);
+				playerShip = (PlayerShip) s;
 			}
 			else if (s instanceof BackgroundSprite)
 			{
-				ListIterator<BackgroundSprite> i = backgroundsFar.listIterator();
-				i.add((BackgroundSprite) s);
+				background = (BackgroundSprite)s;
 			}
 			else
 			{
-				ListIterator<Sprite> i = masterSpriteList.listIterator();
-				i.add(s);
+				//ListIterator<Sprite> i = SpriteList.listIterator();
+				//i.add(s);
+				OtherSpriteList.add(s);
 			}
 		}
 	}
 	
 	//Remove Sprite from the list.
 	//Returns true if element was found in the list and removed
-	public static void removeSprite(Sprite s)
+	public static void remove(Sprite s)
 	{
-		synchronized (spriteListLock)
+		synchronized (SpriteLock)
 		{
 			if (s == gui)
 				gui = null;
 			else if (s instanceof BackgroundSprite)
 			{
-				for (ListIterator<BackgroundSprite> i = backgroundsFar.listIterator(); i.hasNext(); )
+				/*for (ListIterator<BackgroundSprite> i = backgroundsFar.listIterator(); i.hasNext(); )
 				{
 					BackgroundSprite bSprite = i.next();
 					if (bSprite == s)
@@ -78,11 +78,16 @@ public class SpriteList
 						i.remove();
 						break;
 					}
-				}
+				}*/
+				background = null;
+			}
+			else if (s instanceof PlayerShip)
+			{
+				playerShip = null;
 			}
 			else
 			{
-				for (ListIterator<Sprite> i = masterSpriteList.listIterator(); i.hasNext(); )
+				/*for (ListIterator<Sprite> i = masterSpriteList.listIterator(); i.hasNext(); )
 				{
 					Sprite bSprite = i.next();
 					if (bSprite == s)
@@ -90,11 +95,118 @@ public class SpriteList
 						i.remove();
 						break;
 					}
-				}
+				}*/
+				OtherSpriteList.remove(s);
 			}
 		}
 	}
 	
+	public static void remove(int index)
+	{
+		synchronized (SpriteLock)
+		{
+			if (get(index) == gui)
+				gui = null;
+			else if (get(index) instanceof BackgroundSprite)
+			{
+				/*for (ListIterator<BackgroundSprite> i = backgroundsFar.listIterator(); i.hasNext(); )
+				{
+					BackgroundSprite bSprite = i.next();
+					if (bSprite == s)
+					{
+						i.remove();
+						break;
+					}
+				}*/
+				background = null;
+			}
+			else if (get(index) instanceof PlayerShip)
+			{
+				playerShip = null;
+			}
+			else
+			{
+				/*for (ListIterator<Sprite> i = masterSpriteList.listIterator(); i.hasNext(); )
+				{
+					Sprite bSprite = i.next();
+					if (bSprite == s)
+					{
+						i.remove();
+						break;
+					}
+				}*/
+				OtherSpriteList.remove(get(index));
+			}
+		}
+	}
+	
+	//Return size of the SpriteList
+	public static int size()
+	{
+		int count = 0;
+		
+		count = background!=null ? count+1 : count;
+		count = playerShip!=null ? count+1 : count;
+		count = gui!=null ? count+1 : count;
+		count += OtherSpriteList.size();
+		
+		return count;
+	}
+	
+	public static Sprite get(int index)
+	{		
+		
+		if (index < 0)
+			throw new IllegalArgumentException("Sprite List Get Out of Bounds.");	
+		
+		if (background != null)
+		{
+			if (index == 0)
+				return background;
+			
+			index--;
+		}
+		
+		for (int i = 0; i < OtherSpriteList.size(); i++)
+		{
+			if (index == 0)
+				return OtherSpriteList.get(i);
+				
+			index--;
+		}
+		
+		if (playerShip != null)
+		{
+			if (index == 0)
+				return playerShip;
+			
+			index--;
+		}
+		
+		if (gui != null && index == 0)
+			return gui;
+		
+		throw new IllegalArgumentException("Sprite List Get Out of Bounds.");
+		
+	}
+	
+	static public BackgroundSprite getBackground()
+	{
+		return background;
+	}
+	
+	static public PlayerShip getPlayerShip()
+	{
+		return playerShip;
+	}
+	
+	static public GameGUI getGUI()
+	{
+		return gui;
+	}
+	
+	
+	/*
 	//This method is intended only for drawing the sprites.
 	//Modifying the contents of the list should not be done
 	//through this method.
@@ -136,8 +248,9 @@ public class SpriteList
 		
 		return physicsList;
 	}
+	*/
 	
-	public static void clearPlayerShip()
+	/*public static void clearPlayerShip()
 	{
 		if (playerShip == null)
 			return;
@@ -150,9 +263,9 @@ public class SpriteList
 				playerShip = null;
 			}
 		}
-	}
+	}*/
 	
-	public static void setPlayerShip(PlayerShip newShip)
+	/*public static void setPlayerShip(PlayerShip newShip)
 	{
 		if (newShip == null)
 			throw new IllegalArgumentException("Error: Attempted to set SpriteList playerShip to null!");
@@ -182,5 +295,5 @@ public class SpriteList
 		}
 		
 		return playerShip;
-	}
+	}*/
 }

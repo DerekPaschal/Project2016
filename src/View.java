@@ -63,12 +63,14 @@ class View extends JPanel
 		g2.setColor(Color.BLACK);
 		g2.fillRect(0,  0,  (int)ViewCamera.renderRes.x, (int)ViewCamera.renderRes.y);
 		
-		synchronized(SpriteList.spriteListLock)
+		synchronized(SpriteList.SpriteLock)
 		{
-			ArrayList<Sprite> spriteList = SpriteList.getList();
-			for (Sprite currSprite : spriteList)
+			//ArrayList<Sprite> spriteList = SpriteList.getList();
+			Sprite s;
+			for (int i = 0; i < SpriteList.size(); i++)
 			{
-				currSprite.draw(g2);
+				s = SpriteList.get(i);
+				s.draw(g2);
 			}
 		}
 		

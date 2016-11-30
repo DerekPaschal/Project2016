@@ -106,17 +106,23 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	
 	public void mouseMoved(MouseEvent e)
 	{
-		Vector2D position = GetPosition(e);
-		model.mv.gui.mouseMove(e, position);
-		switch (model.mv.getGameState())
+		synchronized (SpriteList.SpriteLock)
 		{
-			case MAIN_MENU:
-				break;
-			case GAME:
-				Controller.mousePos = position;
-				break;
-			default:
-				break;
+			if (model.mv.gui == null)
+				return;
+			
+			Vector2D position = GetPosition(e);
+			model.mv.gui.mouseMove(e, position);
+			switch (model.mv.getGameState())
+			{
+				case MAIN_MENU:
+					break;
+				case GAME:
+					Controller.mousePos = position;
+					break;
+				default:
+					break;
+			}
 		}
 	}
 	
@@ -125,68 +131,79 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	public void mouseExited(MouseEvent e) {    }
 	public void keyPressed(KeyEvent e)
 	{
-		model.mv.gui.keyPress(e);
-		switch (model.mv.getGameState())
+		synchronized (SpriteList.SpriteLock)
 		{
-			case MAIN_MENU:
-				break;
-			case GAME:
-				int keyCode = e.getKeyCode();
-				
-				switch (keyCode)
-				{
-					case KeyEvent.VK_UP:
-						upPressed = true;
-						SpriteList.getPlayerShip().forward = true;
-						break;
-					case KeyEvent.VK_DOWN:
-						downPressed = true;
-						SpriteList.getPlayerShip().backward = true;
-						break;
-					case KeyEvent.VK_LEFT:
-						leftPressed = true;
-						SpriteList.getPlayerShip().left = true;
-						break;
-					case KeyEvent.VK_RIGHT:
-						rightPressed = true;
-						SpriteList.getPlayerShip().right = true;
-						break;
-				}
-				break;
-			default:
-				break;
+			if (SpriteList.getPlayerShip() == null)
+				return;
+			model.mv.gui.keyPress(e);
+			switch (model.mv.getGameState())
+			{
+				case MAIN_MENU:
+					break;
+				case GAME:
+					int keyCode = e.getKeyCode();
+					
+					switch (keyCode)
+					{
+						case KeyEvent.VK_UP:
+							upPressed = true;
+							SpriteList.getPlayerShip().forward = true;
+							break;
+						case KeyEvent.VK_DOWN:
+							downPressed = true;
+							SpriteList.getPlayerShip().backward = true;
+							break;
+						case KeyEvent.VK_LEFT:
+							leftPressed = true;
+							SpriteList.getPlayerShip().left = true;
+							break;
+						case KeyEvent.VK_RIGHT:
+							rightPressed = true;
+							SpriteList.getPlayerShip().right = true;
+							break;
+					}
+					break;
+				default:
+					break;
+			}
 		}
 	}
 	public void keyReleased(KeyEvent e)
 	{
-		int keyCode = e.getKeyCode();
-		switch (model.mv.getGameState())
+		synchronized (SpriteList.SpriteLock)
 		{
-			case MAIN_MENU:
-				break;
-			case GAME:
-				switch (keyCode)
-				{
-					case KeyEvent.VK_UP:
-						upPressed = false;
-						SpriteList.getPlayerShip().forward = false;
-						break;
-					case KeyEvent.VK_DOWN:
-						downPressed = false;
-						SpriteList.getPlayerShip().backward = false;
-						break;
-					case KeyEvent.VK_LEFT:
-						leftPressed = false;
-						SpriteList.getPlayerShip().left = false;
-						break;
-					case KeyEvent.VK_RIGHT:
-						rightPressed = false;
-						SpriteList.getPlayerShip().right = false;
-						break;
-				}
-				break;
-			default:
-				break;
+			if (SpriteList.getPlayerShip() == null)
+				return;
+			
+			int keyCode = e.getKeyCode();
+			switch (model.mv.getGameState())
+			{
+				case MAIN_MENU:
+					break;
+				case GAME:
+					switch (keyCode)
+					{
+						case KeyEvent.VK_UP:
+							upPressed = false;
+							SpriteList.getPlayerShip().forward = false;
+							break;
+						case KeyEvent.VK_DOWN:
+							downPressed = false;
+							SpriteList.getPlayerShip().backward = false;
+							break;
+						case KeyEvent.VK_LEFT:
+							leftPressed = false;
+							SpriteList.getPlayerShip().left = false;
+							break;
+						case KeyEvent.VK_RIGHT:
+							rightPressed = false;
+							SpriteList.getPlayerShip().right = false;
+							break;
+					}
+					break;
+				default:
+					break;
+			}
 		}
 	}
 	public void keyTyped(KeyEvent k) {    }

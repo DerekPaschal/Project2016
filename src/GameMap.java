@@ -19,19 +19,14 @@ public class GameMap {
 	enum MapType {DEMO, BLANK, FILE;};
 	
 	public ArrayList<MapBoundary> fieldBoundaries;
-	private ArrayList<PhysicsSprite> physicsSprites;
-	private ArrayList<BackgroundSprite> backgroundSprites;
-	public Object physicsSpritesLock = new Object();
+	//private ArrayList<PhysicsSprite> physicsSprites;
+	//private ArrayList<BackgroundSprite> backgroundSprites;
+	//public Object physicsSpritesLock = new Object();
 	public MapBoundary mapBoundary;
 	public MapType mapType;
 	public Model model;
 	
-//	public GameMap(Model m, MapType type)
-//	{
-//		this.mapType = type;
-//		this.model = m;
-//		initMap();
-//	}
+
 	public GameMap(Model m)
 	{
 		this.mapBoundary = new MapBoundary(new Rectangle(0,0,100,100));
@@ -44,22 +39,26 @@ public class GameMap {
 	{
 		//Set up resources
 		this.fieldBoundaries = new ArrayList<MapBoundary>();
-		this.physicsSprites = new ArrayList<PhysicsSprite>();
-		this.backgroundSprites = new ArrayList<BackgroundSprite>();
+		//this.physicsSprites = new ArrayList<PhysicsSprite>();
+		//this.backgroundSprites = new ArrayList<BackgroundSprite>();
 		this.mapBoundary = new MapBoundary(new Rectangle(0,0,100,100));
 		this.fieldBoundaries.add(mapBoundary);
 	}
 	
-	//Remove all sprites used for GameMap
+	//Remove all sprites except gui
 	public void removeAllSprites()
 	{
-		synchronized (SpriteList.spriteListLock)
+		synchronized (SpriteList.SpriteLock)
 		{
-			synchronized (this.physicsSprites)
+			for(int i = 0; i < SpriteList.size()-1; i++)
+			{
+				SpriteList.remove(0);
+			}
+			/*synchronized (this.physicsSprites)
 			{
 				for (PhysicsSprite pSprite : this.physicsSprites)
 				{
-					SpriteList.removeSprite(pSprite);
+					SpriteList.remove(pSprite);
 				}
 				this.physicsSprites.clear();
 			}
@@ -71,7 +70,7 @@ public class GameMap {
 				//safe
 				for (Sprite currBound : this.fieldBoundaries)
 				{
-					SpriteList.removeSprite(currBound);
+					SpriteList.remove(currBound);
 				}
 				this.fieldBoundaries.clear();
 			}
@@ -80,10 +79,10 @@ public class GameMap {
 			{
 				for (BackgroundSprite currBackground : this.backgroundSprites)
 				{
-					SpriteList.removeSprite(currBackground);
+					SpriteList.remove(currBackground);
 				}
 				this.backgroundSprites.clear();
-			}
+			}*/
 		}
 	}
 	
@@ -113,32 +112,33 @@ public class GameMap {
 		this.removeAllSprites();
 		
 		PlayerShip playerShip = new PlayerShip(new Vector2D(500.0, 500.0));
-		addPhysicsSprite(playerShip);
-		SpriteList.setPlayerShip(playerShip);
+		//addPhysicsSprite(playerShip);
+		SpriteList.add(playerShip);
 		
 		//Draw Background sprites
 		BackgroundSprite starfield = new BackgroundSprite(new Vector2D(0, 0), "backgrounds/back-stars.png");
-		synchronized(SpriteList.spriteListLock)
+		synchronized(SpriteList.SpriteLock)
 		{
 			this.addBackgroundSprite(starfield);
 		}
 		
 		//Create inner asteroid field
-		int numAsteroids = 300;
-		MapBoundary asteroidField = new MapBoundary(new Rectangle(500,500,1000,1000));
+		int numAsteroids = 200;
+		MapBoundary asteroidField = new MapBoundary(new Rectangle(500,500,500,500));
 		asteroidField.boundaryColor = Color.BLUE;
 		asteroidField.setForce(0.0005);
 		Asteroid adding;
-		synchronized (SpriteList.spriteListLock)
+		synchronized (SpriteList.SpriteLock)
 		{
 			for (int i = 0; i < numAsteroids; i++)
 			{
 				adding = new Asteroid(new Vector2D(asteroidField.getLeftBound() + Math.random()*asteroidField.getWidth(), 
 						asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), new Rotation(Math.random()*360),
-						8+(Math.random() * 8), 0.8);
+						8+(Math.random() * 8), 0.8,100);
 				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
 				adding.rot_vel = Math.random()*5-2.5;
-				this.addPhysicsSprite(adding);
+				//this.addPhysicsSprite(adding);
+				SpriteList.add(adding);
 				asteroidField.addSprite(adding);
 			}
 		}
@@ -147,10 +147,15 @@ public class GameMap {
 		
 		//Create outer map bounds
 		this.mapBoundary = new MapBoundary(new Rectangle(0,0,2000,2000));
-		synchronized(SpriteList.spriteListLock)
+		synchronized(SpriteList.SpriteLock)
 		{
-			for (PhysicsSprite pSprite : physicsSprites)
-				mapBoundary.addSprite(pSprite); //Already synchronized
+			Sprite s;
+			for (int i = 0; i < SpriteList.size(); i++)
+			{
+				s = SpriteList.get(i);
+				if (s instanceof PhysicsSprite)
+					mapBoundary.addSprite((PhysicsSprite)s);
+			}
 		}
 		//Add mapBoundary to the GameMap
 		addBoundary(mapBoundary);
@@ -166,7 +171,7 @@ public class GameMap {
 		{
 			this.fieldBoundaries.add(mb);
 		}
-		SpriteList.addSprite(mb); //Already synchronized
+		SpriteList.add(mb); //Already synchronized
 	}
 	
 	/*
@@ -174,7 +179,7 @@ public class GameMap {
 	 * add it to the master sprite list). New PhysicsSprites
 	 * will be affected by the mapBoundary.
 	 */
-	public void addPhysicsSprite(PhysicsSprite sprite)
+	/*public void addPhysicsSprite(PhysicsSprite sprite)
 	{
 		synchronized(this.physicsSprites)
 		{
@@ -182,8 +187,8 @@ public class GameMap {
 			i.add(sprite);
 		}
 		
-		SpriteList.addSprite(sprite);
-	}
+		SpriteList.add(sprite);
+	}*/
 	
 	/*
 	 * Add a BackgroundSprite to the GameMap (and automatically
@@ -191,12 +196,12 @@ public class GameMap {
 	 */
 	public void addBackgroundSprite(BackgroundSprite sprite)
 	{
-		synchronized (this.backgroundSprites)
+		/*synchronized (this.backgroundSprites)
 		{
 			this.backgroundSprites.add(sprite);
-		}
+		}*/
 		
-		SpriteList.addSprite(sprite); //Already synchronized
+		SpriteList.add(sprite); //Already synchronized
 	}
 	
 	/*
@@ -215,12 +220,12 @@ public class GameMap {
 	 */
 	public void removeBackgroundSprite(BackgroundSprite sprite)
 	{
-		synchronized(this.backgroundSprites)
+		/*synchronized(this.backgroundSprites)
 		{
 			this.backgroundSprites.remove(sprite);
-		}
+		}*/
 		
-		SpriteList.removeSprite(sprite); //Already synchronized
+		SpriteList.remove(sprite); //Already synchronized
 	}
 	
 	/*
@@ -229,13 +234,18 @@ public class GameMap {
 	 */
 	public void clearPhysicsSpritesAcc()
 	{
-		synchronized (this.physicsSprites)
+		synchronized (SpriteList.SpriteLock)
 		{
-			for (PhysicsSprite pSprite : this.physicsSprites)
+			Sprite s;
+			for (int i = 0; i < SpriteList.size(); i++)
 			{
-				pSprite.acc.x = 0;
-				pSprite.acc.y = 0;
-				pSprite.rot_acc = 0;
+				s = SpriteList.get(i);
+				if (s instanceof PhysicsSprite)
+				{
+					((PhysicsSprite)s).acc.x = 0;
+					((PhysicsSprite)s).acc.y = 0;
+					((PhysicsSprite)s).rot_acc = 0;
+				}
 			}
 		}
 	}
@@ -244,28 +254,31 @@ public class GameMap {
 	 * Get size of the list of PhysicsSprites for use
 	 * in physics calculations
 	 */
-	public int getPhysicsSpritesLength()
+	/*public int getPhysicsSpritesLength()
 	{
 		synchronized (this.physicsSprites)
 		{
 			return this.physicsSprites.size();
 		}
-	}
+	}*/
 	
 	//Use only for read-only and sprite update loops
 	//NOT for use for modifying the list
-	public ArrayList<PhysicsSprite> getPhysicsSprites()
+	/*public ArrayList<PhysicsSprite> getPhysicsSprites()
 	{
 		return this.physicsSprites;
-	}
+	}*/
 	
 	public void updateVelPos()
 	{
-		synchronized(SpriteList.spriteListLock)
+		synchronized(SpriteList.SpriteLock)
 		{
-			for (PhysicsSprite pSprite : this.physicsSprites)
+			Sprite s;
+			for (int i = 0; i < SpriteList.size(); i++)
 			{
-				pSprite.updateVelPos();
+				s = SpriteList.get(i);
+				if (s instanceof PhysicsSprite)
+					((PhysicsSprite)s).updateVelPos();
 			}
 		}
 	}
@@ -277,9 +290,9 @@ public class GameMap {
 	 */
 	public void cleanPhysicsSpritesList()
 	{
-		synchronized (SpriteList.spriteListLock)
+		synchronized (SpriteList.SpriteLock)
 		{
-			synchronized (this.physicsSprites)
+			/*synchronized (this.physicsSprites)
 			{
 				for (ListIterator<PhysicsSprite> i = this.physicsSprites.listIterator(); i.hasNext(); )
 				{
@@ -290,6 +303,14 @@ public class GameMap {
 						SpriteList.removeSprite(pSprite);
 					}
 				}
+			}*/
+			
+			Sprite s;
+			for (int i = 0; i < SpriteList.size(); i++)
+			{
+				s = SpriteList.get(i);
+				if (s.remove)
+					SpriteList.remove(s);
 			}
 		}
 	}

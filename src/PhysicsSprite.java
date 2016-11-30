@@ -19,9 +19,9 @@ abstract class PhysicsSprite extends Sprite
 	public double rot_acc;
 	public double size;
 	public double restitution;
-//	public double health;
+	public double health;
 	
-	public PhysicsSprite(Vector2D position, Rotation rotation, double size) 
+	public PhysicsSprite(Vector2D position, Rotation rotation, double size, double restitution, double health) 
 	{
 		super(position);
 		this.size = size;
@@ -30,20 +30,15 @@ abstract class PhysicsSprite extends Sprite
 		this.rotation = rotation;
 		this.rot_vel = 0.0;
 		this.rot_acc = 0.0;
-		this.restitution = 1.0;
-	}
-	
-	public PhysicsSprite(Vector2D position, Rotation rotation, double size, double restitution)
-	{
-		this(position, rotation, size);
 		this.restitution = restitution;
+		this.health = health;
 	}
 	
-	public abstract void updateAcc(ArrayList<PhysicsSprite> physicsSprites);
+	public abstract void updateAcc(int index);
 	
-	public abstract void collisionAlert(PhysicsSprite impactor);
+	public abstract void collisionAlert(PhysicsSprite impactor, double impact);
 	
-	public void CollisionDetect(ArrayList<PhysicsSprite> physicsSprites)
+	public void CollisionDetect(int index)
 	{
 		//Physics Collision Detection
 		double distance;
@@ -52,39 +47,47 @@ abstract class PhysicsSprite extends Sprite
 		double VelocityOnNormal;
 		double restitution;
 	
-		//for (PhysicsSprite pSprite : physicsSprites) //For each Physics Sprite
-		for (ListIterator<PhysicsSprite> i = physicsSprites.listIterator(); i.hasNext(); )
+		
+		Sprite s;
+		PhysicsSprite p;
+		int listSize = SpriteList.size();
+		for (int i = index+1; i < listSize; i++)
 		{
-			PhysicsSprite pSprite = i.next();
+			s = SpriteList.get(i);
+			if(s instanceof PhysicsSprite)
+				p = (PhysicsSprite)s;
+			else
+				continue;
 			
-			if (pSprite != this) //If it is not itself
+			if (p != this) //If it is not itself
 			{
-				distance = this.pos.distance(pSprite.pos); //Calculate Distance between Sprites
-				overlap = (this.size + ((PhysicsSprite)pSprite).size) - distance; //overlap of the Sprites
+				distance = this.pos.distance(p.pos); //Calculate Distance between Sprites
+				overlap = (this.size + ((PhysicsSprite)p).size) - distance; //overlap of the Sprites
 				if (overlap > 0) //If the Sprites are Colliding
 				{
 					restitution = 1.0; //Reset local Restitution variable to default
-					UnitVector  = this.pos.subtract(pSprite.pos).divide(distance); //Find Unit Vector between Sprites
-					VelocityOnNormal = ((PhysicsSprite)pSprite).vel.subtract(this.vel).dot_product(UnitVector); //Portion of velocity on the Unit Vector
+					UnitVector  = this.pos.subtract(p.pos).divide(distance); //Find Unit Vector between Sprites
+					VelocityOnNormal = ((PhysicsSprite)p).vel.subtract(this.vel).dot_product(UnitVector); //Portion of velocity on the Unit Vector
 					
 					if (VelocityOnNormal < 0) //If Velocity on the Normal is Negative (Sprites are moving away from each other)
 					{
-						restitution = Math.min(this.restitution, ((PhysicsSprite)pSprite).restitution); //Modify Restitution to simulate inelastic collisions
+						restitution = Math.min(this.restitution, ((PhysicsSprite)p).restitution); //Modify Restitution to simulate inelastic collisions
 					}
 					
-					//Add to acceleration based on collision depth and restitution and size of current sprite
-					//synchronized (this.acc)
-					//{
-						this.acc = this.acc.add(UnitVector.multiply( (3 * restitution) * (Math.min( overlap , Math.min(this.size, ((PhysicsSprite)pSprite).size) ) /this.size)));
-						this.collisionAlert(pSprite);
-					//}
+					Vector2D impact = UnitVector.multiply( (3 * restitution) * (Math.min( overlap , Math.min(this.size, ((PhysicsSprite)p).size))));
 					
-					//synchronized (pSprite.acc)
-					//{
-					//	pSprite.acc = pSprite.acc.add(UnitVector.multiply( (3 * restitution) * (Math.min( overlap , Math.min(this.size, ((PhysicsSprite)pSprite).size) ) /this.size)));
-					//	pSprite.collisionAlert(this);
-					//}
-					this.collisionAlert((PhysicsSprite)pSprite);
+					//Add to acceleration based on collision depth and restitution and size of current sprite
+					synchronized (this.acc)
+					{
+						this.acc = this.acc.add(impact.divide(this.size));
+						this.collisionAlert(p,impact.length()/(this.size));
+					}
+					
+					synchronized (p.acc)
+					{
+						p.acc = p.acc.add(impact.divide(-p.size));
+						p.collisionAlert(this, impact.length()/(p.size));
+					}
 				}
 			}
 		}

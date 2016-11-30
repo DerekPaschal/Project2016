@@ -22,7 +22,7 @@ public class ModelVars
 		this.m = model;
 		
 		this.gui = new GameGUI();
-		SpriteList.addSprite(this.gui);
+		SpriteList.add(this.gui);
 		this.gameState = GameState.MAIN_MENU;
 	}
 	
@@ -60,7 +60,7 @@ public class ModelVars
 				break;
 			case GAME:
 				this.gameMap.removeAllSprites();
-				SpriteList.clearPlayerShip();
+				//SpriteList.clearPlayerShip();
 				this.gameMap = null;
 				break;
 			default:
