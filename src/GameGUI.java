@@ -51,10 +51,12 @@ public class GameGUI extends Sprite{
 		
 		ActionButton startButton = new ActionButton("Start Game", new Vector2D(50, 200));
 		startButton.setButtonAction(GUIButtonActions.START_GAME);
+		startButton.setButtonSize(new Vector2D(100, 100));
 		startButton.setFontSize(18);
 		startButton.setIsToggleButton(false);
 		
 		ActionButton testToggleButton = new ActionButton("Happy Button", new Vector2D(200, 200));
+		testToggleButton.setButtonSize(new Vector2D(100, 100));
 		testToggleButton.setFontSize(14);
 		
 		//Add the buttons
@@ -84,18 +86,20 @@ public class GameGUI extends Sprite{
 			this.guiTexts.clear();
 		}
 		
-		ActionButton endButton = new ActionButton("Main Menu", new Vector2D(0, 0));
+		ActionButton endButton = new ActionButton("MENU", new Vector2D(5, 5));
 		endButton.setButtonAction(GUIButtonActions.MAIN_MENU);
 		endButton.setIsToggleButton(false);
 		endButton.setTextColor(Color.YELLOW);
-		endButton.setButtonSize(new Vector2D(50, 50));
+		endButton.setButtonSize(new Vector2D(50, 30));
+		endButton.setFontSize(9);
 		
-		ActionButton pauseButton = new ActionButton("PAUSE", new Vector2D(0, 60));
+		ActionButton pauseButton = new ActionButton("PAUSE", new Vector2D(5, 40));
 		pauseButton.setFont(new Font("Monospace", Font.BOLD, 20));
 		pauseButton.setButtonAction(GUIButtonActions.TOGGLE_PAUSED);
 		pauseButton.setIsToggleButton(false);
 		pauseButton.setTextColor(Color.RED);
-		pauseButton.setButtonSize(new Vector2D(50, 50));
+		pauseButton.setButtonSize(new Vector2D(50, 30));
+		pauseButton.setFontSize(9);
 		
 		//Add the buttons
 		synchronized(this.guiButtons)

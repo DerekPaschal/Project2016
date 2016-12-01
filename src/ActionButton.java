@@ -24,6 +24,7 @@ public class ActionButton extends Sprite
 	//Member variables
 	private MenuText text;
 	private Vector2D size;
+	private String imagePath;
 	
 	private BufferedImage buttonImages[] = new BufferedImage[5];
 	
@@ -67,16 +68,40 @@ public class ActionButton extends Sprite
 		this.visible = true;
 		this.remove = false;
 		
+		if (this.imagePath == null)
+//			setImagePath("resources/buttons/testButton/");
+			setImagePath("buttons/standard/");
+		else
+			setImagePath(this.imagePath);
+		
 		//String imagePath = "resources/buttons/testButton/";
-		String imagePath = "buttons/testButton/";
+//		this.imagePath = "buttons/testButton/";
 		
-		buttonImages[0] = ResourceLoader.getBufferedImage(imagePath + "active.png");
-		buttonImages[1] = ResourceLoader.getBufferedImage(imagePath + "disabled.png");
-		buttonImages[2] = ResourceLoader.getBufferedImage(imagePath + "hover.png");
-		buttonImages[3] = ResourceLoader.getBufferedImage(imagePath + "normal.png");
-		buttonImages[4] = ResourceLoader.getBufferedImage(imagePath + "pressed.png");
 		
+		
+//		buttonImages[0] = ResourceLoader.getBufferedImage(imagePath + "active.png");
+//		buttonImages[1] = ResourceLoader.getBufferedImage(imagePath + "disabled.png");
+//		buttonImages[2] = ResourceLoader.getBufferedImage(imagePath + "hover.png");
+//		buttonImages[3] = ResourceLoader.getBufferedImage(imagePath + "normal.png");
+//		buttonImages[4] = ResourceLoader.getBufferedImage(imagePath + "pressed.png");
+//		
 		this.setState(GUIButtonStates.NORMAL);
+		this.needsRedraw = true;
+	}
+	
+	public void setImagePath(String path)
+	{
+		this.imagePath = path;
+		
+		synchronized (this.imageLock)
+		{
+			buttonImages[0] = ResourceLoader.getBufferedImage(imagePath + "active.png");
+			buttonImages[1] = ResourceLoader.getBufferedImage(imagePath + "disabled.png");
+			buttonImages[2] = ResourceLoader.getBufferedImage(imagePath + "hover.png");
+			buttonImages[3] = ResourceLoader.getBufferedImage(imagePath + "normal.png");
+			buttonImages[4] = ResourceLoader.getBufferedImage(imagePath + "pressed.png");
+		}
+		
 		this.needsRedraw = true;
 	}
 	
