@@ -167,13 +167,22 @@ public class SpriteList
 			index--;
 		}
 		
-		for (int i = 0; i < OtherSpriteList.size(); i++)
+		if (index < OtherSpriteList.size())
+		{
+			return OtherSpriteList.get(index);
+		}
+		else
+		{
+			index = index - OtherSpriteList.size();
+		}
+		
+		/*for (int i = 0; i < OtherSpriteList.size(); i++)
 		{
 			if (index == 0)
 				return OtherSpriteList.get(i);
 				
 			index--;
-		}
+		}*/
 		
 		if (playerShip != null)
 		{

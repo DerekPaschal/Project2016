@@ -88,8 +88,9 @@ public class Asteroid extends PhysicsSprite
 	public void collisionAlert(PhysicsSprite impactor, double impact) 
 	{
 		this.rot_vel = Math.random()*5-2.5;
+		
 		if (impactor instanceof SpaceShip)
-			this.health = this.health - impact;
+			this.health -= impact;
 		if (this.health < 0)
 			this.remove = true;
 	}

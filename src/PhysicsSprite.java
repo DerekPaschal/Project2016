@@ -19,7 +19,9 @@ abstract class PhysicsSprite extends Sprite
 	public double rot_acc;
 	public double size;
 	public double restitution;
+	
 	public double health;
+	public Object healthLock = new Object();
 	
 	public PhysicsSprite(Vector2D position, Rotation rotation, double size, double restitution, double health) 
 	{
@@ -80,13 +82,19 @@ abstract class PhysicsSprite extends Sprite
 					synchronized (this.acc)
 					{
 						this.acc = this.acc.add(impact.divide(this.size));
-						this.collisionAlert(p,impact.length()/(this.size));
+						synchronized (this.healthLock)
+						{
+							this.collisionAlert(p,impact.length()/(this.size));
+						}
 					}
 					
 					synchronized (p.acc)
 					{
 						p.acc = p.acc.add(impact.divide(-p.size));
-						p.collisionAlert(this, impact.length()/(p.size));
+						synchronized (p.healthLock)
+						{
+							p.collisionAlert(this, impact.length()/(p.size));
+						}
 					}
 				}
 			}

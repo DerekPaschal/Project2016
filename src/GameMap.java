@@ -123,7 +123,7 @@ public class GameMap {
 		}
 		
 		//Create inner asteroid field
-		int numAsteroids = 200;
+		int numAsteroids = 100;
 		MapBoundary asteroidField = new MapBoundary(new Rectangle(500,500,500,500));
 		asteroidField.boundaryColor = Color.BLUE;
 		asteroidField.setForce(0.0005);
@@ -134,7 +134,7 @@ public class GameMap {
 			{
 				adding = new Asteroid(new Vector2D(asteroidField.getLeftBound() + Math.random()*asteroidField.getWidth(), 
 						asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), new Rotation(Math.random()*360),
-						8+(Math.random() * 8), 0.8,100);
+						8+(Math.random() * 16), 0.8,100);
 				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
 				adding.rot_vel = Math.random()*5-2.5;
 				//this.addPhysicsSprite(adding);
