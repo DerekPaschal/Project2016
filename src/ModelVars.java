@@ -76,7 +76,7 @@ public class ModelVars
 			case GAME:
 				this.gui.setGame();
 				this.gameMap = new GameMap(Game.primaryModel);
-				this.paused = false;
+				this.paused = true;
 				break;
 			default:
 				break;

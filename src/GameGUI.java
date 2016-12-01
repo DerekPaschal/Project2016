@@ -21,6 +21,7 @@ public class GameGUI extends Sprite{
 	ArrayList<ActionButton> guiButtons;
 	ArrayList<MenuText> guiTexts;
 	ActionButton currentButton; //The button currently being acted on
+	GUIWindow guiWindow;
 	
 	public GameGUI()
 	{
@@ -34,6 +35,9 @@ public class GameGUI extends Sprite{
 	
 	public void setMainMenu()
 	{
+		//Close any windows if they are open
+		this.guiWindow = null;
+		
 		synchronized(this.guiButtons)
 		{
 			this.currentButton = null;
@@ -76,6 +80,7 @@ public class GameGUI extends Sprite{
 	
 	public void setGame()
 	{
+		
 		synchronized(this.guiButtons)
 		{
 			this.currentButton = null;
@@ -86,8 +91,10 @@ public class GameGUI extends Sprite{
 			this.guiTexts.clear();
 		}
 		
+		//Create GUI Buttons
+		
 		ActionButton endButton = new ActionButton("MENU", new Vector2D(5, 5));
-		endButton.setButtonAction(GUIButtonActions.MAIN_MENU);
+		endButton.setButtonAction(GUIButtonActions.OPEN_MENU);
 		endButton.setIsToggleButton(false);
 		endButton.setTextColor(Color.YELLOW);
 		endButton.setButtonSize(new Vector2D(50, 30));
@@ -108,6 +115,21 @@ public class GameGUI extends Sprite{
 			this.guiButtons.add(pauseButton);
 		}
 		
+		//Draw window
+		GUIWindow testWindow = new GUIWindow();
+		testWindow.setPos(ReferencePositions.CENTER, new Vector2D((int)(ViewCamera.renderRes.x - 1)/2, (int)(ViewCamera.renderRes.y - 1)/2));
+		testWindow.textColor = Color.WHITE;
+		this.guiWindow = testWindow;
+		
+		this.needsRedraw = true;
+	}
+	
+	public void openMenu()
+	{
+		this.guiWindow = new GUIWindow();
+		this.guiWindow.setPos(ReferencePositions.CENTER, new Vector2D((int)(ViewCamera.renderRes.x - 1)/2, (int)(ViewCamera.renderRes.y - 1)/2));
+		this.guiWindow.textColor = Color.WHITE;
+		this.guiWindow.setMenu();
 		this.needsRedraw = true;
 	}
 	
@@ -142,12 +164,21 @@ public class GameGUI extends Sprite{
 						curr.draw(c2);
 				}
 				
+				//Draw open window (if applicable)
+				if (this.guiWindow != null)
+					this.guiWindow.draw(c2);
+				
 				this.needsRedraw = false;
 			}
 			
 			super.drawStatic(g2);
 		}
 		
+	}
+	
+	public void closeWindow()
+	{
+		this.guiWindow = null;
 	}
 	
 	public void mouseDown(MouseEvent e, Vector2D position)
@@ -165,6 +196,10 @@ public class GameGUI extends Sprite{
 					break;
 				}
 		}
+		
+		if (this.guiWindow != null)
+			if (this.guiWindow.mouseDown(e, position))
+				this.needsRedraw = true;
 	}
 	
 	public void mouseUp(MouseEvent e, Vector2D position)
@@ -185,16 +220,24 @@ public class GameGUI extends Sprite{
 				this.currentButton = null;
 			}
 		}
+		
+		if (this.guiWindow != null)
+			if (this.guiWindow.mouseUp(e, position))
+				this.needsRedraw = true;
 	}
 	
 	public void mouseScroll(MouseWheelEvent e, Vector2D position)
 	{
-		
+		if (this.guiWindow != null)
+			if (this.guiWindow.mouseScroll(e, position))
+				this.needsRedraw = true;
 	}
 	
 	public void mouseDrag(MouseEvent e, Vector2D position)
 	{
-		
+		if (this.guiWindow != null)
+			if (this.guiWindow.mouseDrag(e, position))
+				this.needsRedraw = true;
 	}
 	
 	public void mouseMove(MouseEvent e, Vector2D position)
@@ -221,10 +264,16 @@ public class GameGUI extends Sprite{
 				}
 			}
 		}
+		
+		if (this.guiWindow != null)
+			if (this.guiWindow.mouseMove(e, position))
+				this.needsRedraw = true;
 	}
 	
 	public void keyPress(KeyEvent e)
 	{
-		
+		if (this.guiWindow != null)
+			if (this.guiWindow.keyPress(e))
+				this.needsRedraw = true;
 	}
 }

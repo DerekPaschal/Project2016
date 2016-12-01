@@ -21,7 +21,7 @@ public class MenuText extends Sprite
 	private Color textColor, shadowColor;
 	private Font font;
 	private int textWidth, textHeight;
-	private final int shadowOffset = 3;
+	public final int shadowOffset = 3;
 	
 	/*******************
 	 * Constructors

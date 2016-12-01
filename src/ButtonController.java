@@ -32,6 +32,15 @@ public class ButtonController
 				break;
 			case TOGGLE_PAUSED:
 				model.mv.paused = !model.mv.paused;
+				break;
+			case OPEN_MENU:
+				model.mv.gui.openMenu();
+				model.mv.paused = true;
+				break;
+			case CLOSE_WINDOW:
+				model.mv.gui.closeWindow();
+				model.mv.paused = false;
+				break;
 			default:
 				break;
 			

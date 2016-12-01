@@ -369,7 +369,7 @@ public class ActionButton extends Sprite
 				//Draw source image scaled to button's current size
 				c2.drawImage(sourceImage.getScaledInstance(this.currentImage.getWidth()-1, this.currentImage.getHeight()-1, Image.SCALE_SMOOTH), 
 						0, 0, null);
-				this.text.setPos(ReferencePositions.CENTER, new Vector2D(this.currentImage.getWidth()/2, this.currentImage.getHeight()/2));
+				this.text.setPos(ReferencePositions.CENTER, new Vector2D(this.currentImage.getWidth()/2, this.currentImage.getHeight()/2 - this.text.shadowOffset/2));
 				this.text.draw(c2);
 				
 				at = new AffineTransform();
