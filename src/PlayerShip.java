@@ -62,6 +62,7 @@ public class PlayerShip extends SpaceShip
 			}
 			
 			super.draw(g2);
+			
 		}
 	}
 

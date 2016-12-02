@@ -123,8 +123,6 @@ abstract class Sprite
 		
 		this.at.setToIdentity();
 		
-		
-		
 		double transX = this.pos.x - ((this.currentImage.getWidth()*this.scale)/2) - ViewCamera.pos.x + (ViewCamera.renderRes.x*0.5);
 		double transY = this.pos.y - ((this.currentImage.getHeight()*this.scale)/2) - ViewCamera.pos.y + (ViewCamera.renderRes.y*0.5);
 		
