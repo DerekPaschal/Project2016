@@ -79,14 +79,14 @@ public class GameMap {
 			//Wait
 			try {latch.await();}catch(InterruptedException e){e.printStackTrace();}
 			
-			//Update velocity and position of each PhysicsSprite
-			updateVelPos();
-			
 			//Remove all Sprites that are marked for removal
 			cleanPhysicsSpritesList();
 			
 			//Add sprites to the list if needed
 			addGameSprites();
+			
+			//Update velocity and position of each PhysicsSprite
+			updateVelPos();
 		}
 		
 		if (this.playerShip != null)
@@ -137,7 +137,7 @@ public class GameMap {
 		//Remove any previous sprites
 		this.removeAllSprites();
 		
-		this.playerShip = new PlayerShip(new Vector2D(500.0, 500.0));
+		this.playerShip = new PlayerShip(new Vector2D(200.0, 200.0));
 		SpriteList.add(this.playerShip);
 		
 		//Draw Background sprites
@@ -159,7 +159,7 @@ public class GameMap {
 			{
 				adding = new Asteroid(new Vector2D(asteroidField.getLeftBound() + Math.random()*asteroidField.getWidth(), 
 						asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), new Rotation(Math.random()*360),
-						10+(Math.random() * 10), 0.8,100);
+						10+(Math.random() * 10), 0.95,100);
 				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
 				adding.rot_vel = Math.random()*5-2.5;
 				//this.addPhysicsSprite(adding);

@@ -7,7 +7,7 @@ public class Bullet extends PhysicsSprite
 	boolean armed = false;
 	boolean insideShip = true;
 	double damage = 0;
-	int lifeTime = 0, lifeExpectancy = 30;
+	int lifeTime = 0, lifeExpectancy = 60;
 	
 	public Bullet(Vector2D position, Vector2D velocity, Rotation rotation, double size, double damage) 
 	{
@@ -42,8 +42,9 @@ public class Bullet extends PhysicsSprite
 				impactor.health -= this.damage;
 				if (impactor.health <= 0)
 					impactor.remove = true;
+				
+				this.remove = true;
 			}
-			this.remove = true;
 		}
 	}
 	

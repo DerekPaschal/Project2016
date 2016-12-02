@@ -8,6 +8,7 @@
  ***************************/
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 public class BackgroundSprite extends Sprite
@@ -25,21 +26,25 @@ public class BackgroundSprite extends Sprite
 	{
 		synchronized(this.imageLock)
 		{
-			if (this.needsRedraw || this.currentImage == null)
-			{
-				this.currentImage = new BufferedImage((int)ViewCamera.renderRes.x - 1, (int)ViewCamera.renderRes.y - 1, 
-						BufferedImage.TYPE_INT_ARGB);
-				
-				BufferedImage sourceImage = ResourceLoader.getBufferedImage(imgPath);
-				Graphics2D c2 = this.currentImage.createGraphics();
-				
-				//Draw source image scaled to size of background sprite
-				c2.drawImage(sourceImage, 
-						0, 0, this.currentImage.getWidth()-1, this.currentImage.getHeight()-1, 
-						0, 0, sourceImage.getWidth()-1, sourceImage.getHeight()-1, null);
-				
-				this.needsRedraw = false;
-			}
+
+			this.currentImage = new BufferedImage((int)ViewCamera.renderRes.x - 1, (int)ViewCamera.renderRes.y - 1, 
+					BufferedImage.TYPE_INT_ARGB);
+			
+			BufferedImage sourceImage = ResourceLoader.getBufferedImage(imgPath);			
+			Graphics2D c2 = this.currentImage.createGraphics();
+			
+			//Draw source image scaled to size of background sprite			
+			c2.drawImage(sourceImage, 0, 0, this.currentImage.getWidth(), this.currentImage.getHeight(), null);
+
+
+			//draw parallax layer (closer to ship, uses ViewCamera position)
+			int xOffset = (int)(-ViewCamera.pos.x*0.02), yOffset = (int)(-ViewCamera.pos.y*0.02);
+			c2.drawImage(sourceImage, xOffset, yOffset, (int)(xOffset+(this.currentImage.getWidth()*2.0)), (int)(yOffset+(this.currentImage.getHeight()*2.0)), null);
+			
+			xOffset *= 2; yOffset *= 2;
+			c2.drawImage(sourceImage, xOffset, yOffset, (int)(xOffset+(this.currentImage.getWidth()*2.5)), (int)(yOffset+(this.currentImage.getHeight()*2.5)), null);
+			
+			this.needsRedraw = false;
 			
 			super.drawStatic(g2);
 		}
