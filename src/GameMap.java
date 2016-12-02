@@ -13,25 +13,30 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.ListIterator;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 public class GameMap {
 	
 	enum MapType {DEMO, BLANK, FILE;};
 	
 	public ArrayList<MapBoundary> fieldBoundaries;
-	//private ArrayList<PhysicsSprite> physicsSprites;
-	//private ArrayList<BackgroundSprite> backgroundSprites;
-	//public Object physicsSpritesLock = new Object();
 	public MapBoundary mapBoundary;
 	public MapType mapType;
 	public Model model;
-	
+	private PlayerShip playerShip;
+	ExecutorService executor;
 
 	public GameMap(Model m)
 	{
 		this.mapBoundary = new MapBoundary(new Rectangle(0,0,100,100));
 		this.model = m;
 		initMap();
+		
+		//Setup Thread Executor for threaded portions
+		executor = Executors.newCachedThreadPool();
 	}
 	
 	//Initialize resources for a map
@@ -39,10 +44,53 @@ public class GameMap {
 	{
 		//Set up resources
 		this.fieldBoundaries = new ArrayList<MapBoundary>();
-		//this.physicsSprites = new ArrayList<PhysicsSprite>();
-		//this.backgroundSprites = new ArrayList<BackgroundSprite>();
 		this.mapBoundary = new MapBoundary(new Rectangle(0,0,100,100));
 		this.fieldBoundaries.add(mapBoundary);
+	}
+	
+	public void updateMap() throws Exception
+	{
+		int sprite_threads = 4;
+		
+		if (sprite_threads < 1)
+			throw new Exception("Calculation threads cannot be less than 1.");
+		
+		//synchronized(mv.gameSpritesLock)
+		synchronized(SpriteList.SpriteLock)
+		{
+			//Set all PhysicsSprite accelerations in gameMap to 0
+			clearPhysicsSpritesAcc();
+			
+			//Update accelerations of each PhysicsSprite in the game
+			CountDownLatch latch = new CountDownLatch(sprite_threads);
+			double divided = SpriteList.size() / sprite_threads;
+			
+			int tempStart = 0, tempEnd = 0;
+			//PhysicsSprite-PhysicsSprite collisions
+			for (int i = 0; i<sprite_threads;i++)
+			{
+				tempStart = tempEnd;
+				tempEnd = Math.max((int) (divided * (i+1)), SpriteList.size());
+				
+				executor.execute(new UpdateAccThread(tempStart, tempEnd, latch));
+				
+			}
+			
+			//Wait
+			try {latch.await();}catch(InterruptedException e){e.printStackTrace();}
+			
+			//Update velocity and position of each PhysicsSprite
+			updateVelPos();
+			
+			//Remove all Sprites that are marked for removal
+			cleanPhysicsSpritesList();
+			
+			//Add sprites to the list if needed
+			addGameSprites();
+		}
+		
+		if (this.playerShip != null)
+			ViewCamera.pos = this.playerShip.pos;
 	}
 	
 	//Remove all sprites except gui
@@ -50,39 +98,17 @@ public class GameMap {
 	{
 		synchronized (SpriteList.SpriteLock)
 		{
-			for(int i = 0; i < SpriteList.size()-1; i++)
+			int index = 0;
+			for(int i = 0; i < SpriteList.size(); i++)
 			{
-				SpriteList.remove(0);
-			}
-			/*synchronized (this.physicsSprites)
-			{
-				for (PhysicsSprite pSprite : this.physicsSprites)
+				if (!(SpriteList.get(index) instanceof GameGUI))
+					SpriteList.remove(index);
+				else
 				{
-					SpriteList.remove(pSprite);
+					index++;
+					i++;
 				}
-				this.physicsSprites.clear();
 			}
-			
-			synchronized (this.fieldBoundaries)
-			{
-				//All sprites in fieldBoundaries already cleared
-				//from master sprite list, so removing boundaries is
-				//safe
-				for (Sprite currBound : this.fieldBoundaries)
-				{
-					SpriteList.remove(currBound);
-				}
-				this.fieldBoundaries.clear();
-			}
-			
-			synchronized (this.backgroundSprites)
-			{
-				for (BackgroundSprite currBackground : this.backgroundSprites)
-				{
-					SpriteList.remove(currBackground);
-				}
-				this.backgroundSprites.clear();
-			}*/
 		}
 	}
 	
@@ -111,20 +137,19 @@ public class GameMap {
 		//Remove any previous sprites
 		this.removeAllSprites();
 		
-		PlayerShip playerShip = new PlayerShip(new Vector2D(500.0, 500.0));
-		//addPhysicsSprite(playerShip);
-		SpriteList.add(playerShip);
+		this.playerShip = new PlayerShip(new Vector2D(500.0, 500.0));
+		SpriteList.add(this.playerShip);
 		
 		//Draw Background sprites
 		BackgroundSprite starfield = new BackgroundSprite(new Vector2D(0, 0), "backgrounds/back-stars.png");
 		synchronized(SpriteList.SpriteLock)
 		{
-			this.addBackgroundSprite(starfield);
+			SpriteList.add(starfield);
 		}
 		
 		//Create inner asteroid field
-		int numAsteroids = 100;
-		MapBoundary asteroidField = new MapBoundary(new Rectangle(500,500,500,500));
+		int numAsteroids = 500;
+		MapBoundary asteroidField = new MapBoundary(new Rectangle(500,500,1000,1000));
 		asteroidField.boundaryColor = Color.BLUE;
 		asteroidField.setForce(0.0005);
 		Asteroid adding;
@@ -134,7 +159,7 @@ public class GameMap {
 			{
 				adding = new Asteroid(new Vector2D(asteroidField.getLeftBound() + Math.random()*asteroidField.getWidth(), 
 						asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), new Rotation(Math.random()*360),
-						8+(Math.random() * 16), 0.8,100);
+						10+(Math.random() * 10), 0.8,100);
 				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
 				adding.rot_vel = Math.random()*5-2.5;
 				//this.addPhysicsSprite(adding);
@@ -159,6 +184,9 @@ public class GameMap {
 		}
 		//Add mapBoundary to the GameMap
 		addBoundary(mapBoundary);
+		
+		if (this.playerShip != null)
+			ViewCamera.pos = this.playerShip.pos;
 	}
 	
 	/*
@@ -174,60 +202,7 @@ public class GameMap {
 		SpriteList.add(mb); //Already synchronized
 	}
 	
-	/*
-	 * Add a PhysicsSprite to the GameMap (and automatically
-	 * add it to the master sprite list). New PhysicsSprites
-	 * will be affected by the mapBoundary.
-	 */
-	/*public void addPhysicsSprite(PhysicsSprite sprite)
-	{
-		synchronized(this.physicsSprites)
-		{
-			ListIterator<PhysicsSprite> i = this.physicsSprites.listIterator();
-			i.add(sprite);
-		}
-		
-		SpriteList.add(sprite);
-	}*/
-	
-	/*
-	 * Add a BackgroundSprite to the GameMap (and automatically
-	 * add it master background sprite list).
-	 */
-	public void addBackgroundSprite(BackgroundSprite sprite)
-	{
-		/*synchronized (this.backgroundSprites)
-		{
-			this.backgroundSprites.add(sprite);
-		}*/
-		
-		SpriteList.add(sprite); //Already synchronized
-	}
-	
-	/*
-	 * Completely remove a PhysicsSprite from GameMap (and
-	 * master sprite list). The PhysicsSprite will also be
-	 * removed from all MapBoundary list of affected sprites
-	 */
-	public void removePhysicsSprite(PhysicsSprite sprite)
-	{
-		sprite.remove = true;
-	}
-	
-	/*
-	 * Completely remove a BackgroundSprite from GameMap (and
-	 * master background list).
-	 */
-	public void removeBackgroundSprite(BackgroundSprite sprite)
-	{
-		/*synchronized(this.backgroundSprites)
-		{
-			this.backgroundSprites.remove(sprite);
-		}*/
-		
-		SpriteList.remove(sprite); //Already synchronized
-	}
-	
+
 	/*
 	 * Set the acceleration of all PhysicsSprites in GameMap
 	 * to 0 (first step for physics calculations)
@@ -250,24 +225,6 @@ public class GameMap {
 		}
 	}
 	
-	/*
-	 * Get size of the list of PhysicsSprites for use
-	 * in physics calculations
-	 */
-	/*public int getPhysicsSpritesLength()
-	{
-		synchronized (this.physicsSprites)
-		{
-			return this.physicsSprites.size();
-		}
-	}*/
-	
-	//Use only for read-only and sprite update loops
-	//NOT for use for modifying the list
-	/*public ArrayList<PhysicsSprite> getPhysicsSprites()
-	{
-		return this.physicsSprites;
-	}*/
 	
 	public void updateVelPos()
 	{
@@ -283,6 +240,18 @@ public class GameMap {
 		}
 	}
 	
+	/**
+	 * General purpose method that adds sprites to the GameMap depending on
+	 * the current status of the Game.
+	 */
+	public void addGameSprites()
+	{		
+		if (this.playerShip.firing && this.playerShip.timeSinceFiring>this.playerShip.bulletCooldown)
+		{
+			SpriteList.add(this.playerShip.fireBullet());
+		}
+	}
+	
 	
 	/*
 	 * Clear all sprites from the list of PhysicsSprites
@@ -291,20 +260,7 @@ public class GameMap {
 	public void cleanPhysicsSpritesList()
 	{
 		synchronized (SpriteList.SpriteLock)
-		{
-			/*synchronized (this.physicsSprites)
-			{
-				for (ListIterator<PhysicsSprite> i = this.physicsSprites.listIterator(); i.hasNext(); )
-				{
-					PhysicsSprite pSprite = i.next();
-					if (pSprite != null && pSprite.remove)
-					{
-						i.remove();
-						SpriteList.removeSprite(pSprite);
-					}
-				}
-			}*/
-			
+		{			
 			Sprite s;
 			for (int i = 0; i < SpriteList.size(); i++)
 			{
@@ -313,5 +269,37 @@ public class GameMap {
 					SpriteList.remove(s);
 			}
 		}
+	}
+}
+
+
+
+class UpdateAccThread implements Runnable
+{
+	int begin, end;
+	CountDownLatch latch;
+	
+	UpdateAccThread(double begin, double end, CountDownLatch latch)
+	{
+		this.begin = (int)begin;
+		this.end = (int)end;
+		this.latch = latch;
+	}
+
+	@Override
+	public void run() 
+	{		
+		Sprite s;
+		for(int i = begin; i < end; i++)
+		{
+			s = SpriteList.get(i);
+			if (s instanceof PhysicsSprite)
+				((PhysicsSprite) s).updateAcc(i);
+			else if (s instanceof MapBoundary)
+				((MapBoundary)s).checkCollision();
+		}
+		
+		//CountDown the latch so main thread can join
+		latch.countDown();
 	}
 }

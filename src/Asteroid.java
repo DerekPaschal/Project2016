@@ -52,11 +52,6 @@ public class Asteroid extends PhysicsSprite
 		{
 			if (this.needsRedraw)
 			{
-				//this.currentImage = new BufferedImage((int)Math.round(this.size*2), (int)Math.round(this.size*2), 
-				//		BufferedImage.TYPE_INT_ARGB);
-				
-				//BufferedImage tempImage;
-				
 				switch(type)
 				{
 					case 0:
@@ -72,11 +67,6 @@ public class Asteroid extends PhysicsSprite
 						break;
 				}
 				
-				//Graphics2D c2 = this.currentImage.createGraphics();
-				//c2.drawImage(tempImage, 
-				//		0, 0, this.currentImage.getWidth()-1, this.currentImage.getHeight()-1, 
-				//		0, 0, tempImage.getWidth()-1, tempImage.getHeight()-1, null);
-				
 				this.scale =  (this.size*2) / Math.max(this.currentImage.getWidth(), this.currentImage.getHeight());
 			}
 			
@@ -91,7 +81,7 @@ public class Asteroid extends PhysicsSprite
 		
 		if (impactor instanceof SpaceShip)
 			this.health -= impact;
-		if (this.health < 0)
+		if (this.health <= 0)
 			this.remove = true;
 	}
 }

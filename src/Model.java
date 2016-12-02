@@ -21,7 +21,6 @@ class Model
 {
 	int tick = 0;
 	public ModelVars mv;
-	ExecutorService executor;
 	
 	/***************************
 	 * Constructor
@@ -36,8 +35,7 @@ class Model
 		
 		this.mv.setGameState(GameState.MAIN_MENU);
 		
-		//Setup Thread Executor for threaded portions
-		executor = Executors.newCachedThreadPool();
+		
 	}
 
 	/***************************
@@ -63,50 +61,7 @@ class Model
 		if (this.mv.paused)
 			return;
 		
-		int sprite_threads = 4;
-		
-		if (sprite_threads < 1)
-			throw new Exception("Calculation threads cannot be less than 1.");
-		
-		//synchronized(mv.gameSpritesLock)
-		synchronized(SpriteList.SpriteLock)
-		{
-			//Set all PhysicsSprite accelerations in gameMap to 0
-			mv.gameMap.clearPhysicsSpritesAcc();
-			
-			//Update accelerations of each PhysicsSprite in the game
-			CountDownLatch latch = new CountDownLatch(sprite_threads);
-			double divided = SpriteList.size() / sprite_threads;
-			
-			int tempStart = 0, tempEnd = 0;
-			//PhysicsSprite-PhysicsSprite collisions
-			for (int i = 0; i<sprite_threads;i++)
-			{
-				/*if ((i + 1) == sprite_threads)
-					executor.execute(new UpdateAccThread(divided * i, SpriteList.size(), latch));
-				else
-					executor.execute(new UpdateAccThread(divided * i, divided * (i+1), latch));
-				 */
-				tempStart = tempEnd;
-				tempEnd = Math.max((int) (divided * (i+1)), SpriteList.size());
-				
-				executor.execute(new UpdateAccThread(tempStart, tempEnd, latch));
-				
-			}
-			
-			//Wait
-			try {latch.await();}catch(InterruptedException e){e.printStackTrace();}
-			
-			//Update velocity and position of each PhysicsSprite
-			mv.gameMap.updateVelPos();
-			
-			//Remove all Sprites that are marked for removal
-			mv.gameMap.cleanPhysicsSpritesList();
-		}
-		
-		//ViewCamera.pos = mv.playerShip.pos;
-		if (SpriteList.getPlayerShip() != null)
-			ViewCamera.pos = SpriteList.getPlayerShip().pos;
+		mv.gameMap.updateMap();
 	}
 	
 	/***************************
@@ -164,45 +119,3 @@ class Model
 	
 }
 
-
-class UpdateAccThread implements Runnable
-{
-	int begin, end;
-	CountDownLatch latch;
-	
-	UpdateAccThread(double begin, double end, CountDownLatch latch)
-	{
-		this.begin = (int)begin;
-		this.end = (int)end;
-		this.latch = latch;
-	}
-
-	@Override
-	public void run() 
-	{
-		//Determine if running PhysicsSprite-PhysicsSprite collisions or Boundary-PhysicsSprite collisions
-		//if (this.sprites != null)
-		//{
-		
-		Sprite s;
-		for(int i = begin; i < end; i++)
-		{
-			s = SpriteList.get(i);
-			if (s instanceof PhysicsSprite)
-				((PhysicsSprite) s).updateAcc(i);
-			else if (s instanceof MapBoundary)
-				((MapBoundary)s).checkCollision();
-		}
-		
-		/*else
-		{
-			for(MapBoundary currentBoundary : this.boundaries)
-			{
-				currentBoundary.checkCollision();
-			}
-			
-		}*/
-		//CountDown the latch so main thread can join
-		latch.countDown();
-	}
-}

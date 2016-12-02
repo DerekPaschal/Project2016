@@ -20,7 +20,7 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 	Model model;
 	public static Vector2D mousePos = new Vector2D(0,0);
 	boolean draggingMap = false, draggingWindow = false;
-	boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false;
+	boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false, spacePressed = false;
 
 	Controller(Model m)
 	{
@@ -146,20 +146,24 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 					switch (keyCode)
 					{
 						case KeyEvent.VK_UP:
-							upPressed = true;
+							this.upPressed = true;
 							SpriteList.getPlayerShip().forward = true;
 							break;
 						case KeyEvent.VK_DOWN:
-							downPressed = true;
+							this.downPressed = true;
 							SpriteList.getPlayerShip().backward = true;
 							break;
 						case KeyEvent.VK_LEFT:
-							leftPressed = true;
+							this.leftPressed = true;
 							SpriteList.getPlayerShip().left = true;
 							break;
 						case KeyEvent.VK_RIGHT:
-							rightPressed = true;
+							this.rightPressed = true;
 							SpriteList.getPlayerShip().right = true;
+							break;
+						case KeyEvent.VK_SPACE:
+							this.spacePressed = true;
+							SpriteList.getPlayerShip().firing = true;
 							break;
 					}
 					break;
@@ -184,20 +188,24 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 					switch (keyCode)
 					{
 						case KeyEvent.VK_UP:
-							upPressed = false;
+							this.upPressed = false;
 							SpriteList.getPlayerShip().forward = false;
 							break;
 						case KeyEvent.VK_DOWN:
-							downPressed = false;
+							this.downPressed = false;
 							SpriteList.getPlayerShip().backward = false;
 							break;
 						case KeyEvent.VK_LEFT:
-							leftPressed = false;
+							this.leftPressed = false;
 							SpriteList.getPlayerShip().left = false;
 							break;
 						case KeyEvent.VK_RIGHT:
-							rightPressed = false;
+							this.rightPressed = false;
 							SpriteList.getPlayerShip().right = false;
+							break;
+						case KeyEvent.VK_SPACE:
+							this.spacePressed = false;
+							SpriteList.getPlayerShip().firing = false;
 							break;
 					}
 					break;

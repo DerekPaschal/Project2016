@@ -14,17 +14,21 @@ import java.util.ArrayList;
 
 abstract class SpaceShip extends PhysicsSprite
 {
-	public double healthMax = 0, shield = 0, shieldMax = 0, energy = 0;
+	public double healthMax = 0, shield = 0, shieldMax = 0, shieldRegen = 0, energy = 0;
 	public boolean left, right, forward, backward, firing;
 	private double turnRate = 2, thrustPower = 0.2;
 	
-	public SpaceShip(Vector2D position, Rotation rotation, double size, double health, double shield)
+	public double bulletSize = 4.0, bulletVel = 10.0, bulletDamage = 50;
+	public int bulletCooldown = 20, timeSinceFiring = 0;
+	
+	public SpaceShip(Vector2D position, Rotation rotation, double size, double health, double shield, double shieldRegen)
 	{
 		super(position,rotation,size, 1.0, health);
 		
 		this.healthMax = health;
 		this.shield = shield;
 		this.shieldMax = shield;
+		this.shieldRegen = shieldRegen;
 		this.energy = 1000;
 		
 		left = false;
@@ -41,22 +45,30 @@ abstract class SpaceShip extends PhysicsSprite
 		
 		synchronized (this.acc)
 		{
-			//Add Acceleration from Thrusters
-			if (forward)
+			//Add Acceleration from Thrusters			
+			if (forward && this.energy > this.thrustPower)
+			{
 				this.acc = this.acc.add(new Vector2D(Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower, Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower));
-			if (backward)
+				this.energy -= this.thrustPower;
+			}
+			if (backward && this.energy > this.thrustPower)
+			{
 				this.acc = this.acc.add(new Vector2D(-Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower,-Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.thrustPower));
+				this.energy -= this.thrustPower;
+			}
 			
 			//Apply Friction Force (In Space?)
 			this.acc = this.acc.subtract(this.vel.multiply(new Vector2D(0.02,0.02)));
 			
 			//Add Rotation
 			if (left)
-				//this.rotation.addAmount(-this.turnRate);
+			{
 				this.rot_acc =+ -this.turnRate;
+			}
 			if (right)
-				//this.rotation.addAmount(this.turnRate);
+			{
 				this.rot_acc =+ this.turnRate;
+			}
 			
 			//Apply Rotation Friction (In Space?)
 			this.rot_acc = this.rot_acc - (this.rot_vel * 0.2);
@@ -66,66 +78,48 @@ abstract class SpaceShip extends PhysicsSprite
 	@Override
 	public void collisionAlert(PhysicsSprite impactor, double impact)
 	{
-		this.shield -= impact;
-		
-		if (this.shield < 0)
+		if (impactor instanceof Asteroid)
 		{
-			this.health += this.shield;
-			this.shield = 0.0;
-		}
-		
-		if (this.health < 0)
-		{
-			this.remove = true;
-		}
-	}
-
-	@Override
-	public void draw(Graphics2D g2)
-	{
-		synchronized (this.imageLock)
-		{
-			if (this.needsRedraw || this.currentImage == null)
+			this.shield -= impact;
+			
+			if (this.shield < 0)
 			{
-				this.currentImage = new BufferedImage((int)this.size*2, (int)this.size*2, BufferedImage.TYPE_INT_ARGB); //create blank current image
-				Graphics2D c2 = this.currentImage.createGraphics(); //Create graphics object for current Image
-				//c2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON); //Set Anti Aliasing
-				
-				BufferedImage shipImage = ResourceLoader.getBufferedImage("ships/13B.png"); //Load Player Ship Image
-				
-				Vector2D shipDims = new Vector2D(shipImage.getWidth(), shipImage.getHeight()); //Get Maximum dimensions of ship image
-				double shipScale = (this.size*2) / Math.max(shipDims.x, shipDims.y); //Set scale size that will make ship image fit into size
-								
-				//Draw 'shield bubble'
-				/*for (float alpha = 0, i = 0; (alpha < 1.0) && (this.size - i > 1); alpha+= 0.035, i++)
-				{
-					c2.setColor(new Color((float)0, (float)0.7, (float)0.8, (float)alpha));
-					c2.drawOval((int) i, (int) i, (int)(Math.round(this.size*2)-1-i*2), (int)(Math.round(this.size*2)-1-i*2));	
-				}*/
-				
-				float shieldRatio = (float)(this.shield / this.shieldMax);
-				int i = 0;
-				float alpha = (float)(0.1*shieldRatio);
-		
-				for (; (alpha <= 1.0 && alpha >= 0.0) && (i < 4); alpha += (0.1*shieldRatio) ,i++)
-				{
-					c2.setColor(new Color((float)0.0,(float)0.7,(float)0.8,alpha));
-					c2.drawOval(i, i, (int)(Math.round(this.size*2)-1-i*2), (int)(Math.round(this.size*2)-1-i*2));
-				}
-				
-				for (; (alpha >= 0.0 && alpha <= 1.0) && (this.size - i > 1); alpha-= (0.04*shieldRatio), i++)
-				{
-					c2.setColor(new Color((float)0.0,(float)0.7,(float)0.8,alpha));
-					c2.drawOval(i, i, (int)(Math.round(this.size*2)-1-i*2), (int)(Math.round(this.size*2)-1-i*2));
-				}
-				
-				c2.scale(shipScale, shipScale); //Apply scaler for ship image drawing
-				c2.drawImage(shipImage, (int)((this.size - (shipDims.x * 0.5 * shipScale))/shipScale), (int)((this.size - (shipDims.y * 0.5 * shipScale))/shipScale), null); //Draw ship image onto current image
-				
-				c2.dispose();
+				this.health += this.shield;
+				this.shield = 0.0;
 			}
 			
-			super.draw(g2);
+			if (this.health < 0)
+			{
+				this.remove = true;
+			}
 		}
 	}
+	
+	@Override
+	public void updateVelPos()
+	{
+		super.updateVelPos();
+		
+		synchronized(this.healthLock)
+		{			
+			if (this.energy > this.shieldRegen)
+			{
+				double shieldAdd = Math.min(this.shieldRegen, this.shieldMax - this.shield);
+				this.energy -= shieldAdd;
+				this.shield += shieldAdd;
+			}
+		}
+		
+		this.timeSinceFiring++;
+	}
+
+	public Bullet fireBullet()
+	{
+		this.timeSinceFiring = 0;
+		Vector2D bulletPos = new Vector2D(this.pos.x + (Math.cos(this.rotation.getRadians() - Math.PI / 2.0)*30), this.pos.y + (Math.sin(this.rotation.getRadians()-Math.PI / 2.0)*30) );
+		Vector2D bulletVel = new Vector2D(this.vel.x + (Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * this.bulletVel), this.vel.y + (Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.bulletVel));
+		Bullet bullet = new Bullet(bulletPos, bulletVel, new Rotation(this.rotation), this.bulletSize, this.bulletDamage);
+		return bullet;
+	}
+	
 }

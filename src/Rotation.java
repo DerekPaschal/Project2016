@@ -21,6 +21,11 @@ public class Rotation
 		validateRotation();
 	}
 	
+	public Rotation(Rotation rotation2) 
+	{
+		this.rotation = rotation2.rotation;
+	}
+
 	public void setRotation(double degrees)
 	{
 		this.rotation = degrees;

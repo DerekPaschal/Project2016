@@ -18,6 +18,7 @@ abstract class PhysicsSprite extends Sprite
 	public double rot_vel;
 	public double rot_acc;
 	public double size;
+	public double mass;
 	public double restitution;
 	
 	public double health;
@@ -27,6 +28,7 @@ abstract class PhysicsSprite extends Sprite
 	{
 		super(position);
 		this.size = size;
+		this.mass = size;
 		this.vel = new Vector2D(0.0,0.0);
 		this.acc = new Vector2D(0.0,0.0);
 		this.rotation = rotation;
@@ -61,42 +63,53 @@ abstract class PhysicsSprite extends Sprite
 			else
 				continue;
 			
-			if (p != this) //If it is not itself
+			
+			distance = this.pos.distance(p.pos); //Calculate Distance between Sprites
+			overlap = (this.size + ((PhysicsSprite)p).size) - distance; //overlap of the Sprites
+			if (overlap > 0 && distance > 0.0) //If the Sprites are Colliding
 			{
-				distance = this.pos.distance(p.pos); //Calculate Distance between Sprites
-				overlap = (this.size + ((PhysicsSprite)p).size) - distance; //overlap of the Sprites
-				if (overlap > 0) //If the Sprites are Colliding
+				restitution = 1.0; //Reset local Restitution variable to default
+				UnitVector  = this.pos.subtract(p.pos).divide(distance); //Find Unit Vector between Sprites
+				VelocityOnNormal = ((PhysicsSprite)p).vel.subtract(this.vel).dot_product(UnitVector); //Portion of velocity on the Unit Vector
+				
+				if (VelocityOnNormal < 0) //If Velocity on the Normal is Negative (Sprites are moving away from each other)
 				{
-					restitution = 1.0; //Reset local Restitution variable to default
-					UnitVector  = this.pos.subtract(p.pos).divide(distance); //Find Unit Vector between Sprites
-					VelocityOnNormal = ((PhysicsSprite)p).vel.subtract(this.vel).dot_product(UnitVector); //Portion of velocity on the Unit Vector
-					
-					if (VelocityOnNormal < 0) //If Velocity on the Normal is Negative (Sprites are moving away from each other)
+					restitution = Math.min(this.restitution, ((PhysicsSprite)p).restitution); //Modify Restitution to simulate inelastic collisions
+				}
+				
+				Vector2D impact = UnitVector.multiply( (3 * restitution) * (Math.min( overlap , Math.min(this.size, p.size))));
+				double impactValue = 0;
+				//Add to acceleration based on collision depth and restitution and size of current sprite
+				synchronized (this.acc)
+				{
+					if (this.mass > 0.0 && p.mass > 0.0)
 					{
-						restitution = Math.min(this.restitution, ((PhysicsSprite)p).restitution); //Modify Restitution to simulate inelastic collisions
+						this.acc = this.acc.add(impact.divide(this.mass));
+						impactValue = impact.length()/this.mass;
 					}
-					
-					Vector2D impact = UnitVector.multiply( (3 * restitution) * (Math.min( overlap , Math.min(this.size, ((PhysicsSprite)p).size))));
-					
-					//Add to acceleration based on collision depth and restitution and size of current sprite
-					synchronized (this.acc)
+					synchronized (this.healthLock)
 					{
-						this.acc = this.acc.add(impact.divide(this.size));
-						synchronized (this.healthLock)
-						{
-							this.collisionAlert(p,impact.length()/(this.size));
-						}
-					}
-					
-					synchronized (p.acc)
-					{
-						p.acc = p.acc.add(impact.divide(-p.size));
-						synchronized (p.healthLock)
-						{
-							p.collisionAlert(this, impact.length()/(p.size));
-						}
+						this.collisionAlert(p,impactValue);
 					}
 				}
+				
+				synchronized (p.acc)
+				{
+					if (p.mass > 0.0 && this.mass > 0.0)
+					{
+						p.acc = p.acc.add(impact.divide(-p.mass));
+						impactValue = impact.length()/p.mass;
+					}
+					else
+					{
+						impactValue = 0;
+					}
+					synchronized (p.healthLock)
+					{
+						p.collisionAlert(this, impactValue);
+					}
+				}
+				
 			}
 		}
 	}
