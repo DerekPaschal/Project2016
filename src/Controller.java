@@ -156,7 +156,9 @@ class Controller implements MouseListener, MouseWheelListener, MouseMotionListen
 						case KeyEvent.VK_LEFT:
 							this.leftPressed = true;
 							if(!SpriteList.getPlayerShip().left)
+							{
 								SpriteList.getPlayerShip().left = true;
+							}
 							break;
 						case KeyEvent.VK_RIGHT:
 							this.rightPressed = true;

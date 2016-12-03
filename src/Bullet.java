@@ -15,10 +15,11 @@ public class Bullet extends PhysicsSprite
 		this.mass = 0.0;
 		this.vel = velocity;
 		this.damage = damage;
-		this.currentImage = new BufferedImage((int)Math.round(this.size*2), (int)Math.round(this.size*2), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D c2 = this.currentImage.createGraphics();
-		c2.setColor(new Color(255,255,255));
-		c2.fillOval(0, 0, (int)(this.size*2), (int)(this.size*2));
+		this.currentImage = ResourceLoader.getBufferedImage("weapons/teal_short_fat_beam.png");
+		//this.currentImage = new BufferedImage((int)Math.round(this.size*2), (int)Math.round(this.size*2), BufferedImage.TYPE_INT_ARGB);
+		//Graphics2D c2 = this.currentImage.createGraphics();
+		//c2.setColor(new Color(255,255,255));
+		//c2.fillOval(0, 0, (int)(this.size*2), (int)(this.size*2));
 	}
 
 	@Override

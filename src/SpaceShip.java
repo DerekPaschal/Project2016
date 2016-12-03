@@ -119,7 +119,7 @@ abstract class SpaceShip extends PhysicsSprite
 		//Vector2D bulletPos = new Vector2D(this.pos.x + (Math.cos(this.rotation.getRadians() - Math.PI / 2.0)*30), this.pos.y + (Math.sin(this.rotation.getRadians()-Math.PI / 2.0)*30) );
 		Vector2D bulletPos = new Vector2D(this.pos.x + (Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * 20), this.pos.y + (Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * 20));
 		Vector2D bulletVel = new Vector2D(this.vel.x + (Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * this.bulletVel), this.vel.y + (Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.bulletVel));
-		Bullet bullet = new Bullet(bulletPos, bulletVel, new Rotation(0), this.bulletSize, this.bulletDamage);
+		Bullet bullet = new Bullet(bulletPos, bulletVel, new Rotation(this.rotation), this.bulletSize, this.bulletDamage);
 		return bullet;
 	}
 	
