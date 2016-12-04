@@ -34,12 +34,20 @@ public class ButtonController
 				model.mv.paused = !model.mv.paused;
 				break;
 			case OPEN_MENU:
-				model.mv.gui.openMenu();
+				SpriteList.getGUI().openMenu();
+				model.mv.paused = true;
+				break;
+			case OPEN_UPGRADES:
+				SpriteList.getGUI().openUpgrades();
 				model.mv.paused = true;
 				break;
 			case CLOSE_WINDOW:
-				model.mv.gui.closeWindow();
+				SpriteList.getGUI().closeWindow();
 				model.mv.paused = false;
+				break;
+			case UPGRADE_SHIELDS:
+				model.mv.gameMap.upgradePlayerShield();
+				SpriteList.getGUI().updateShieldIndicator();
 				break;
 			default:
 				break;

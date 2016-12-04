@@ -24,16 +24,15 @@ public class GUIWindow extends Sprite
 	private String backgroundImagePath;
 	ActionButton currentButton; //The button currently being acted on
 	public Color textColor;
+	private BufferedImage windowImage;
 	
-	public GUIWindow()
+	public GUIWindow(GUIWindowType windowType)
 	{
 		this.windowButtons = new ArrayList<ActionButton>();
 		this.windowTexts = new ArrayList<MenuText>();
-		this.backgroundImagePath = "gui/window_background.png";
+		this.backgroundImagePath = "gui/";
 		this.textColor = Color.WHITE;
-		this.currentImage = ResourceLoader.getBufferedImage(backgroundImagePath);
-		
-		this.setMenu();
+		this.updateBackgroundImage(windowType);
 	}
 	
 	public void addButton(ActionButton button)
@@ -74,39 +73,166 @@ public class GUIWindow extends Sprite
 		}
 	}
 	
+	private void updateBackgroundImage(GUIWindowType windowType)
+	{
+		if (windowType == null)
+		{
+			windowImage = ResourceLoader.getBufferedImage(backgroundImagePath + "guiwindow.png");
+			return;
+		}
+		else
+			switch(windowType)
+			{
+				case REGULAR:
+					this.windowImage = ResourceLoader.getBufferedImage(backgroundImagePath + "guiwindow.png");
+					break;
+				case WIDE:
+					this.windowImage = ResourceLoader.getBufferedImage(backgroundImagePath + "guiwindow_wide.png");
+					break;
+				default:
+					this.windowImage = ResourceLoader.getBufferedImage(backgroundImagePath + "guiwindow.png");
+					break;
+			}
+		
+		if (this.currentImage == null)
+			this.currentImage = windowImage;
+	}
+	
 	/*
 	 * Method sets the guiWindow to the ingame menu state
 	 */
 	public void setMenu()
 	{
-		//Add a close Button
-		ActionButton closeButton = new ActionButton("X", new Vector2D(345, 10));
-		closeButton.setFont(new Font("Monospace", Font.BOLD, 20));
-		closeButton.setButtonAction(GUIButtonActions.CLOSE_WINDOW);
-		closeButton.setIsToggleButton(false);
-		closeButton.setTextColor(Color.RED);
-		closeButton.setButtonSize(new Vector2D(25, 25));
-		closeButton.setFontSize(15);
-		
-		//Add return to main menu button
-		ActionButton mainMenuButton = new ActionButton("Return to Main Menu");
-		mainMenuButton.setPos(ReferencePositions.CENTER, new Vector2D(this.currentImage.getWidth(), this.currentImage.getHeight()));
-		mainMenuButton.setFont(new Font("Monospace", Font.BOLD, 20));
-		mainMenuButton.setButtonAction(GUIButtonActions.MAIN_MENU);
-		mainMenuButton.setIsToggleButton(false);
-		mainMenuButton.setTextColor(Color.RED);
-		mainMenuButton.setButtonSize(new Vector2D(160, 35));
-		mainMenuButton.setFontSize(15);
-		
-		
-		//Add buttons
-		synchronized(this.windowButtons)
+		synchronized(this.imageLock)
 		{
-			this.windowButtons.add(closeButton);
-			this.windowButtons.add(mainMenuButton);
+			synchronized(this.windowButtons)
+			{
+				this.windowButtons.clear();
+			}
+			synchronized(this.windowTexts)
+			{
+				this.windowTexts.clear();
+			}
+			
+			updateBackgroundImage(GUIWindowType.REGULAR);
+			
+			this.currentImage = this.windowImage;
+			
+			//Add a close Button
+			ActionButton closeButton = new ActionButton("X", 
+					new Vector2D(this.windowImage.getWidth()-37, 10));
+			closeButton.setFont(new Font("Monospace", Font.BOLD, 20));
+			closeButton.setButtonAction(GUIButtonActions.CLOSE_WINDOW);
+			closeButton.setIsToggleButton(false);
+			closeButton.setTextColor(Color.RED);
+			closeButton.setButtonSize(new Vector2D(25, 25));
+			closeButton.setFontSize(15);
+			
+			//Add return to main menu button
+			ActionButton mainMenuButton = new ActionButton("Return to Main Menu");
+			mainMenuButton.setPos(ReferencePositions.CENTER, new Vector2D(this.currentImage.getWidth(), this.currentImage.getHeight()));
+			mainMenuButton.setFont(new Font("Monospace", Font.BOLD, 20));
+			mainMenuButton.setButtonAction(GUIButtonActions.MAIN_MENU);
+			mainMenuButton.setIsToggleButton(false);
+			mainMenuButton.setTextColor(Color.RED);
+			mainMenuButton.setButtonSize(new Vector2D(160, 35));
+			mainMenuButton.setFontSize(15);
+			
+			
+			//Add buttons
+			synchronized(this.windowButtons)
+			{
+				this.windowButtons.add(closeButton);
+				this.windowButtons.add(mainMenuButton);
+			}
+			
+			this.needsRedraw = true;
 		}
+	}
+	
+	/*
+	 * Method sets the guiWindow to the ingame upgrade menu state
+	 */
+	public void setUpgrades()
+	{
+		synchronized(this.imageLock)
+		{
+			synchronized(this.windowButtons)
+			{
+				this.windowButtons.clear();
+			}
+			synchronized(this.windowTexts)
+			{
+				this.windowTexts.clear();
+			}
 		
-		this.needsRedraw = true;
+			updateBackgroundImage(GUIWindowType.WIDE);
+			
+			this.currentImage = this.windowImage;
+			
+			//Add a close Button
+			ActionButton closeButton = new ActionButton("X");
+			closeButton.setPos(ReferencePositions.TOP_LEFT, new Vector2D(this.windowImage.getWidth()-37, 10));
+			closeButton.setFont(new Font("Monospace", Font.BOLD, 20));
+			closeButton.setButtonAction(GUIButtonActions.CLOSE_WINDOW);
+			closeButton.setIsToggleButton(false);
+			closeButton.setTextColor(Color.RED);
+			closeButton.setButtonSize(new Vector2D(25, 25));
+			closeButton.setFontSize(15);
+			
+			//Add return to main menu button
+			ActionButton mainMenuButton = new ActionButton("Return to Main Menu");
+			mainMenuButton.setPos(ReferencePositions.CENTER, new Vector2D(this.windowImage.getWidth(), this.windowImage.getHeight()));
+			mainMenuButton.setFont(new Font("Monospace", Font.BOLD, 20));
+			mainMenuButton.setButtonAction(GUIButtonActions.MAIN_MENU);
+			mainMenuButton.setIsToggleButton(false);
+			mainMenuButton.setTextColor(Color.RED);
+			mainMenuButton.setButtonSize(new Vector2D(160, 35));
+			mainMenuButton.setFontSize(15);
+			
+			//Add upgrade shield button
+			ActionButton upgradeShieldButton = new ActionButton("SHIELD +");
+			upgradeShieldButton.setPos(ReferencePositions.CENTER_LEFT, new Vector2D(20, 100));
+			upgradeShieldButton.setFont(new Font("Monospace", Font.BOLD, 20));
+			upgradeShieldButton.setButtonAction(GUIButtonActions.UPGRADE_SHIELDS);
+			upgradeShieldButton.setIsToggleButton(false);
+			upgradeShieldButton.setTextColor(Color.BLUE);
+			upgradeShieldButton.setButtonSize(new Vector2D(130, 35));
+			upgradeShieldButton.setFontSize(15);
+			if (SpriteList.getPlayerShip().getShieldUpgrade() > 3)
+				upgradeShieldButton.disable();
+			
+			
+			//Display ship upgrades
+			MenuText shieldLevel = new MenuText("Current Shield Level: " + SpriteList.getPlayerShip().getShieldUpgrade(), 20, 20);
+			
+			//Add buttons
+			synchronized(this.windowButtons)
+			{
+				this.windowButtons.add(closeButton);
+				this.windowButtons.add(mainMenuButton);
+				this.windowButtons.add(upgradeShieldButton);
+			}
+			synchronized(this.windowTexts)
+			{
+				this.windowTexts.add(shieldLevel);
+			}
+			
+			this.needsRedraw = true;
+		}
+	}
+	
+	public void updateUpgradeWindow()
+	{
+		this.setUpgrades();
+//		synchronized(this.imageLock)
+//		{
+//			for (int i = 0; i < this.windowTexts.size(); i++)
+//			{
+//				this.windowTexts.get(i).needsRedraw = true;
+//			}
+//			this.needsRedraw = true;
+//		}
 	}
 	
 	@Override
@@ -118,7 +244,8 @@ public class GUIWindow extends Sprite
 			{
 				AffineTransform at = new AffineTransform();
 				
-				BufferedImage windowImage = ResourceLoader.getBufferedImage(backgroundImagePath);
+				if (this.windowImage == null)
+					updateBackgroundImage(GUIWindowType.REGULAR);
 				
 				this.currentImage = new BufferedImage((int)windowImage.getWidth()-1, (int)windowImage.getHeight()-1, BufferedImage.TYPE_INT_ARGB);
 				Graphics2D c2 = this.currentImage.createGraphics();
@@ -130,6 +257,18 @@ public class GUIWindow extends Sprite
 				for (int i = 0; i < this.windowButtons.size(); i++)
 				{
 					this.windowButtons.get(i).draw(c2);
+				}
+				
+				if (SpriteList.getPlayerShip().upgradesUpdated)
+				{
+					this.updateUpgradeWindow();
+					SpriteList.getPlayerShip().upgradesUpdated = false;
+				}
+				
+				//Draw the text elements
+				for (int i = 0; i < this.windowTexts.size(); i++)
+				{
+					this.windowTexts.get(i).draw(c2);
 				}
 				
 				at.translate(this.pos.x, this.pos.y);

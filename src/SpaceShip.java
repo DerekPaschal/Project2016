@@ -16,7 +16,7 @@ abstract class SpaceShip extends PhysicsSprite
 {
 	public double healthMax = 0, shield = 0, shieldMax = 0, shieldRegen = 0, energy = 0;
 	public boolean left, right, forward, backward, firing;
-	private double turnRate = 2, thrustPower = 0.2;
+	public double turnRate = 2, thrustPower = 0.2;
 	
 	public double bulletSize = 4, bulletVel = 10.0, bulletDamage = 50;
 	public int bulletCooldown = 10, timeSinceFiring = 0;

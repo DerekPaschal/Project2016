@@ -193,6 +193,8 @@ public class ActionButton extends Sprite
 				this.setState(GUIButtonStates.ACTIVE);
 			else
 				this.setState(GUIButtonStates.NORMAL);
+			
+			this.needsRedraw = true;
 		}
 	}
 	

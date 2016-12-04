@@ -15,9 +15,61 @@ import java.awt.image.BufferedImage;
 
 public class PlayerShip extends SpaceShip
 {
+	private int damageLevel, shieldLevel, speedLevel, fireRateLevel;
+	public boolean upgradesUpdated = false;
+	
 	public PlayerShip(Vector2D position) 
 	{
 		super(position,new Rotation(0),40,10,20,0.05);
+		this.damageLevel = 0;
+		this.shieldLevel = 0;
+		this.speedLevel = 0;
+		this.fireRateLevel = 0;
+	}
+	
+	public int getDamageUpgrade() { return this.damageLevel; }
+	public void upgradeDamage()
+	{
+		if (this.damageLevel < 3)
+		{
+			this.damageLevel++;
+			this.bulletDamage += bulletDamage*0.5;
+			upgradesUpdated = true;
+		}
+	}
+	
+	public int getShieldUpgrade() { return this.shieldLevel; }
+	public void upgradeShield()
+	{
+		if (this.shieldLevel < 3)
+		{
+			this.shieldLevel++;
+			this.shieldRegen += this.shieldRegen*0.5;
+			this.shieldMax += this.shieldMax*0.25;
+			upgradesUpdated = true;
+		}
+	}
+	
+	public int getSpeedUpgrade() { return this.speedLevel; }
+	public void upgradeSpeed()
+	{
+		if (this.speedLevel < 3)
+		{
+			this.speedLevel++;
+			this.thrustPower += this.thrustPower*0.25;
+			this.turnRate += this.turnRate*0.25;
+			upgradesUpdated = true;
+		}
+	}
+	
+	public int getFireRateUpgrade() { return this.fireRateLevel; }
+	public void upgradeFireRate()
+	{
+		if (this.fireRateLevel < 3)
+		{
+			this.fireRateLevel++;
+			upgradesUpdated = true;
+		}
 	}
 	
 	@Override
@@ -62,7 +114,6 @@ public class PlayerShip extends SpaceShip
 			}
 			
 			super.draw(g2);
-			
 		}
 	}
 

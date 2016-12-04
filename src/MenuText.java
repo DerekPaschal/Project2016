@@ -53,9 +53,9 @@ public class MenuText extends Sprite
 		
 		
 		if (colorShadow != null)
-			this.shadowColor = colorShadow;
+			setShadowColor(colorShadow);
 		else
-			this.shadowColor = Color.BLACK;
+			setShadowColor(Color.BLACK);
 		
 		this.font = new Font("MONOSPACE", Font.BOLD, 20);
 		
@@ -97,7 +97,10 @@ public class MenuText extends Sprite
 	public void setTextColor(Color color) { this.textColor = color; }
 	
 	public Color getShadowColor() { return this.shadowColor; }
-	public void setShadowColor(Color color) { this.shadowColor = color; }
+	public void setShadowColor(Color color)
+	{
+		this.shadowColor = new Color ((float)color.getRed()/255, (float)color.getGreen()/255, (float)color.getBlue()/255, (float)0.3);
+	}
 	
 	public Font getFont() { return this.font; }
 	public void setFont(Font f) { this.font = f; updateImageSize(); }

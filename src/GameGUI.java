@@ -108,29 +108,83 @@ public class GameGUI extends Sprite{
 		pauseButton.setButtonSize(new Vector2D(50, 30));
 		pauseButton.setFontSize(9);
 		
+		ActionButton upgradesButton = new ActionButton("UPGRADE", new Vector2D(5, 75));
+		upgradesButton.setFont(new Font("Monospace", Font.BOLD, 20));
+		upgradesButton.setButtonAction(GUIButtonActions.OPEN_UPGRADES);
+		upgradesButton.setIsToggleButton(false);
+		upgradesButton.setTextColor(Color.GREEN);
+		upgradesButton.setButtonSize(new Vector2D(50, 30));
+		upgradesButton.setFontSize(9);
+		
 		//Add the buttons
 		synchronized(this.guiButtons)
 		{
 			this.guiButtons.add(endButton);
 			this.guiButtons.add(pauseButton);
+			this.guiButtons.add(upgradesButton);
 		}
 		
 		//Draw window
-		GUIWindow testWindow = new GUIWindow();
-		testWindow.setPos(ReferencePositions.CENTER, new Vector2D((int)(ViewCamera.renderRes.x - 1)/2, (int)(ViewCamera.renderRes.y - 1)/2));
-		testWindow.textColor = Color.WHITE;
-		this.guiWindow = testWindow;
+		GUIWindow pauseWindow = new GUIWindow(GUIWindowType.REGULAR);
+		pauseWindow.setPos(ReferencePositions.CENTER, new Vector2D((int)(ViewCamera.renderRes.x - 1)/2, (int)(ViewCamera.renderRes.y - 1)/2));
+		pauseWindow.textColor = Color.WHITE;
+		pauseWindow.setMenu();
+		this.guiWindow = pauseWindow;
 		
 		this.needsRedraw = true;
 	}
 	
 	public void openMenu()
 	{
-		this.guiWindow = new GUIWindow();
+		this.guiWindow = new GUIWindow(GUIWindowType.REGULAR);
+		this.guiWindow.setMenu();
 		this.guiWindow.setPos(ReferencePositions.CENTER, new Vector2D((int)(ViewCamera.renderRes.x - 1)/2, (int)(ViewCamera.renderRes.y - 1)/2));
 		this.guiWindow.textColor = Color.WHITE;
-		this.guiWindow.setMenu();
 		this.needsRedraw = true;
+	}
+	
+	public void openUpgrades()
+	{
+		if  (SpriteList.getPlayerShip() == null)
+			return;
+		this.guiWindow = new GUIWindow(GUIWindowType.REGULAR);
+		this.guiWindow.setUpgrades();
+		this.guiWindow.setPos(ReferencePositions.CENTER, new Vector2D((int)(ViewCamera.renderRes.x - 1)/2, (int)(ViewCamera.renderRes.y - 1)/2));
+		this.guiWindow.textColor = Color.WHITE;
+		this.needsRedraw = true;
+	}
+	
+	public void updateShieldIndicator()
+	{
+		if (this.guiWindow != null)
+		{
+			this.guiWindow.updateUpgradeWindow();
+			this.needsRedraw = true;
+		}
+	}
+	public void updateSpeedIndicator()
+	{
+		if (this.guiWindow != null)
+		{
+			this.guiWindow.updateUpgradeWindow();
+			this.needsRedraw = true;
+		}
+	}
+	public void updateDamageIndicator()
+	{
+		if (this.guiWindow != null)
+		{
+			this.guiWindow.updateUpgradeWindow();
+			this.needsRedraw = true;
+		}
+	}
+	public void updateFireRateIndicator()
+	{
+		if (this.guiWindow != null)
+		{
+			this.guiWindow.updateUpgradeWindow();
+			this.needsRedraw = true;
+		}
 	}
 	
 	@Override
