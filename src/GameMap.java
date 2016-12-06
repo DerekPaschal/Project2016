@@ -28,6 +28,7 @@ public class GameMap {
 	public Model model;
 	private PlayerShip playerShip;
 	ExecutorService executor;
+	ArrayList<Asteroid> RemovedAsteroids = new ArrayList<Asteroid>();
 
 	public GameMap(Model m)
 	{
@@ -49,32 +50,21 @@ public class GameMap {
 	}
 	
 	public void updateMap() throws Exception
-	{
-		int sprite_threads = 4;
-		
-		if (sprite_threads < 1)
-			throw new Exception("Calculation threads cannot be less than 1.");
-		
-		//synchronized(mv.gameSpritesLock)
+	{				
 		synchronized(SpriteList.SpriteLock)
 		{
 			//Set all PhysicsSprite accelerations in gameMap to 0
 			clearPhysicsSpritesAcc();
 			
 			//Update accelerations of each PhysicsSprite in the game
-			CountDownLatch latch = new CountDownLatch(sprite_threads);
-			double divided = SpriteList.size() / sprite_threads;
+			CountDownLatch latch = new CountDownLatch(4);
+			int ListSize = SpriteList.size();
 			
-			int tempStart = 0, tempEnd = 0;
-			//PhysicsSprite-PhysicsSprite collisions
-			for (int i = 0; i<sprite_threads;i++)
-			{
-				tempStart = tempEnd;
-				tempEnd = Math.max((int) (divided * (i+1)), SpriteList.size());
-				
-				executor.execute(new UpdateAccThread(tempStart, tempEnd, latch));
-				
-			}
+			//Load Threads with Work to do Physics
+			executor.execute(new UpdateAccThread(0,ListSize/16,latch));
+			executor.execute(new UpdateAccThread(ListSize/16,ListSize/4,latch));
+			executor.execute(new UpdateAccThread(ListSize/4,ListSize/2,latch));
+			executor.execute(new UpdateAccThread(ListSize/2,ListSize,latch));
 			
 			//Wait
 			try {latch.await();}catch(InterruptedException e){e.printStackTrace();}
@@ -250,6 +240,38 @@ public class GameMap {
 		{
 			SpriteList.add(this.playerShip.fireBullet());
 		}
+		
+		Asteroid s;
+		Asteroid n;
+		Asteroid n2;
+		for (int i = 0; i < this.RemovedAsteroids.size(); i++)
+		{
+			s = this.RemovedAsteroids.get(i);
+			this.playerShip.energy += s.size;
+			if (s.size >= 16)
+			{
+				n = new Asteroid(s.pos.add(new Vector2D(s.size/2,s.size/2)), s.rotation, s.size/2, s.restitution);
+				n.rot_vel = Math.random()*5-2.5;
+				n.vel = s.vel.add(Math.random()*5-2.5);
+				SpriteList.add(n);
+				
+				n2 = new Asteroid(s.pos.add(new Vector2D(-s.size/2,-s.size/2)), s.rotation, s.size/2, s.restitution);
+				n2.rot_vel = Math.random()*5-2.5;
+				n2.vel = s.vel.add(Math.random()*5-2.5);
+				SpriteList.add(n2);
+				
+				for(MapBoundary boundary : this.fieldBoundaries)
+				{
+					if (boundary.sprites.contains(s))
+					{
+						boundary.removeSprite(s);
+						boundary.addSprite(n);
+						boundary.addSprite(n2);
+					}
+				}
+			}
+		}
+		this.RemovedAsteroids.clear();
 	}
 	
 	
@@ -266,7 +288,13 @@ public class GameMap {
 			{
 				s = SpriteList.get(i);
 				if (s.remove)
+				{
+					if (s instanceof Asteroid)
+					{
+						this.RemovedAsteroids.add((Asteroid)s);
+					}
 					SpriteList.remove(s);
+				}
 			}
 		}
 	}

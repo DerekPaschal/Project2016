@@ -29,7 +29,7 @@ public class MapBoundary extends Sprite
 	public Color boundaryColor;
 	public int boundaryWidth;
 	private double repulsiveForce;
-	private ArrayList<PhysicsSprite> sprites;
+	public ArrayList<PhysicsSprite> sprites;
 	
 	public MapBoundary(Rectangle size)
 	{
