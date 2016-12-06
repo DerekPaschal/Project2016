@@ -259,7 +259,7 @@ public class GUIWindow extends Sprite
 					this.windowButtons.get(i).draw(c2);
 				}
 				
-				if (SpriteList.getPlayerShip().upgradesUpdated)
+				if (SpriteList.getPlayerShip() != null && SpriteList.getPlayerShip().upgradesUpdated)
 				{
 					this.updateUpgradeWindow();
 					SpriteList.getPlayerShip().upgradesUpdated = false;

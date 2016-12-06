@@ -36,7 +36,7 @@ public class MapBoundary extends Sprite
 		this.sprites = new ArrayList<PhysicsSprite>();
 		this.mapBounds = new Rectangle(size);
 		this.boundaryColor = Color.RED;
-		this.boundaryWidth = 10;
+		this.boundaryWidth = 0;
 		this.repulsiveForce = 0.1;
 	}
 	
