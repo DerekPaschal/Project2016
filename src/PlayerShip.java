@@ -15,60 +15,39 @@ import java.awt.image.BufferedImage;
 
 public class PlayerShip extends SpaceShip
 {
-	private int damageLevel, shieldLevel, speedLevel, fireRateLevel;
+	private int currentLevel, baseUpgradeCost, maxUpgradeLevel;
 	public boolean upgradesUpdated = false;
 	
 	public PlayerShip(Vector2D position) 
 	{
 		super(position,new Rotation(0),40,10,20,0.05);
-		this.damageLevel = 0;
-		this.shieldLevel = 0;
-		this.speedLevel = 0;
-		this.fireRateLevel = 0;
+		this.currentLevel = 0;
+		this.baseUpgradeCost = 10;
+		this.maxUpgradeLevel = 3;
 	}
 	
-	public int getDamageUpgrade() { return this.damageLevel; }
-	public void upgradeDamage()
+	public int getNextUpgradeCost()
 	{
-		if (this.damageLevel < 3)
-		{
-			this.damageLevel++;
-			this.bulletDamage += bulletDamage*0.5;
-			upgradesUpdated = true;
-		}
+		return (int) (this.baseUpgradeCost + this.currentLevel * 2);
 	}
 	
-	public int getShieldUpgrade() { return this.shieldLevel; }
-	public void upgradeShield()
+	public int getUpgradeLevel()
 	{
-		if (this.shieldLevel < 3)
-		{
-			this.shieldLevel++;
-			this.shieldRegen += this.shieldRegen*0.5;
-			this.shieldMax += this.shieldMax*0.25;
-			upgradesUpdated = true;
-		}
+		return this.currentLevel;
 	}
 	
-	public int getSpeedUpgrade() { return this.speedLevel; }
-	public void upgradeSpeed()
+	public void upgradeShip()
 	{
-		if (this.speedLevel < 3)
+		if (this.energy > this.getNextUpgradeCost() && this.currentLevel < this.maxUpgradeLevel)
 		{
-			this.speedLevel++;
-			this.thrustPower += this.thrustPower*0.25;
-			this.turnRate += this.turnRate*0.25;
-			upgradesUpdated = true;
-		}
-	}
-	
-	public int getFireRateUpgrade() { return this.fireRateLevel; }
-	public void upgradeFireRate()
-	{
-		if (this.fireRateLevel < 3)
-		{
-			this.fireRateLevel++;
-			upgradesUpdated = true;
+			this.energy -= this.getNextUpgradeCost();
+			this.shieldMax *= 1.2;
+			this.shieldRegen *= 1.2;
+			this.bulletVel *= 1.2;
+			this.bulletDamage *= 2;
+			this.bulletSpread *= 2;
+			this.thrustPower *= 1.2;
+			this.currentLevel++;
 		}
 	}
 	

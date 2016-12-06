@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 abstract class SpaceShip extends PhysicsSprite
 {
-	public double healthMax = 0, shield = 0, shieldMax = 0, shieldRegen = 0, energy = 0;
+	public double healthMax = 0, shield = 0, shieldMax = 0, shieldRegen = 0, energy = 0, bulletSpread = 1;
 	public boolean left, right, forward, backward, firing;
 	public double turnRate = 2, thrustPower = 0.2;
 	
@@ -118,7 +118,7 @@ abstract class SpaceShip extends PhysicsSprite
 		this.timeSinceFiring = 0;
 		//Vector2D bulletPos = new Vector2D(this.pos.x + (Math.cos(this.rotation.getRadians() - Math.PI / 2.0)*30), this.pos.y + (Math.sin(this.rotation.getRadians()-Math.PI / 2.0)*30) );
 		Vector2D bulletPos = new Vector2D(this.pos.x + (Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * 20), this.pos.y + (Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * 20));
-		Vector2D bulletVel = new Vector2D(this.vel.x + (Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * this.bulletVel), this.vel.y + (Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.bulletVel));
+		Vector2D bulletVel = new Vector2D(this.vel.x + (Math.cos(this.rotation.getRadians() + Math.toRadians(this.bulletSpread*Math.random() - this.bulletSpread/2) - Math.PI / 2.0) * this.bulletVel), this.vel.y + (Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.bulletVel));
 		Bullet bullet = new Bullet(bulletPos, bulletVel, new Rotation(this.rotation), this.bulletSize, this.bulletDamage);
 		return bullet;
 	}

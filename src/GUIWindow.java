@@ -114,37 +114,7 @@ public class GUIWindow extends Sprite
 				this.windowTexts.clear();
 			}
 			
-			updateBackgroundImage(GUIWindowType.REGULAR);
-			
-			this.currentImage = this.windowImage;
-			
-			//Add a close Button
-			ActionButton closeButton = new ActionButton("X", 
-					new Vector2D(this.windowImage.getWidth()-37, 10));
-			closeButton.setFont(new Font("Monospace", Font.BOLD, 20));
-			closeButton.setButtonAction(GUIButtonActions.CLOSE_WINDOW);
-			closeButton.setIsToggleButton(false);
-			closeButton.setTextColor(Color.RED);
-			closeButton.setButtonSize(new Vector2D(25, 25));
-			closeButton.setFontSize(15);
-			
-			//Add return to main menu button
-			ActionButton mainMenuButton = new ActionButton("Return to Main Menu");
-			mainMenuButton.setPos(ReferencePositions.CENTER, new Vector2D(this.currentImage.getWidth(), this.currentImage.getHeight()));
-			mainMenuButton.setFont(new Font("Monospace", Font.BOLD, 20));
-			mainMenuButton.setButtonAction(GUIButtonActions.MAIN_MENU);
-			mainMenuButton.setIsToggleButton(false);
-			mainMenuButton.setTextColor(Color.RED);
-			mainMenuButton.setButtonSize(new Vector2D(160, 35));
-			mainMenuButton.setFontSize(15);
-			
-			
-			//Add buttons
-			synchronized(this.windowButtons)
-			{
-				this.windowButtons.add(closeButton);
-				this.windowButtons.add(mainMenuButton);
-			}
+			this.setStandardWindow();
 			
 			this.needsRedraw = true;
 		}
@@ -165,8 +135,48 @@ public class GUIWindow extends Sprite
 			{
 				this.windowTexts.clear();
 			}
+			
+			this.setStandardWindow();
 		
-			updateBackgroundImage(GUIWindowType.WIDE);
+			//Display ship upgrades
+			MenuText confirmText1 = new MenuText("UPGRADE?");
+			confirmText1.setPos(ReferencePositions.CENTER, this.windowImage.getWidth()/2, 20);
+			MenuText confirmText2 = new MenuText("This will cost " + SpriteList.getPlayerShip().getNextUpgradeCost() + " energy", 20, 100);
+			MenuText confirmText3 = new MenuText("You have " + (int) SpriteList.getPlayerShip().energy + " energy", 20, 60);
+			
+			ActionButton upgradeButton = new ActionButton("UPGRADE !");
+			upgradeButton.setButtonSize(new Vector2D(this.windowImage.getWidth() - 30, 60));
+			upgradeButton.setPos(ReferencePositions.CENTER, this.windowImage.getWidth()/2, 250);
+			upgradeButton.setFontSize(20);
+			upgradeButton.setTextColor(Color.YELLOW);
+			upgradeButton.setButtonAction(GUIButtonActions.UPGRADE_SHIP);
+			upgradeButton.setIsToggleButton(false);
+			
+			MenuText shipLevelText = new MenuText("Current Ship Level: " + SpriteList.getPlayerShip().getUpgradeLevel());
+			shipLevelText.setPos(ReferencePositions.CENTER, this.windowImage.getWidth()/2, 300);
+			
+			//Add buttons
+			synchronized(this.windowButtons)
+			{
+				this.windowButtons.add(upgradeButton);
+			}
+			synchronized(this.windowTexts)
+			{
+				this.windowTexts.add(confirmText1);
+				this.windowTexts.add(confirmText2);
+				this.windowTexts.add(confirmText3);
+				this.windowTexts.add(shipLevelText);
+			}
+			
+			this.needsRedraw = true;
+		}
+	}
+	
+	public void setStandardWindow()
+	{
+		synchronized (this.imageLock)
+		{
+			updateBackgroundImage(GUIWindowType.REGULAR);
 			
 			this.currentImage = this.windowImage;
 			
@@ -181,41 +191,20 @@ public class GUIWindow extends Sprite
 			closeButton.setFontSize(15);
 			
 			//Add return to main menu button
-			ActionButton mainMenuButton = new ActionButton("Return to Main Menu");
+			ActionButton mainMenuButton = new ActionButton("Close Window");
 			mainMenuButton.setPos(ReferencePositions.CENTER, new Vector2D(this.windowImage.getWidth(), this.windowImage.getHeight()));
 			mainMenuButton.setFont(new Font("Monospace", Font.BOLD, 20));
-			mainMenuButton.setButtonAction(GUIButtonActions.MAIN_MENU);
+			mainMenuButton.setButtonAction(GUIButtonActions.CLOSE_WINDOW);
 			mainMenuButton.setIsToggleButton(false);
 			mainMenuButton.setTextColor(Color.RED);
 			mainMenuButton.setButtonSize(new Vector2D(160, 35));
 			mainMenuButton.setFontSize(15);
-			
-			//Add upgrade shield button
-			ActionButton upgradeShieldButton = new ActionButton("SHIELD +");
-			upgradeShieldButton.setPos(ReferencePositions.CENTER_LEFT, new Vector2D(20, 100));
-			upgradeShieldButton.setFont(new Font("Monospace", Font.BOLD, 20));
-			upgradeShieldButton.setButtonAction(GUIButtonActions.UPGRADE_SHIELDS);
-			upgradeShieldButton.setIsToggleButton(false);
-			upgradeShieldButton.setTextColor(Color.BLUE);
-			upgradeShieldButton.setButtonSize(new Vector2D(130, 35));
-			upgradeShieldButton.setFontSize(15);
-			if (SpriteList.getPlayerShip().getShieldUpgrade() > 3)
-				upgradeShieldButton.disable();
-			
-			
-			//Display ship upgrades
-			MenuText shieldLevel = new MenuText("Current Shield Level: " + SpriteList.getPlayerShip().getShieldUpgrade(), 20, 20);
 			
 			//Add buttons
 			synchronized(this.windowButtons)
 			{
 				this.windowButtons.add(closeButton);
 				this.windowButtons.add(mainMenuButton);
-				this.windowButtons.add(upgradeShieldButton);
-			}
-			synchronized(this.windowTexts)
-			{
-				this.windowTexts.add(shieldLevel);
 			}
 			
 			this.needsRedraw = true;

@@ -383,21 +383,9 @@ public class GameMap {
 		}
 	}
 	
-	public void upgradePlayerDamage()
+	public void upgradePlayerShip()
 	{
-		SpriteList.getPlayerShip().upgradeDamage();
-	}
-	public void upgradePlayerShield()
-	{
-		SpriteList.getPlayerShip().upgradeShield();
-	}
-	public void upgradePlayerFireRate()
-	{
-		SpriteList.getPlayerShip().upgradeFireRate();
-	}
-	public void upgradePlayerSpeed()
-	{
-		SpriteList.getPlayerShip().upgradeSpeed();
+		SpriteList.getPlayerShip().upgradeShip();
 	}
 }
 

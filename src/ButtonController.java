@@ -45,8 +45,8 @@ public class ButtonController
 				SpriteList.getGUI().closeWindow();
 				model.mv.paused = false;
 				break;
-			case UPGRADE_SHIELDS:
-				model.mv.gameMap.upgradePlayerShield();
+			case UPGRADE_SHIP:
+				model.mv.gameMap.upgradePlayerShip();
 				SpriteList.getGUI().updateShieldIndicator();
 				break;
 			default:
