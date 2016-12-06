@@ -127,41 +127,122 @@ public class GameMap {
 		//Remove any previous sprites
 		this.removeAllSprites();
 		
-		this.playerShip = new PlayerShip(new Vector2D(200.0, 200.0));
+		//Create new PlayerShip
+		this.playerShip = new PlayerShip(new Vector2D(500.0, 5750.0));
 		SpriteList.add(this.playerShip);
 		
-		//Draw Background sprites
+		//Create Background
 		BackgroundSprite starfield = new BackgroundSprite(new Vector2D(0, 0), "backgrounds/back-stars.png");
 		synchronized(SpriteList.SpriteLock)
 		{
 			SpriteList.add(starfield);
 		}
 		
-		//Create inner asteroid field
-		int numAsteroids = 500;
-		MapBoundary asteroidField = new MapBoundary(new Rectangle(500,500,1000,1000));
+		
+		//Create first asteroid field
+		MapBoundary asteroidField = new MapBoundary(new Rectangle(0,4500,1000,1000));
 		asteroidField.boundaryColor = Color.BLUE;
 		asteroidField.setForce(0.0005);
 		Asteroid adding;
 		synchronized (SpriteList.SpriteLock)
 		{
-			for (int i = 0; i < numAsteroids; i++)
+			for (int i = 0; i < 100; i++)
 			{
 				adding = new Asteroid(new Vector2D(asteroidField.getLeftBound() + Math.random()*asteroidField.getWidth(), 
 						asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), new Rotation(Math.random()*360),
-						10+(Math.random() * 10), 0.99);
+						10+(Math.random() * 6));
 				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
 				adding.rot_vel = Math.random()*5-2.5;
-				//this.addPhysicsSprite(adding);
 				SpriteList.add(adding);
 				asteroidField.addSprite(adding);
 			}
 		}
-		//Add asteroid field to the GameMap
-		addBoundary(asteroidField);
+		addBoundary(asteroidField);//Add asteroid field to the GameMap
+		
+		
+		//Create second asteroid field
+		asteroidField = new MapBoundary(new Rectangle(0,3500,1000,1000));
+		asteroidField.boundaryColor = Color.BLUE;
+		asteroidField.setForce(0.0005);
+		synchronized (SpriteList.SpriteLock)
+		{
+			for (int i = 0; i < 100; i++)
+			{
+				adding = new Asteroid(new Vector2D(asteroidField.getLeftBound() + Math.random()*asteroidField.getWidth(), 
+						asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), new Rotation(Math.random()*360),
+						8+(Math.random() * 14));
+				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
+				adding.rot_vel = Math.random()*5-2.5;
+				SpriteList.add(adding);
+				asteroidField.addSprite(adding);
+			}
+		}
+		addBoundary(asteroidField);//Add asteroid field to the GameMap
+		
+		
+		//Create third asteroid field
+		asteroidField = new MapBoundary(new Rectangle(0,2000,1000,1500));
+		asteroidField.boundaryColor = Color.BLUE;
+		asteroidField.setForce(0.0005);
+		synchronized (SpriteList.SpriteLock)
+		{
+			for (int i = 0; i < 150; i++)
+			{
+				adding = new Asteroid(new Vector2D(asteroidField.getLeftBound() + Math.random()*asteroidField.getWidth(), 
+						asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), new Rotation(Math.random()*360),
+						10+(Math.random() * 20));
+				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
+				adding.rot_vel = Math.random()*5-2.5;
+				SpriteList.add(adding);
+				asteroidField.addSprite(adding);
+			}
+		}
+		addBoundary(asteroidField);//Add asteroid field to the GameMap
+		
+		
+		//Create fourth asteroid field
+		asteroidField = new MapBoundary(new Rectangle(0,1000,1000,1000));
+		asteroidField.boundaryColor = Color.BLUE;
+		asteroidField.setForce(0.0005);
+		synchronized (SpriteList.SpriteLock)
+		{
+			for (int i = 0; i < 100; i++)
+			{
+				adding = new Asteroid(new Vector2D(asteroidField.getLeftBound() + Math.random()*asteroidField.getWidth(), 
+						asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), new Rotation(Math.random()*360),
+						12+(Math.random() * 28));
+				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
+				adding.rot_vel = Math.random()*5-2.5;
+				SpriteList.add(adding);
+				asteroidField.addSprite(adding);
+			}
+		}
+		addBoundary(asteroidField);//Add asteroid field to the GameMap
+			
+		
+		//Create fifth asteroid field
+		asteroidField = new MapBoundary(new Rectangle(0,250,1000,750));
+		asteroidField.boundaryColor = Color.BLUE;
+		asteroidField.setForce(0.0005);
+		synchronized (SpriteList.SpriteLock)
+		{
+			for (int i = 0; i < 75; i++)
+			{
+				adding = new Asteroid(new Vector2D(asteroidField.getLeftBound() + Math.random()*asteroidField.getWidth(), 
+						asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), new Rotation(Math.random()*360),
+						16+(Math.random() * 4));
+				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
+				adding.rot_vel = Math.random()*5-2.5;
+				SpriteList.add(adding);
+				asteroidField.addSprite(adding);
+			}
+		}
+		addBoundary(asteroidField);//Add asteroid field to the GameMap
+		
+		
 		
 		//Create outer map bounds
-		this.mapBoundary = new MapBoundary(new Rectangle(0,0,2000,2000));
+		this.mapBoundary = new MapBoundary(new Rectangle(0,0,1000,6000));
 		synchronized(SpriteList.SpriteLock)
 		{
 			Sprite s;
@@ -172,12 +253,15 @@ public class GameMap {
 					mapBoundary.addSprite((PhysicsSprite)s);
 			}
 		}
+		
+		
 		//Add mapBoundary to the GameMap
 		addBoundary(mapBoundary);
 		
 		if (this.playerShip != null)
 			ViewCamera.pos = this.playerShip.pos;
 	}
+	
 	
 	/*
 	 * Add a MapBoundary to the GameMap (and automatically
@@ -250,12 +334,12 @@ public class GameMap {
 			this.playerShip.energy += s.size;
 			if (s.size >= 16)
 			{
-				n = new Asteroid(s.pos.add(new Vector2D(s.size/2,s.size/2)), s.rotation, s.size/2, s.restitution);
+				n = new Asteroid(s.pos.add(new Vector2D(s.size/2,s.size/2)), s.rotation, s.size/2);
 				n.rot_vel = Math.random()*5-2.5;
 				n.vel = s.vel.add(Math.random()*5-2.5);
 				SpriteList.add(n);
 				
-				n2 = new Asteroid(s.pos.add(new Vector2D(-s.size/2,-s.size/2)), s.rotation, s.size/2, s.restitution);
+				n2 = new Asteroid(s.pos.add(new Vector2D(-s.size/2,-s.size/2)), s.rotation, s.size/2);
 				n2.rot_vel = Math.random()*5-2.5;
 				n2.vel = s.vel.add(Math.random()*5-2.5);
 				SpriteList.add(n2);
