@@ -155,13 +155,39 @@ public class GameGUI extends Sprite{
 	
 	public void updateGUIBars()
 	{
+		if (SpriteList.getPlayerShip() == null)
+			return;
 		synchronized(this.guiBars)
 		{
 			this.guiBars.clear();
+			this.guiTexts.clear();
 			
-			GUIBar shieldBar = new GUIBar((int)SpriteList.getPlayerShip().shield, (int)SpriteList.getPlayerShip().shieldMax, 50, 20, Color.BLUE);
-			shieldBar.setPos(ReferencePositions.CENTER, new Vector2D(40, 40));
+			//Add shield indicators
+			GUIBar shieldBar = new GUIBar((int)SpriteList.getPlayerShip().shield, (int)SpriteList.getPlayerShip().shieldMax, 120, 20, Color.BLUE);
+			shieldBar.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(0, 430));
 			this.guiBars.add(shieldBar);
+			MenuText shieldText = new MenuText(Math.round((float)SpriteList.getPlayerShip().shield / (float)SpriteList.getPlayerShip().shieldMax * 100) + "%");
+			shieldText.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(130, 450));
+			shieldText.setTextColor(Color.BLUE);
+			this.guiTexts.add(shieldText);
+			
+			//Add health bar
+			GUIBar healthBar = new GUIBar((int)SpriteList.getPlayerShip().health, (int)SpriteList.getPlayerShip().healthMax, 120, 20, Color.RED);
+			healthBar.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(0, 460));
+			this.guiBars.add(healthBar);
+			MenuText healthText = new MenuText(Math.round((float)SpriteList.getPlayerShip().health / (float)SpriteList.getPlayerShip().healthMax * 100) + "%");
+			healthText.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(130, 480));
+			healthText.setTextColor(Color.RED);
+			this.guiTexts.add(healthText);
+			
+			//Add energy bar
+			GUIBar energyBar = new GUIBar((int)SpriteList.getPlayerShip().energy, 1000, 120, 20, Color.YELLOW);
+			energyBar.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(0, 400));
+			this.guiBars.add(energyBar);
+			MenuText energyText = new MenuText(SpriteList.getPlayerShip().energy + "");
+			energyText.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(130, 420));
+			energyText.setTextColor(Color.YELLOW);
+			this.guiTexts.add(energyText);
 		}
 		this.needsRedraw = true;
 	}
