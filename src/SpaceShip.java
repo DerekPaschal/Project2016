@@ -107,15 +107,24 @@ abstract class SpaceShip extends PhysicsSprite
 		super.updateVelPos();
 		
 		synchronized(this.healthLock)
-		{			
-			double shieldAdd = Math.min(this.shieldRegen, this.shieldMax - this.shield);
-			double shieldCost = shieldAdd * 10;
-			
-			if (this.energy > shieldCost)
+		{		
+			if (this.energy > 0.5)
 			{
-				this.energy -= shieldCost;
-				this.shield += shieldAdd;
+				double shieldAdd = Math.min(this.shieldRegen, this.shieldMax - this.shield);
+				double shieldCost = shieldAdd * 10;
+				
+				if (this.energy > shieldCost)
+				{
+					this.energy -= shieldCost;
+					this.shield += shieldAdd;
+				}
 			}
+			else
+			{						
+				this.health = Math.max(this.health-0.1, 0);
+			}
+			
+			
 		}
 		
 		this.timeSinceFiring++;

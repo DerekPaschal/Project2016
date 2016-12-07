@@ -23,6 +23,7 @@ public class ResourceLoader
 	private static TreeMap<String, BufferedImage> resources = new TreeMap<String, BufferedImage>();
 	private static BufferedImage testImage;
 	private static String directoryPath = System.getProperty("user.dir") + "\\src\\resources\\";
+	//private static String directoryPath = "\\resources\\";
 	
 	public ResourceLoader()
 	{

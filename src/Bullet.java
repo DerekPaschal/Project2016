@@ -7,7 +7,7 @@ public class Bullet extends PhysicsSprite
 	boolean armed = false;
 	boolean insideShip = true;
 	double damage = 0;
-	int lifeTime = 0, lifeExpectancy = 60;
+	int lifeTime = 0, lifeExpectancy = 50;
 	
 	public Bullet(Vector2D position, Vector2D velocity, Rotation rotation, double size, double damage, int bulletImage) 
 	{

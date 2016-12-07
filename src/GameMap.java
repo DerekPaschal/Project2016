@@ -328,7 +328,7 @@ public class GameMap {
 			SpriteList.getGUI().openGameWin();
 		}
 		
-		if (this.playerShip.health <= 0.0 || this.playerShip.energy <= 1.0)
+		if (this.playerShip.health <= 0.0)
 		{
 			//You lose
 			SpriteList.getGUI().openGameLose();
