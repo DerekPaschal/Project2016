@@ -44,6 +44,8 @@ class View extends JPanel
 			
 			drawNextFrame();
 			
+			g.setColor(Color.darkGray);
+			g.fillRect(0, 0, (int)ViewCamera.windowDim.x, (int)ViewCamera.windowDim.y);
 			g.drawImage(this.Frame, (int)ViewCamera.scalingOffset.x, (int)ViewCamera.scalingOffset.y, null);
 			
 			View.drawingFrame = false;
