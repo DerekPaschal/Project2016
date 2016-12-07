@@ -20,7 +20,7 @@ public class Asteroid extends PhysicsSprite
 	
 	public Asteroid(Vector2D position, Rotation rotation, double size)
 	{
-		super(position, rotation, Math.round(size),0.99, size*10);
+		super(position, rotation, Math.round(size),0.99, size*size);
 		this.vel = new Vector2D();
 		int color_value = (int)(128+(Math.random()*64));
 		this.color = new Color(color_value,color_value,color_value);

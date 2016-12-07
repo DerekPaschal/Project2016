@@ -20,15 +20,15 @@ public class PlayerShip extends SpaceShip
 	
 	public PlayerShip(Vector2D position) 
 	{
-		super(position,new Rotation(0),40,10,20,0.05);
-		this.currentLevel = 0;
-		this.baseUpgradeCost = 10;
-		this.maxUpgradeLevel = 3;
+		super(position,new Rotation(0),40,10,10,0.05);
+		this.currentLevel = 1;
+		this.baseUpgradeCost = 1000;
+		this.maxUpgradeLevel = 5;
 	}
 	
 	public int getNextUpgradeCost()
 	{
-		return (int) (this.baseUpgradeCost + this.currentLevel * 2);
+		return (int) (this.baseUpgradeCost + (500 * (this.currentLevel-1)));
 	}
 	
 	public int getUpgradeLevel()
@@ -41,12 +41,15 @@ public class PlayerShip extends SpaceShip
 		if (this.energy > this.getNextUpgradeCost() && this.currentLevel < this.maxUpgradeLevel)
 		{
 			this.energy -= this.getNextUpgradeCost();
+			this.healthMax *= 1.1;
+			this.health = this.healthMax;
 			this.shieldMax *= 1.2;
 			this.shieldRegen *= 1.2;
-			this.bulletVel *= 1.2;
-			this.bulletDamage *= 2;
+			this.bulletVel *= 1.1;
+			this.bulletDamage *= 1.5;
 			this.bulletSpread *= 2;
-			this.thrustPower *= 1.2;
+			this.thrustPower *= 1.1;
+			this.bulletCooldown -= 1.0;
 			this.currentLevel++;
 		}
 	}

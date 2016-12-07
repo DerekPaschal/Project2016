@@ -18,7 +18,7 @@ abstract class SpaceShip extends PhysicsSprite
 	public boolean left, right, forward, backward, firing;
 	public double turnRate = 2, thrustPower = 0.2;
 	
-	public double bulletSize = 4, bulletVel = 10.0, bulletDamage = 50;
+	public double bulletSize = 4, bulletVel = 15.0, bulletDamage = 100;
 	public int bulletCooldown = 10, timeSinceFiring = 0;
 	
 	public SpaceShip(Vector2D position, Rotation rotation, double size, double health, double shield, double shieldRegen)
@@ -29,7 +29,7 @@ abstract class SpaceShip extends PhysicsSprite
 		this.shield = shield;
 		this.shieldMax = shield;
 		this.shieldRegen = shieldRegen;
-		this.energy = 1000;
+		this.energy = 100000;
 		
 		left = false;
 		right = false;
@@ -102,10 +102,12 @@ abstract class SpaceShip extends PhysicsSprite
 		
 		synchronized(this.healthLock)
 		{			
-			if (this.energy > this.shieldRegen)
+			double shieldAdd = Math.min(this.shieldRegen, this.shieldMax - this.shield);
+			double shieldCost = shieldAdd * 10;
+			
+			if (this.energy > shieldCost)
 			{
-				double shieldAdd = Math.min(this.shieldRegen, this.shieldMax - this.shield);
-				this.energy -= shieldAdd;
+				this.energy -= shieldCost;
 				this.shield += shieldAdd;
 			}
 		}

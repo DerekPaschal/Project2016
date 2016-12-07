@@ -128,7 +128,7 @@ public class GameMap {
 		this.removeAllSprites();
 		
 		//Create new PlayerShip
-		this.playerShip = new PlayerShip(new Vector2D(500.0, 5750.0));
+		this.playerShip = new PlayerShip(new Vector2D(500.0, 7750.0));
 		SpriteList.add(this.playerShip);
 		
 		//Create Background
@@ -140,7 +140,7 @@ public class GameMap {
 		
 		
 		//Create first asteroid field
-		MapBoundary asteroidField = new MapBoundary(new Rectangle(0,4500,1000,1000));
+		MapBoundary asteroidField = new MapBoundary(new Rectangle(0,6500,1000,1000));
 		asteroidField.boundaryColor = Color.BLUE;
 		asteroidField.setForce(0.0005);
 		Asteroid adding;
@@ -161,7 +161,7 @@ public class GameMap {
 		
 		
 		//Create second asteroid field
-		asteroidField = new MapBoundary(new Rectangle(0,3500,1000,1000));
+		asteroidField = new MapBoundary(new Rectangle(0,5000,1000,1000));
 		asteroidField.boundaryColor = Color.BLUE;
 		asteroidField.setForce(0.0005);
 		synchronized (SpriteList.SpriteLock)
@@ -181,7 +181,7 @@ public class GameMap {
 		
 		
 		//Create third asteroid field
-		asteroidField = new MapBoundary(new Rectangle(0,2000,1000,1500));
+		asteroidField = new MapBoundary(new Rectangle(0,3000,1000,1500));
 		asteroidField.boundaryColor = Color.BLUE;
 		asteroidField.setForce(0.0005);
 		synchronized (SpriteList.SpriteLock)
@@ -201,7 +201,7 @@ public class GameMap {
 		
 		
 		//Create fourth asteroid field
-		asteroidField = new MapBoundary(new Rectangle(0,1000,1000,1000));
+		asteroidField = new MapBoundary(new Rectangle(0,1500,1000,1000));
 		asteroidField.boundaryColor = Color.BLUE;
 		asteroidField.setForce(0.0005);
 		synchronized (SpriteList.SpriteLock)
@@ -230,7 +230,7 @@ public class GameMap {
 			{
 				adding = new Asteroid(new Vector2D(asteroidField.getLeftBound() + Math.random()*asteroidField.getWidth(), 
 						asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), new Rotation(Math.random()*360),
-						16+(Math.random() * 4));
+						20+(Math.random() * 20));
 				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
 				adding.rot_vel = Math.random()*5-2.5;
 				SpriteList.add(adding);
@@ -242,7 +242,7 @@ public class GameMap {
 		
 		
 		//Create outer map bounds
-		this.mapBoundary = new MapBoundary(new Rectangle(0,0,1000,6000));
+		this.mapBoundary = new MapBoundary(new Rectangle(0,0,1000,8000));
 		this.mapBoundary.boundaryWidth = 5;
 		this.mapBoundary.boundaryColor = new Color(128,128,128,128);
 		synchronized(SpriteList.SpriteLock)
@@ -322,6 +322,18 @@ public class GameMap {
 	 */
 	public void addGameSprites()
 	{		
+		if (this.playerShip.pos.y - this.playerShip.size <= 0)
+		{
+			//You win
+			//SpriteList.getGUI().
+		}
+		
+		if (this.playerShip.health <= 0.0 || this.playerShip.energy <= 1.0)
+		{
+			//You lose
+			//SpriteList.getGUI().
+		}
+		
 		if (this.playerShip.firing && this.playerShip.timeSinceFiring>this.playerShip.bulletCooldown)
 		{
 			SpriteList.add(this.playerShip.fireBullet());
@@ -333,7 +345,7 @@ public class GameMap {
 		for (int i = 0; i < this.RemovedAsteroids.size(); i++)
 		{
 			s = this.RemovedAsteroids.get(i);
-			this.playerShip.energy += s.size;
+			this.playerShip.energy += s.size*s.size*0.1;
 			if (s.size >= 16)
 			{
 				n = new Asteroid(s.pos.add(new Vector2D(Math.random()*s.size,Math.random()*s.size)), s.rotation, s.size/2);
