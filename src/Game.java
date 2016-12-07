@@ -38,7 +38,7 @@ public class Game extends JFrame implements ActionListener
 		this.view = new View(this.model);
 		
 		//Set up Java window
-		this.setTitle("GridGame");
+		this.setTitle("Asteroid Escape");
 		this.getContentPane().add(view);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setExtendedState(MAXIMIZED_BOTH);

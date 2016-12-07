@@ -61,9 +61,9 @@ public class GameMap {
 			int ListSize = SpriteList.size();
 			
 			//Load Threads with Work to do Physics
-			executor.execute(new UpdateAccThread(0,ListSize/16,latch));
-			executor.execute(new UpdateAccThread(ListSize/16,ListSize/4,latch));
-			executor.execute(new UpdateAccThread(ListSize/4,ListSize/2,latch));
+			executor.execute(new UpdateAccThread(0,ListSize/8,latch));
+			executor.execute(new UpdateAccThread(ListSize/8,(ListSize*3)/10,latch));
+			executor.execute(new UpdateAccThread((ListSize*3)/10,ListSize/2,latch));
 			executor.execute(new UpdateAccThread(ListSize/2,ListSize,latch));
 			
 			//Wait
@@ -243,6 +243,8 @@ public class GameMap {
 		
 		//Create outer map bounds
 		this.mapBoundary = new MapBoundary(new Rectangle(0,0,1000,6000));
+		this.mapBoundary.boundaryWidth = 5;
+		this.mapBoundary.boundaryColor = new Color(128,128,128,128);
 		synchronized(SpriteList.SpriteLock)
 		{
 			Sprite s;
@@ -334,14 +336,14 @@ public class GameMap {
 			this.playerShip.energy += s.size;
 			if (s.size >= 16)
 			{
-				n = new Asteroid(s.pos.add(new Vector2D(s.size/2,s.size/2)), s.rotation, s.size/2);
+				n = new Asteroid(s.pos.add(new Vector2D(Math.random()*s.size,Math.random()*s.size)), s.rotation, s.size/2);
 				n.rot_vel = Math.random()*5-2.5;
-				n.vel = s.vel.add(Math.random()*5-2.5);
+				n.vel = s.vel;
 				SpriteList.add(n);
 				
-				n2 = new Asteroid(s.pos.add(new Vector2D(-s.size/2,-s.size/2)), s.rotation, s.size/2);
+				n2 = new Asteroid(s.pos.add(new Vector2D(Math.random()*s.size,Math.random()*s.size)), s.rotation, s.size/2);
 				n2.rot_vel = Math.random()*5-2.5;
-				n2.vel = s.vel.add(Math.random()*5-2.5);
+				n2.vel = s.vel;
 				SpriteList.add(n2);
 				
 				for(MapBoundary boundary : this.fieldBoundaries)
