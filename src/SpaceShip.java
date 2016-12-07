@@ -21,6 +21,11 @@ abstract class SpaceShip extends PhysicsSprite
 	public double bulletSize = 4, bulletVel = 15.0, bulletDamage = 100;
 	public int bulletCooldown = 10, timeSinceFiring = 0;
 	
+	public int currentLevel = 1;
+	
+	public Color shieldColor;
+	public BufferedImage shipImage;
+	
 	public SpaceShip(Vector2D position, Rotation rotation, double size, double health, double shield, double shieldRegen)
 	{
 		super(position,rotation,size, 1.0, health);
@@ -29,11 +34,8 @@ abstract class SpaceShip extends PhysicsSprite
 		this.shield = shield;
 		this.shieldMax = shield;
 		this.shieldRegen = shieldRegen;
-<<<<<<< HEAD
-		this.energy = 10000;
-=======
 		this.energy = 1000;
->>>>>>> origin/master
+
 		
 		left = false;
 		right = false;
@@ -122,10 +124,9 @@ abstract class SpaceShip extends PhysicsSprite
 	public Bullet fireBullet()
 	{
 		this.timeSinceFiring = 0;
-		//Vector2D bulletPos = new Vector2D(this.pos.x + (Math.cos(this.rotation.getRadians() - Math.PI / 2.0)*30), this.pos.y + (Math.sin(this.rotation.getRadians()-Math.PI / 2.0)*30) );
 		Vector2D bulletPos = new Vector2D(this.pos.x + (Math.cos(this.rotation.getRadians() - Math.PI / 2.0) * 20), this.pos.y + (Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * 20));
 		Vector2D bulletVel = new Vector2D(this.vel.x + (Math.cos(this.rotation.getRadians() + Math.toRadians(this.bulletSpread*Math.random() - this.bulletSpread/2) - Math.PI / 2.0) * this.bulletVel), this.vel.y + (Math.sin(this.rotation.getRadians() - Math.PI / 2.0) * this.bulletVel));
-		Bullet bullet = new Bullet(bulletPos, bulletVel, new Rotation(this.rotation), this.bulletSize, this.bulletDamage);
+		Bullet bullet = new Bullet(bulletPos, bulletVel, new Rotation(this.rotation), this.bulletSize, this.bulletDamage, this.currentLevel);
 		return bullet;
 	}
 	

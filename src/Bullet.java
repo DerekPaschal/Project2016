@@ -9,13 +9,13 @@ public class Bullet extends PhysicsSprite
 	double damage = 0;
 	int lifeTime = 0, lifeExpectancy = 60;
 	
-	public Bullet(Vector2D position, Vector2D velocity, Rotation rotation, double size, double damage) 
+	public Bullet(Vector2D position, Vector2D velocity, Rotation rotation, double size, double damage, int bulletImage) 
 	{
 		super(position, rotation, size, 1.0, 100);
 		this.mass = 0.0;
 		this.vel = velocity;
 		this.damage = damage;
-		this.currentImage = ResourceLoader.getBufferedImage("weapons/teal_short_fat_beam.png");
+		this.currentImage = ResourceLoader.getBufferedImage("weapons/short_fat_beam_"+bulletImage+".png");
 		//this.currentImage = new BufferedImage((int)Math.round(this.size*2), (int)Math.round(this.size*2), BufferedImage.TYPE_INT_ARGB);
 		//Graphics2D c2 = this.currentImage.createGraphics();
 		//c2.setColor(new Color(255,255,255));

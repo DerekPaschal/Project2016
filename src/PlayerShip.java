@@ -15,20 +15,21 @@ import java.awt.image.BufferedImage;
 
 public class PlayerShip extends SpaceShip
 {
-	private int currentLevel, baseUpgradeCost, maxUpgradeLevel;
+	private int baseUpgradeCost, maxUpgradeLevel;
 	public boolean upgradesUpdated = false;
 	
 	public PlayerShip(Vector2D position) 
 	{
-		super(position,new Rotation(0),40,10,10,0.05);
-		this.currentLevel = 1;
+		super(position,new Rotation(0),40,10,5,0.025);
 		this.baseUpgradeCost = 1000;
-		this.maxUpgradeLevel = 5;
+		this.maxUpgradeLevel = 7;
+		this.shipImage = ResourceLoader.getBufferedImage("ships/13B1.png"); //Load Player Ship Image
+		this.shieldColor = new Color((float)0.0, (float)0.7, (float)0.8);
 	}
 	
 	public int getNextUpgradeCost()
 	{
-		return (int) (this.baseUpgradeCost + (500 * (this.currentLevel-1)));
+		return (int) (this.baseUpgradeCost + (1000 * (this.currentLevel-1)));
 	}
 	
 	public int getUpgradeLevel()
@@ -43,14 +44,48 @@ public class PlayerShip extends SpaceShip
 			this.energy -= this.getNextUpgradeCost();
 			this.healthMax *= 1.1;
 			this.health = this.healthMax;
-			this.shieldMax *= 1.2;
-			this.shieldRegen *= 1.2;
+			this.shieldMax *= 1.3;
+			this.shieldRegen *= 1.4;
 			this.bulletVel *= 1.1;
-			this.bulletDamage *= 1.5;
-			this.bulletSpread *= 2;
+			this.bulletSize += 1;
+			this.bulletDamage *= 1.4;
+			this.bulletSpread *= 1.1;
 			this.thrustPower *= 1.1;
-			this.bulletCooldown -= 1.0;
+			this.bulletCooldown -= 1;
 			this.currentLevel++;
+			synchronized (this.imageLock)
+			{
+				switch (this.currentLevel)
+				{
+				case 2 :
+					this.shipImage = ResourceLoader.getBufferedImage("ships/13B2.png");
+					this.shieldColor = new Color((float)0.9, (float)0.2, (float)0.0);
+					break;
+				case 3 :
+					this.shipImage = ResourceLoader.getBufferedImage("ships/13B3.png");
+					this.shieldColor = new Color((float)0.1, (float)0.9, (float)0.4);
+					break;
+				case 4 :
+					this.shipImage = ResourceLoader.getBufferedImage("ships/13B4.png");
+					this.shieldColor = new Color((float)0.8, (float)0.8, (float)0.0);
+					break;
+				case 5 :
+					this.shipImage = ResourceLoader.getBufferedImage("ships/13B5.png");
+					this.shieldColor = new Color((float)1.0, (float)0.7, (float)0.0);
+					break;
+				case 6 :
+					this.shipImage = ResourceLoader.getBufferedImage("ships/13B6.png");
+					this.shieldColor = new Color((float)1.0, (float)1.0, (float)1.0);
+					break;
+				case 7 :
+					this.shipImage = ResourceLoader.getBufferedImage("ships/13B7_0.png");
+					break;
+				default :
+					this.shipImage = ResourceLoader.getBufferedImage("ships/13B1.png");
+					this.shieldColor = new Color((float)0.0, (float)0.7, (float)0.8);
+					break;
+				}
+			}
 		}
 	}
 	
@@ -59,13 +94,10 @@ public class PlayerShip extends SpaceShip
 	{
 		synchronized (this.imageLock)
 		{
-			if (this.needsRedraw || this.currentImage == null)
-			{
+			
 				this.currentImage = new BufferedImage((int)this.size*2, (int)this.size*2, BufferedImage.TYPE_INT_ARGB); //create blank current image
 				Graphics2D c2 = this.currentImage.createGraphics(); //Create graphics object for current Image
 				c2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON); //Set Anti Aliasing
-				
-				BufferedImage shipImage = ResourceLoader.getBufferedImage("ships/13B.png"); //Load Player Ship Image
 				
 				Vector2D shipDims = new Vector2D(shipImage.getWidth(), shipImage.getHeight()); //Get Maximum dimensions of ship image
 				double shipScale = (this.size*2*0.8) / Math.max(shipDims.x, shipDims.y); //Set scale size that will make ship image fit into size
@@ -75,12 +107,12 @@ public class PlayerShip extends SpaceShip
 				float alpha = (float)(0.1*shieldRatio);
 				for (; (alpha <= 1.0 && alpha >= 0.0) && (i < 4); alpha += (0.1*shieldRatio) ,i++)
 				{
-					c2.setColor(new Color((float)0.0,(float)0.7,(float)0.8,alpha));
+					c2.setColor(new Color(this.shieldColor.getRed(),this.shieldColor.getGreen(),this.shieldColor.getBlue(),(int)(alpha*255)));
 					c2.drawOval(i, i, (int)(Math.round(this.size*2)-1-i*2), (int)(Math.round(this.size*2)-1-i*2));
 				}
 				for (; (alpha >= 0.0 && alpha <= 1.0) && (this.size - i > 1); alpha-= (0.04*shieldRatio), i++)
 				{
-					c2.setColor(new Color((float)0.0,(float)0.7,(float)0.8,alpha));
+					c2.setColor(new Color(this.shieldColor.getRed(),this.shieldColor.getGreen(),this.shieldColor.getBlue(),(int)(alpha*255)));
 					c2.drawOval(i, i, (int)(Math.round(this.size*2)-1-i*2), (int)(Math.round(this.size*2)-1-i*2));
 				}
 								
@@ -93,7 +125,7 @@ public class PlayerShip extends SpaceShip
 				c2.fillOval((int)this.size - 1, (int)this.size - 1, 2, 2);*/
 				
 				c2.dispose();
-			}
+			
 			
 			super.draw(g2);
 		}
