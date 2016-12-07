@@ -118,7 +118,7 @@ public class GameGUI extends Sprite{
 		upgradesButton.setButtonSize(new Vector2D(50, 30));
 		upgradesButton.setFontSize(9);
 		
-		updateGUIBars();
+		updateGUIIndicators();
 		
 		//Add the buttons
 		synchronized(this.guiButtons)
@@ -153,40 +153,73 @@ public class GameGUI extends Sprite{
 		this.needsRedraw = true;
 	}
 	
-	public void updateGUIBars()
+	public void openGameWin()
 	{
-		if (SpriteList.getPlayerShip() == null)
+		if  (SpriteList.getPlayerShip() == null)
 			return;
+		this.guiWindow = new GUIWindow(GUIWindowType.REGULAR);
+		this.guiWindow.setGameWin();
+		this.guiWindow.setPos(ReferencePositions.CENTER, new Vector2D((int)(ViewCamera.renderRes.x - 1)/2, (int)(ViewCamera.renderRes.y - 1)/2));
+		this.guiWindow.textColor = Color.WHITE;
+		this.needsRedraw = true;
+	}
+	
+	public void openGameLose()
+	{
+		if  (SpriteList.getPlayerShip() == null)
+			return;
+		this.guiWindow = new GUIWindow(GUIWindowType.REGULAR);
+		this.guiWindow.setGameLose();
+		this.guiWindow.setPos(ReferencePositions.CENTER, new Vector2D((int)(ViewCamera.renderRes.x - 1)/2, (int)(ViewCamera.renderRes.y - 1)/2));
+		this.guiWindow.textColor = Color.WHITE;
+		this.needsRedraw = true;
+	}
+	
+	public void updateGUIIndicators()
+	{
 		synchronized(this.guiBars)
 		{
 			this.guiBars.clear();
 			this.guiTexts.clear();
 			
+			double currShield = 0, shieldMax = 0;
+			double currHealth = 0, healthMax = 0;
+			double currEnergy = 0;
+			
+			if (SpriteList.getPlayerShip() != null)
+			{
+				currShield = SpriteList.getPlayerShip().shield;
+				shieldMax = SpriteList.getPlayerShip().shieldMax;
+				
+				currHealth = SpriteList.getPlayerShip().health;
+				healthMax = SpriteList.getPlayerShip().healthMax;
+				
+				currEnergy = SpriteList.getPlayerShip().energy;
+			}
+			
 			//Add shield indicators
-			GUIBar shieldBar = new GUIBar((int)SpriteList.getPlayerShip().shield, (int)SpriteList.getPlayerShip().shieldMax, 120, 20, Color.BLUE);
+			GUIBar shieldBar = new GUIBar((int)currShield, (int)shieldMax, 120, 20, Color.BLUE);
 			shieldBar.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(0, 430));
 			this.guiBars.add(shieldBar);
-			MenuText shieldText = new MenuText(Math.round((float)SpriteList.getPlayerShip().shield / (float)SpriteList.getPlayerShip().shieldMax * 100) + "%");
+			MenuText shieldText = new MenuText(Math.round((float)currShield / (float)shieldMax * 100) + "%");
 			shieldText.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(130, 450));
 			shieldText.setTextColor(Color.BLUE);
 			this.guiTexts.add(shieldText);
 			
 			//Add health bar
-			GUIBar healthBar = new GUIBar((int)SpriteList.getPlayerShip().health, (int)SpriteList.getPlayerShip().healthMax, 120, 20, Color.RED);
+			GUIBar healthBar = new GUIBar((int)currHealth, (int)healthMax, 120, 20, Color.RED);
 			healthBar.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(0, 460));
 			this.guiBars.add(healthBar);
-			MenuText healthText = new MenuText(Math.round((float)SpriteList.getPlayerShip().health / (float)SpriteList.getPlayerShip().healthMax * 100) + "%");
+			MenuText healthText = new MenuText(Math.round((float)currHealth / (float)healthMax * 100) + "%");
 			healthText.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(130, 480));
 			healthText.setTextColor(Color.RED);
 			this.guiTexts.add(healthText);
 			
-			//Add energy bar
-			GUIBar energyBar = new GUIBar((int)SpriteList.getPlayerShip().energy, 1000, 120, 20, Color.YELLOW);
-			energyBar.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(0, 400));
-			this.guiBars.add(energyBar);
-			MenuText energyText = new MenuText(SpriteList.getPlayerShip().energy + "");
-			energyText.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(130, 420));
+			//Add energy indicator
+			MenuText energyText = new MenuText("Energy: " + Math.round(currEnergy));
+			energyText.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(5, 420));
 			energyText.setTextColor(Color.YELLOW);
+			energyText.setFontSize(15);
 			this.guiTexts.add(energyText);
 		}
 		this.needsRedraw = true;
@@ -201,7 +234,7 @@ public class GameGUI extends Sprite{
 //			if (this.needsRedraw || this.currentImage == null)
 			{
 				if (!this.guiBars.isEmpty())
-					updateGUIBars();
+					updateGUIIndicators();
 				
 				//GameGUI is always the size of the screen
 				this.currentImage = new BufferedImage((int)ViewCamera.renderRes.x - 1, (int)ViewCamera.renderRes.y - 1, 

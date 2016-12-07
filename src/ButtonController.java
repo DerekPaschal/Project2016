@@ -47,6 +47,7 @@ public class ButtonController
 				break;
 			case UPGRADE_SHIP:
 				model.mv.gameMap.upgradePlayerShip();
+				SpriteList.getGUI().openUpgrades();
 				break;
 			default:
 				break;

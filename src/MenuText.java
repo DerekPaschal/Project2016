@@ -104,6 +104,15 @@ public class MenuText extends Sprite
 	
 	public Font getFont() { return this.font; }
 	public void setFont(Font f) { this.font = f; updateImageSize(); }
+	public int getFontSize()
+	{
+		return this.getFont().getSize();
+	}
+	public void setFontSize(int fontSize)
+	{
+		this.font = new Font(this.getFont().getFontName(), this.getFont().getStyle(), fontSize);
+		this.needsRedraw = true;
+	}
 	
 	private void updateImageSize()
 	{

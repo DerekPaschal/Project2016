@@ -172,6 +172,64 @@ public class GUIWindow extends Sprite
 		}
 	}
 	
+	public void setGameWin()
+	{
+		synchronized(this.imageLock)
+		{
+			synchronized(this.windowButtons)
+			{
+				this.windowButtons.clear();
+			}
+			synchronized(this.windowTexts)
+			{
+				this.windowTexts.clear();
+			}
+			
+			this.setStandardWindow();
+		
+			//Display ship upgrades
+			MenuText winText = new MenuText("YOU WIN !!");
+			winText.setPos(ReferencePositions.CENTER, this.windowImage.getWidth()/2, 20);
+			winText.setTextColor(Color.GREEN);
+			
+			synchronized(this.windowTexts)
+			{
+				this.windowTexts.add(winText);
+			}
+			
+			this.needsRedraw = true;
+		}
+	}
+	
+	public void setGameLose()
+	{
+		synchronized(this.imageLock)
+		{
+			synchronized(this.windowButtons)
+			{
+				this.windowButtons.clear();
+			}
+			synchronized(this.windowTexts)
+			{
+				this.windowTexts.clear();
+			}
+			
+			this.setStandardWindow();
+		
+			//Display ship upgrades
+			MenuText deathText = new MenuText("YOU LOSE? YEP. DED");
+			deathText.setTextColor(Color.RED);
+			deathText.setPos(ReferencePositions.CENTER, this.windowImage.getWidth()/2, 20);
+			
+			synchronized(this.windowTexts)
+			{
+				this.windowTexts.add(deathText);
+			}
+			
+			this.needsRedraw = true;
+		}
+	}
+	
 	public void setStandardWindow()
 	{
 		synchronized (this.imageLock)
