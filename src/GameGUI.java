@@ -155,8 +155,7 @@ public class GameGUI extends Sprite{
 	
 	public void openGameWin()
 	{
-		if  (SpriteList.getPlayerShip() == null)
-			return;
+		Game.primaryModel.mv.paused = true;
 		this.guiWindow = new GUIWindow(GUIWindowType.REGULAR);
 		this.guiWindow.setGameWin();
 		this.guiWindow.setPos(ReferencePositions.CENTER, new Vector2D((int)(ViewCamera.renderRes.x - 1)/2, (int)(ViewCamera.renderRes.y - 1)/2));
@@ -166,8 +165,7 @@ public class GameGUI extends Sprite{
 	
 	public void openGameLose()
 	{
-		if  (SpriteList.getPlayerShip() == null)
-			return;
+		Game.primaryModel.mv.paused = true;
 		this.guiWindow = new GUIWindow(GUIWindowType.REGULAR);
 		this.guiWindow.setGameLose();
 		this.guiWindow.setPos(ReferencePositions.CENTER, new Vector2D((int)(ViewCamera.renderRes.x - 1)/2, (int)(ViewCamera.renderRes.y - 1)/2));

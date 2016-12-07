@@ -73,7 +73,7 @@ public class GameMap {
 			cleanPhysicsSpritesList();
 			
 			//Add sprites to the list if needed
-			addGameSprites();
+			doGameActions();
 			
 			//Update velocity and position of each PhysicsSprite
 			updateVelPos();
@@ -230,7 +230,7 @@ public class GameMap {
 			{
 				adding = new Asteroid(new Vector2D(asteroidField.getLeftBound() + Math.random()*asteroidField.getWidth(), 
 						asteroidField.getUpperBound() + Math.random()*asteroidField.getHeight()), new Rotation(Math.random()*360),
-						20+(Math.random() * 20));
+						10+(Math.random() * 20));
 				adding.vel =  new Vector2D(Math.random()-0.5, Math.random()-0.5);
 				adding.rot_vel = Math.random()*5-2.5;
 				SpriteList.add(adding);
@@ -320,18 +320,18 @@ public class GameMap {
 	 * General purpose method that adds sprites to the GameMap depending on
 	 * the current status of the Game.
 	 */
-	public void addGameSprites()
+	public void doGameActions()
 	{		
 		if (this.playerShip.pos.y - this.playerShip.size <= 0)
 		{
 			//You win
-			//SpriteList.getGUI().
+			SpriteList.getGUI().openGameWin();
 		}
 		
 		if (this.playerShip.health <= 0.0 || this.playerShip.energy <= 1.0)
 		{
 			//You lose
-			//SpriteList.getGUI().
+			SpriteList.getGUI().openGameLose();
 		}
 		
 		if (this.playerShip.firing && this.playerShip.timeSinceFiring>this.playerShip.bulletCooldown)
