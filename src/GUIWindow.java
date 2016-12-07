@@ -103,6 +103,25 @@ public class GUIWindow extends Sprite
 	 */
 	public void setMenu()
 	{
+		this.setInstructions();
+		
+		ActionButton mainMenuButton = new ActionButton("Return to Main Menu");
+		mainMenuButton.setPos(ReferencePositions.CENTER, new Vector2D(this.windowImage.getWidth(), this.windowImage.getHeight()-50));
+		mainMenuButton.setFont(new Font("Monospace", Font.BOLD, 20));
+		mainMenuButton.setButtonAction(GUIButtonActions.MAIN_MENU);
+		mainMenuButton.setIsToggleButton(false);
+		mainMenuButton.setTextColor(Color.RED);
+		mainMenuButton.setButtonSize(new Vector2D(160, 35));
+		mainMenuButton.setFontSize(15);
+		
+		synchronized(this.windowButtons)
+		{
+			this.windowButtons.add(mainMenuButton);
+		}
+	}
+	
+	public void setInstructions()
+	{
 		synchronized(this.imageLock)
 		{
 			synchronized(this.windowButtons)
@@ -115,6 +134,33 @@ public class GUIWindow extends Sprite
 			}
 			
 			this.setStandardWindow();
+			
+			MenuText windowTitle = new MenuText("INSTRUCTIONS");
+			windowTitle.setPos(ReferencePositions.CENTER, this.windowImage.getWidth()/2, 20);
+			
+			MenuText instructions1 = new MenuText("Blast your way through the asteroid field and", 20, 90);
+			instructions1.setFontSize(16);
+			MenuText instructions2 = new MenuText("make it safely to the other side. Gather energy", 20, 110);
+			instructions2.setFontSize(16);
+			MenuText instructions3 = new MenuText("by destroying asteroids to upgrade your ship.", 20, 130);
+			instructions3.setFontSize(16);
+			MenuText instructions4 = new MenuText("Be careful! You need energy to recharge your", 20, 150);
+			instructions4.setFontSize(16);
+			MenuText instructions5 = new MenuText("shields and power your thrusters. Upgrade", 20, 170);
+			instructions5.setFontSize(16);
+			MenuText instructions6 = new MenuText("too soon and you will be LOST IN SPACE!", 20, 190);
+			instructions6.setFontSize(16);
+			
+			synchronized(this.windowTexts)
+			{
+				this.windowTexts.add(windowTitle);
+				this.windowTexts.add(instructions1);
+				this.windowTexts.add(instructions2);
+				this.windowTexts.add(instructions3);
+				this.windowTexts.add(instructions4);
+				this.windowTexts.add(instructions5);
+				this.windowTexts.add(instructions6);
+			}
 			
 			this.needsRedraw = true;
 		}
@@ -217,13 +263,24 @@ public class GUIWindow extends Sprite
 			this.setStandardWindow();
 		
 			//Display ship upgrades
-			MenuText deathText = new MenuText("YOU LOSE? YEP. DED");
-			deathText.setTextColor(Color.RED);
-			deathText.setPos(ReferencePositions.CENTER, this.windowImage.getWidth()/2, 20);
+			MenuText resultText = new MenuText("GAME OVER !");
+			resultText.setFontSize(20);
+			resultText.setTextColor(Color.RED);
+			resultText.setPos(ReferencePositions.CENTER, this.windowImage.getWidth()/2, 20);
+			
+			MenuText scoreDescription = new MenuText("Final Score:");
+			scoreDescription.setFontSize(10);
+			scoreDescription.setTextColor(Color.RED);
+			scoreDescription.setPos(ReferencePositions.CENTER, this.windowImage.getWidth()/2, 40);
+			
+			MenuText scoreText = new MenuText("0");
+			scoreText.setFontSize(20);
+			scoreText.setTextColor(Color.RED);
+			scoreText.setPos(ReferencePositions.CENTER, this.windowImage.getWidth()/2, 60);
 			
 			synchronized(this.windowTexts)
 			{
-				this.windowTexts.add(deathText);
+				this.windowTexts.add(resultText);
 			}
 			
 			this.needsRedraw = true;
@@ -248,21 +305,21 @@ public class GUIWindow extends Sprite
 			closeButton.setButtonSize(new Vector2D(25, 25));
 			closeButton.setFontSize(15);
 			
-			//Add return to main menu button
-			ActionButton mainMenuButton = new ActionButton("Close Window");
-			mainMenuButton.setPos(ReferencePositions.CENTER, new Vector2D(this.windowImage.getWidth(), this.windowImage.getHeight()));
-			mainMenuButton.setFont(new Font("Monospace", Font.BOLD, 20));
-			mainMenuButton.setButtonAction(GUIButtonActions.CLOSE_WINDOW);
-			mainMenuButton.setIsToggleButton(false);
-			mainMenuButton.setTextColor(Color.RED);
-			mainMenuButton.setButtonSize(new Vector2D(160, 35));
-			mainMenuButton.setFontSize(15);
+			//Add large close window button
+			ActionButton closeButton2 = new ActionButton("Close Window");
+			closeButton2.setPos(ReferencePositions.CENTER, new Vector2D(this.windowImage.getWidth(), this.windowImage.getHeight()));
+			closeButton2.setFont(new Font("Monospace", Font.BOLD, 20));
+			closeButton2.setButtonAction(GUIButtonActions.CLOSE_WINDOW);
+			closeButton2.setIsToggleButton(false);
+			closeButton2.setTextColor(Color.RED);
+			closeButton2.setButtonSize(new Vector2D(160, 35));
+			closeButton2.setFontSize(15);
 			
 			//Add buttons
 			synchronized(this.windowButtons)
 			{
 				this.windowButtons.add(closeButton);
-				this.windowButtons.add(mainMenuButton);
+				this.windowButtons.add(closeButton2);
 			}
 			
 			this.needsRedraw = true;

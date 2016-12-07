@@ -29,7 +29,7 @@ abstract class SpaceShip extends PhysicsSprite
 		this.shield = shield;
 		this.shieldMax = shield;
 		this.shieldRegen = shieldRegen;
-		this.energy = 100000;
+		this.energy = 10000;
 		
 		left = false;
 		right = false;

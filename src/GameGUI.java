@@ -49,27 +49,36 @@ public class GameGUI extends Sprite{
 		{
 			this.guiTexts.clear();
 		}
+		synchronized(this.guiBars)
+		{
+			this.guiBars.clear();
+		}
 		
 		//Create main menu components
-		MenuText title = new MenuText("FLEET PATROL", (int)(ViewCamera.renderRes.x / 2), 100, Color.GREEN, GameConstant.SLATE_GRAY);
+		MenuText title = new MenuText("ASTEROID ESCAPE", (int)(ViewCamera.renderRes.x / 2), 250, Color.GREEN, GameConstant.SLATE_GRAY);
 		title.setFont(new Font("Courier New", Font.BOLD, 40));
 		title.setPos(ReferencePositions.TOP_CENTER, new Vector2D(ViewCamera.renderRes.x / 2, 45));
 		
-		ActionButton startButton = new ActionButton("Start Game", new Vector2D(50, 200));
+		ActionButton startButton = new ActionButton("Start Game");
+		startButton.setButtonSize(new Vector2D(400, 50));
+		startButton.setPos(ReferencePositions.CENTER, new Vector2D(ViewCamera.renderRes.x / 2, 250));
+//		startButton.setPos(ReferencePositions.TOP_CENTER, new Vector2D(ViewCamera.renderRes.x / 2, 200));
 		startButton.setButtonAction(GUIButtonActions.START_GAME);
-		startButton.setButtonSize(new Vector2D(100, 100));
 		startButton.setFontSize(18);
 		startButton.setIsToggleButton(false);
 		
-		ActionButton testToggleButton = new ActionButton("Happy Button", new Vector2D(200, 200));
-		testToggleButton.setButtonSize(new Vector2D(100, 100));
-		testToggleButton.setFontSize(14);
+		ActionButton quitButton = new ActionButton("Quit Game");
+		quitButton.setButtonSize(new Vector2D(400, 50));
+		quitButton.setPos(ReferencePositions.CENTER, new Vector2D(ViewCamera.renderRes.x / 2, 350));
+		quitButton.setButtonAction(GUIButtonActions.QUIT_GAME);
+		quitButton.setFontSize(18);
+		quitButton.setIsToggleButton(false);
 		
 		//Add the buttons
 		synchronized(this.guiButtons)
 		{
 			this.guiButtons.add(startButton);
-			this.guiButtons.add(testToggleButton);
+			this.guiButtons.add(quitButton);
 		}
 		//Add the text elements
 		synchronized(this.guiTexts)
@@ -128,8 +137,17 @@ public class GameGUI extends Sprite{
 			this.guiButtons.add(upgradesButton);
 		}
 		
-		openMenu();
+		this.openInstructions();
 		
+		this.needsRedraw = true;
+	}
+	
+	public void openInstructions()
+	{
+		this.guiWindow = new GUIWindow(GUIWindowType.REGULAR);
+		this.guiWindow.setInstructions();
+		this.guiWindow.setPos(ReferencePositions.CENTER, new Vector2D((int)(ViewCamera.renderRes.x - 1)/2, (int)(ViewCamera.renderRes.y - 1)/2));
+		this.guiWindow.textColor = Color.WHITE;
 		this.needsRedraw = true;
 	}
 	
@@ -182,7 +200,7 @@ public class GameGUI extends Sprite{
 			
 			double currShield = 0, shieldMax = 0;
 			double currHealth = 0, healthMax = 0;
-			double currEnergy = 0;
+			double currEnergy = 0, energyMax = 0;
 			
 			if (SpriteList.getPlayerShip() != null)
 			{
@@ -193,6 +211,7 @@ public class GameGUI extends Sprite{
 				healthMax = SpriteList.getPlayerShip().healthMax;
 				
 				currEnergy = SpriteList.getPlayerShip().energy;
+				energyMax = SpriteList.getPlayerShip().getNextUpgradeCost();
 			}
 			
 			//Add shield indicators
@@ -214,10 +233,12 @@ public class GameGUI extends Sprite{
 			this.guiTexts.add(healthText);
 			
 			//Add energy indicator
-			MenuText energyText = new MenuText("Energy: " + Math.round(currEnergy));
-			energyText.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(5, 420));
+			GUIBar energyBar = new GUIBar((int)Math.min(currEnergy, energyMax), (int)energyMax, 120, 20, Color.YELLOW);
+			energyBar.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(0, 400));
+			this.guiBars.add(energyBar);
+			MenuText energyText = new MenuText(Math.round(currEnergy) + "");
+			energyText.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(130, 420));
 			energyText.setTextColor(Color.YELLOW);
-			energyText.setFontSize(15);
 			this.guiTexts.add(energyText);
 		}
 		this.needsRedraw = true;

@@ -111,4 +111,9 @@ public class Game extends JFrame implements ActionListener
 		else
 			return false;
 	}
+	
+	public static void exitGame()
+	{
+		System.exit(0);
+	}
 }

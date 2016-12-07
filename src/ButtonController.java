@@ -49,6 +49,8 @@ public class ButtonController
 				model.mv.gameMap.upgradePlayerShip();
 				SpriteList.getGUI().openUpgrades();
 				break;
+			case QUIT_GAME:
+				Game.exitGame();
 			default:
 				break;
 			

@@ -28,7 +28,7 @@ public class GUIBar extends Sprite
 		
 		//Hardcoded
 		frameColor = Color.LIGHT_GRAY;
-		barColor = c;
+		barColor = new Color((float)c.getRed()/(float)255, (float)c.getGreen()/(float)255, (float)c.getBlue()/(float)255, (float)0.75);
 		
 	}
 	
