@@ -20,6 +20,7 @@ public class GameGUI extends Sprite{
 	
 	ArrayList<ActionButton> guiButtons;
 	ArrayList<MenuText> guiTexts;
+	ArrayList<GUIBar> guiBars;
 	ActionButton currentButton; //The button currently being acted on
 	GUIWindow guiWindow;
 	
@@ -27,6 +28,7 @@ public class GameGUI extends Sprite{
 	{
 		this.guiButtons = new ArrayList<ActionButton>();
 		this.guiTexts = new ArrayList<MenuText>();
+		this.guiBars = new ArrayList<GUIBar>();
 		this.currentButton = null;
 		this.currentImage = new BufferedImage((int)ViewCamera.renderRes.x - 1, (int)ViewCamera.renderRes.y - 1, 
 				BufferedImage.TYPE_INT_ARGB);
@@ -116,6 +118,8 @@ public class GameGUI extends Sprite{
 		upgradesButton.setButtonSize(new Vector2D(50, 30));
 		upgradesButton.setFontSize(9);
 		
+		updateGUIBars();
+		
 		//Add the buttons
 		synchronized(this.guiButtons)
 		{
@@ -124,12 +128,7 @@ public class GameGUI extends Sprite{
 			this.guiButtons.add(upgradesButton);
 		}
 		
-		//Draw window
-		GUIWindow pauseWindow = new GUIWindow(GUIWindowType.REGULAR);
-		pauseWindow.setPos(ReferencePositions.CENTER, new Vector2D((int)(ViewCamera.renderRes.x - 1)/2, (int)(ViewCamera.renderRes.y - 1)/2));
-		pauseWindow.textColor = Color.WHITE;
-		pauseWindow.setMenu();
-		this.guiWindow = pauseWindow;
+		openMenu();
 		
 		this.needsRedraw = true;
 	}
@@ -154,46 +153,30 @@ public class GameGUI extends Sprite{
 		this.needsRedraw = true;
 	}
 	
-	public void updateShieldIndicator()
+	public void updateGUIBars()
 	{
-		if (this.guiWindow != null)
+		synchronized(this.guiBars)
 		{
-			this.guiWindow.updateUpgradeWindow();
-			this.needsRedraw = true;
+			this.guiBars.clear();
+			
+			GUIBar shieldBar = new GUIBar((int)SpriteList.getPlayerShip().shield, (int)SpriteList.getPlayerShip().shieldMax, 50, 20, Color.BLUE);
+			shieldBar.setPos(ReferencePositions.CENTER, new Vector2D(40, 40));
+			this.guiBars.add(shieldBar);
 		}
+		this.needsRedraw = true;
 	}
-	public void updateSpeedIndicator()
-	{
-		if (this.guiWindow != null)
-		{
-			this.guiWindow.updateUpgradeWindow();
-			this.needsRedraw = true;
-		}
-	}
-	public void updateDamageIndicator()
-	{
-		if (this.guiWindow != null)
-		{
-			this.guiWindow.updateUpgradeWindow();
-			this.needsRedraw = true;
-		}
-	}
-	public void updateFireRateIndicator()
-	{
-		if (this.guiWindow != null)
-		{
-			this.guiWindow.updateUpgradeWindow();
-			this.needsRedraw = true;
-		}
-	}
+	
 	
 	@Override
 	public void draw(Graphics2D g2)
 	{
 		synchronized (this.imageLock)
 		{
-			if (this.needsRedraw || this.currentImage == null)
+//			if (this.needsRedraw || this.currentImage == null)
 			{
+				if (!this.guiBars.isEmpty())
+					updateGUIBars();
+				
 				//GameGUI is always the size of the screen
 				this.currentImage = new BufferedImage((int)ViewCamera.renderRes.x - 1, (int)ViewCamera.renderRes.y - 1, 
 						BufferedImage.TYPE_INT_ARGB);
@@ -217,6 +200,13 @@ public class GameGUI extends Sprite{
 					for (MenuText curr : this.guiTexts)
 						curr.draw(c2);
 				}
+				//Draw GUI Bars
+				synchronized(this.guiBars)
+				{
+					for (GUIBar curr : this.guiBars)
+						curr.draw(c2);
+				}
+				
 				
 				//Draw open window (if applicable)
 				if (this.guiWindow != null)

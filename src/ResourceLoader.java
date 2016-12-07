@@ -51,7 +51,7 @@ public class ResourceLoader
 			e.printStackTrace();
 		}
 		
-		loadAllResources(directoryPath);
+		//loadAllResources(directoryPath);
 	}
 	
 	//Recursively load all BufferedImages within the resources directory
