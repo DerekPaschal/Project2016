@@ -10,10 +10,17 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;
+
+import javax.sound.sampled.*;
 
 @SuppressWarnings("serial")
 public class Game extends JFrame implements ActionListener
@@ -62,6 +69,8 @@ public class Game extends JFrame implements ActionListener
 		view.addMouseListener(controller);
 		view.addMouseMotionListener(controller);
 		view.addMouseWheelListener(controller);
+		
+		Game.music();
 		
 		new Timer((int) (1000.0 / GameConstant.goalFrameRate), this).start(); // Indirectly calls actionPerformed at regular intervals
 	}
@@ -120,6 +129,50 @@ public class Game extends JFrame implements ActionListener
 		new Game();
 	}
 	
+	public static void music() throws FileNotFoundException, UnsupportedAudioFileException, IOException, LineUnavailableException 
+    {       
+		/*AudioPlayer MGP = AudioPlayer.player;  
+        AudioStream BGM;  
+        AudioData MD;  
+        ContinuousAudioDataStream loop = null;  
+
+        try {  
+            BGM = new AudioStream(new FileInputStream(System.getProperty("user.dir") + "\\src\\resources\\music\\Neon_Transit_G.mp3"));  
+            MD = BGM.getData();  
+            loop = new ContinuousAudioDataStream(MD);  
+        } catch(IOException error)  {  
+        	System.out.print(error.toString()); 
+        	
+        }  
+        MGP.start(loop);  */
+		
+		FileInputStream filestream = new FileInputStream(System.getProperty("user.dir") + "\\src\\resources\\music\\Neon_Transit_G.wav");
+		BufferedInputStream mystream = new BufferedInputStream(filestream);
+		AudioInputStream ais = AudioSystem.getAudioInputStream(mystream);
+		//AudioInputStream ais = AudioSystem.getAudioInputStream(new FileInputStream(System.getProperty("user.dir") + "\\src\\resources\\music\\Neon_Transit_G.mp3"));
+		//AudioInputStream ais = AudioSystem.getAudioInputStream(new URL(System.getProperty("user.dir") + "\\src\\resources\\music\\Neon_Transit_G.mp3"));
+		Clip clip = AudioSystem.getClip();
+		clip.open(ais);
+		clip.start();
+		//clip.loop(Clip.LOOP_CONTINUOUSLY);
+		/*if (clip != null)
+		{
+			new Thread() 
+			{
+                public void run() 
+                {
+                    synchronized (clip) 
+                    {
+                        clip.stop();
+                        clip.setFramePosition(0);
+                        clip.loop(Clip.LOOP_CONTINUOUSLY);
+                    }
+                }
+            }.start();
+		}*/
+		
+    }
+	
 	//If both in debug mode and debugging type passed in is true, return true
 	public static boolean isDebugging(boolean debugTypeEnabled)
 	{
@@ -132,23 +185,5 @@ public class Game extends JFrame implements ActionListener
 	public static void exitGame()
 	{
 		System.exit(0);
-	}
-}
-
-class GameAdvanceThread implements Runnable
-{
-	GameAdvanceThread ()
-	{
-		
-	}
-
-	@Override
-	public void run()
-	{
-		try {
-			Game.primaryModel.update();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 }
