@@ -24,8 +24,8 @@ public class BackgroundSprite extends Sprite
 	@Override
 	public void draw(Graphics2D g2)
 	{
-		synchronized(this.imageLock)
-		{
+		//synchronized(this.imageLock)
+		//{
 
 			this.currentImage = new BufferedImage((int)ViewCamera.renderRes.x - 1, (int)ViewCamera.renderRes.y - 1, 
 					BufferedImage.TYPE_INT_ARGB);
@@ -38,15 +38,16 @@ public class BackgroundSprite extends Sprite
 
 
 			//draw parallax layer (closer to ship, uses ViewCamera position)
-			int xOffset = (int)(-ViewCamera.pos.x*0.02), yOffset = (int)(-ViewCamera.pos.y*0.02);
-			c2.drawImage(sourceImage, xOffset, yOffset, (int)(xOffset+(this.currentImage.getWidth()*2.0)), (int)(yOffset+(this.currentImage.getHeight()*2.0)), null);
+			int xOffset = (int)(-ViewCamera.pos.x*0.04), yOffset = (int)(-ViewCamera.pos.y*0.04);
+			c2.drawImage(sourceImage, xOffset, yOffset, (int)(xOffset+(this.currentImage.getWidth()*3.0)), (int)(yOffset+(this.currentImage.getHeight()*3.0)), null);
 			
+			//draw another parallax layer
 			xOffset *= 2; yOffset *= 2;
-			c2.drawImage(sourceImage, xOffset, yOffset, (int)(xOffset+(this.currentImage.getWidth()*2.5)), (int)(yOffset+(this.currentImage.getHeight()*2.5)), null);
+			c2.drawImage(sourceImage, xOffset, yOffset, (int)(xOffset+(this.currentImage.getWidth()*3.5)), (int)(yOffset+(this.currentImage.getHeight()*3.5)), null);
 			
 			this.needsRedraw = false;
 			
 			super.drawStatic(g2);
-		}
+		//}
 	}
 }

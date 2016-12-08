@@ -146,10 +146,16 @@ public class GUIWindow extends Sprite
 			instructions3.setFontSize(16);
 			MenuText instructions4 = new MenuText("Be careful! You need energy to recharge your", 20, 150);
 			instructions4.setFontSize(16);
-			MenuText instructions5 = new MenuText("shields and power your thrusters. Upgrade", 20, 170);
+			MenuText instructions5 = new MenuText("shields, use thrusters, and run life support.", 20, 170);
 			instructions5.setFontSize(16);
-			MenuText instructions6 = new MenuText("too soon and you will be LOST IN SPACE!", 20, 190);
+			MenuText instructions6 = new MenuText("The goal is to reach the end of the asteroid", 20, 190);
 			instructions6.setFontSize(16);
+			MenuText instructions7 = new MenuText("field, the top of the map.", 20, 210);
+			instructions7.setFontSize(16);
+			MenuText instructions8 = new MenuText("Run out of energy and you will be...", 20, 240);
+			instructions8.setFontSize(16);
+			MenuText instructions9 = new MenuText("LOST IN SPACE", 100, 270);
+			instructions9.setFontSize(24);
 			
 			synchronized(this.windowTexts)
 			{
@@ -160,6 +166,9 @@ public class GUIWindow extends Sprite
 				this.windowTexts.add(instructions4);
 				this.windowTexts.add(instructions5);
 				this.windowTexts.add(instructions6);
+				this.windowTexts.add(instructions7);
+				this.windowTexts.add(instructions8);
+				this.windowTexts.add(instructions9);
 			}
 			
 			this.needsRedraw = true;

@@ -138,12 +138,12 @@ public class MenuText extends Sprite
 	@Override
 	public void draw(Graphics2D g2)
 	{
-		synchronized(this.imageLock)
-		{
+		//synchronized(this.imageLock)
+		//{
 			//Get dimensions of button text
 			//Change font to get accurate height and width values
-			if (this.needsRedraw || this.currentImage == null)
-			{
+			//if (this.needsRedraw || this.currentImage == null)
+			//{
 				updateImageSize();
 				
 				Graphics2D c2 = this.currentImage.createGraphics();
@@ -156,9 +156,9 @@ public class MenuText extends Sprite
 				c2.drawString(this.text, 0, textHeight);
 				
 				this.needsRedraw = false;
-			}
+			//}
 			
 			super.drawStatic(g2, this.pos.x, this.pos.y);
-		}
+		//}
 	}
 }

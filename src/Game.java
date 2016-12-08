@@ -10,6 +10,7 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;
@@ -20,6 +21,8 @@ public class Game extends JFrame implements ActionListener
 	//Master toggle for debug mode
 	//Specific debugging functionality toggled in GameDebugVars
 	public static final boolean DEBUG = true;
+	
+	private static AtomicBoolean Updating = new AtomicBoolean(false);
 	
 	Model model;
 	public static Model primaryModel;
@@ -65,6 +68,10 @@ public class Game extends JFrame implements ActionListener
 
 	public void actionPerformed(ActionEvent evt)
 	{
+		if (!Game.Updating.compareAndSet(false, true))
+		{
+			return;
+		}
 		
 		ViewCamera.windowDim.x = this.view.getWidth();
 		ViewCamera.windowDim.y = this.view.getHeight();
@@ -89,13 +96,23 @@ public class Game extends JFrame implements ActionListener
 		try {
 			this.model.update();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		//Thread GameUpdateThread = new Thread(new GameAdvanceThread(),"Game Update Thread.");
+		//GameUpdateThread.start();
 
 		//long paintStartTime = System.currentTimeMillis();
 		repaint(); // Indirectly calls View.paintComponent
 		//GameDebugVars.paintsPerSecond = 1000.0 / (System.currentTimeMillis() - paintStartTime);
+		
+		/*try {
+			GameUpdateThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}*/
+		
+		Game.Updating.set(false);
 	}
 
 	public static void main(String[] args) throws Exception
@@ -115,5 +132,23 @@ public class Game extends JFrame implements ActionListener
 	public static void exitGame()
 	{
 		System.exit(0);
+	}
+}
+
+class GameAdvanceThread implements Runnable
+{
+	GameAdvanceThread ()
+	{
+		
+	}
+
+	@Override
+	public void run()
+	{
+		try {
+			Game.primaryModel.update();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

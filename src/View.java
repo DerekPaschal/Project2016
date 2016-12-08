@@ -55,6 +55,7 @@ class View extends JPanel
 	public void drawNextFrame()
 	{
 		double currentRenderScale = ViewCamera.renderScale;
+
 		this.Frame = new BufferedImage((int)ViewCamera.windowDim.x - 1, (int)ViewCamera.windowDim.x - 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = (Graphics2D) Frame.getGraphics();
 		

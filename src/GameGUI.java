@@ -193,72 +193,81 @@ public class GameGUI extends Sprite{
 	
 	public void updateGUIIndicators()
 	{
-		synchronized(this.guiBars)
-		{
+		
 			this.guiBars.clear();
 			this.guiTexts.clear();
 			
 			double currShield = 0, shieldMax = 0;
 			double currHealth = 0, healthMax = 0;
 			double currEnergy = 0, energyMax = 0;
+			int player_y = 0, gameLength = 8000;
 			
-			if (SpriteList.getPlayerShip() != null)
+			PlayerShip ship = SpriteList.getPlayerShip();
+			if (ship != null)
 			{
-				currShield = SpriteList.getPlayerShip().shield;
-				shieldMax = SpriteList.getPlayerShip().shieldMax;
+				currShield = ship.shield;
+				shieldMax = ship.shieldMax;
 				
-				currHealth = SpriteList.getPlayerShip().health;
-				healthMax = SpriteList.getPlayerShip().healthMax;
+				currHealth = ship.health;
+				healthMax = ship.healthMax;
 				
-				currEnergy = SpriteList.getPlayerShip().energy;
-				energyMax = SpriteList.getPlayerShip().getNextUpgradeCost();
+				currEnergy = ship.energy;
+				energyMax = ship.getNextUpgradeCost();
+				
+				player_y = (int)(gameLength - ship.pos.y);
 			}
+			
+			//ADD progress indicator
+			GUIBar progressBar = new GUIBar(player_y, gameLength, 400, 20, Color.GRAY);
+			progressBar.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(245, 5));
+			this.guiBars.add(progressBar);
+			
+			//Add energy indicator
+			GUIBar energyBar = new GUIBar((int)Math.min(currEnergy, energyMax), (int)energyMax, 120, 20, Color.YELLOW);
+			energyBar.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(5, 400));
+			this.guiBars.add(energyBar);
+			MenuText energyText = new MenuText("Energy: "+ (int)(currEnergy));
+			energyText.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(135, 420));
+			energyText.setTextColor(Color.YELLOW);
+			this.guiTexts.add(energyText);
 			
 			//Add shield indicators
 			GUIBar shieldBar = new GUIBar((int)currShield, (int)shieldMax, 120, 20, Color.BLUE);
-			shieldBar.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(0, 430));
+			shieldBar.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(5, 430));
 			this.guiBars.add(shieldBar);
 			MenuText shieldText = new MenuText(Math.round((float)currShield / (float)shieldMax * 100) + "%");
-			shieldText.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(130, 450));
+			shieldText.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(135, 450));
 			shieldText.setTextColor(Color.BLUE);
 			this.guiTexts.add(shieldText);
 			
 			//Add health bar
 			GUIBar healthBar = new GUIBar((int)currHealth, (int)healthMax, 120, 20, Color.RED);
-			healthBar.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(0, 460));
+			healthBar.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(5, 460));
 			this.guiBars.add(healthBar);
 			MenuText healthText = new MenuText(Math.round((float)currHealth / (float)healthMax * 100) + "%");
-			healthText.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(130, 480));
+			healthText.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(135, 480));
 			healthText.setTextColor(Color.RED);
 			this.guiTexts.add(healthText);
-			
-			//Add energy indicator
-			GUIBar energyBar = new GUIBar((int)Math.min(currEnergy, energyMax), (int)energyMax, 120, 20, Color.YELLOW);
-			energyBar.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(0, 400));
-			this.guiBars.add(energyBar);
-			MenuText energyText = new MenuText(Math.round(currEnergy) + "");
-			energyText.setPos(ReferencePositions.BOTTOM_LEFT, new Vector2D(130, 420));
-			energyText.setTextColor(Color.YELLOW);
-			this.guiTexts.add(energyText);
-		}
-		this.needsRedraw = true;
+		
+		//this.needsRedraw = true;
 	}
 	
 	
 	@Override
 	public void draw(Graphics2D g2)
 	{
-		synchronized (this.imageLock)
-		{
+		//synchronized (this.imageLock)
+		//{
 //			if (this.needsRedraw || this.currentImage == null)
 			{
 				if (!this.guiBars.isEmpty())
 					updateGUIIndicators();
 				
 				//GameGUI is always the size of the screen
-				this.currentImage = new BufferedImage((int)ViewCamera.renderRes.x - 1, (int)ViewCamera.renderRes.y - 1, 
-						BufferedImage.TYPE_INT_ARGB);
-				Graphics2D c2 = this.currentImage.createGraphics();
+				//this.currentImage = new BufferedImage((int)ViewCamera.renderRes.x - 1, (int)ViewCamera.renderRes.y - 1, 
+				//		BufferedImage.TYPE_INT_ARGB);
+				//Graphics2D c2 = this.currentImage.createGraphics();
+				Graphics2D c2 = g2;
 				
 				//Draw main menu background
 				if (Game.primaryModel.mv.getGameState() == GameState.MAIN_MENU)
@@ -293,8 +302,8 @@ public class GameGUI extends Sprite{
 				this.needsRedraw = false;
 			}
 			
-			super.drawStatic(g2);
-		}
+			//super.drawStatic(g2);
+		//}
 		
 	}
 	
